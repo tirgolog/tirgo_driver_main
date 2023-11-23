@@ -1,0 +1,25 @@
+<ion-header class="ion-padding">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text=""></ion-back-button>
+    </ion-buttons>
+    <h3>{{'Введите город' | translate}}</h3>
+    <p>{{'Введите и выберите город из списка' | translate}}</p>
+  </ion-toolbar>
+  <ion-toolbar class="myBorder">
+    <ion-item class="agroinput marginBottom5" lines="none">
+      <ion-input type="text" name="name" placeholder="{{'Введите город' | translate}}" minlength="2" maxlength="60"
+                 (ionChange)="findCity($event)"></ion-input>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding" scrollEvents="true">
+  <ion-list>
+    <ng-container  *ngFor="let city of findList">
+      <ion-item *ngIf="city.data.city || city.data.region" class="my-cities" lines="none" (click)="setCity(city)">
+        <ion-label>г. {{city.data.city ? city.data.city : city.data.region}}, {{city.data.country}}<br> <small class="unrestricted_value">{{city.unrestricted_value}}</small></ion-label>
+      </ion-item>
+    </ng-container>
+  </ion-list>
+</ion-content>

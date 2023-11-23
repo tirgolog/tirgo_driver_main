@@ -1,0 +1,16 @@
+.active-plane{
+  color: #f59004;
+}
+
+.badge{
+  background: #db0000;
+  color: #ffffff;
+  height: 15px;
+  min-width: 15px;
+  border-radius: 50%;
+  position: absolute;
+  z-index: 9;
+  right: 20%;
+  top: 20%;
+  line-height: 15px;
+}

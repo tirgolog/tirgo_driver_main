@@ -1,0 +1,6 @@
+<ion-app>
+  <ion-menu contentId="menu" side="start" [disabled]="!authService.isAuthenticated()">
+    <app-menu></app-menu>
+  </ion-menu>
+  <ion-router-outlet id="menu"></ion-router-outlet>
+</ion-app>

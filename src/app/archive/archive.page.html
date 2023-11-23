@@ -1,0 +1,59 @@
+<app-header></app-header>
+<ion-content>
+  <div *ngIf="items && items.length === 0" class="noItem">
+    <ion-icon src="assets/img/wrong.svg"></ion-icon>
+    <p>{{'К сожалению у вас нет завершенных заказов' | translate}}.</p>
+  </div>
+  <div class="wrapper-fluid">
+    <div class="body-wrap form-block main-body body-have-bottom-menu">
+      <div class="order-item" *ngFor="let item of items">
+        <div class="order-item-articul">
+          <span>
+            <!--<img src="assets/img/order-false.svg" alt="">-->
+            №{{authService.addLeadingZeros(item.id)}}</span>
+        </div>
+        <table class="table-info table-img">
+          <tbody>
+          <tr>
+            <td>{{'Отправка из' | translate}}:</td>
+            <td>{{item.route.from_city}}</td>
+          </tr>
+          <tr>
+            <td>{{'Доставка в' | translate}}:</td>
+            <td>{{item.route.to_city}}</td>
+          </tr>
+          </tbody>
+        </table>
+        <table class="table-data">
+          <tbody>
+          <tr>
+            <td>{{'Время отправки' | translate}}</td>
+            <td>{{item.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
+          </tr>
+          <tr>
+            <td>{{'Тип транспорта' | translate}}</td>
+            <td>{{returnNameTypeTransport(item.transport_type)}}</td>
+          </tr>
+          <tr>
+            <td>{{'Тип груза' | translate}}</td>
+            <td>{{returnNameCargoType(item.type_cargo)}}</td>
+          </tr>
+          <tr>
+            <td>{{'Вес груза' | translate}}</td>
+            <td>{{item.weight}} {{'кг' | translate}}.</td>
+          </tr>
+          <tr>
+            <td>{{'Пользователь' | translate}}</td>
+            <td>{{item.usernameorder}}</td>
+          </tr>
+          <!--<tr>
+            <td>Контакты</td>
+            <td>+{{item.userphoneorder}}</td>
+          </tr>-->
+          </tbody>
+        </table>
+        <button class="get-order-btn">{{'Заказ завершен' | translate}}</button>
+      </div>
+    </div>
+  </div>
+</ion-content>

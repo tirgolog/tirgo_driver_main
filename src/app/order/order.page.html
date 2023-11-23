@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>{{'Заказ' | translate}} №{{authService.addLeadingZeros(item.id)}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wrapper-fluid ion-padding-tabs">
+    <div class="body-wrap form-block">
+      <div class="autorize">
+        <p><b>{{'Ваше предложение по цене' | translate}} ($)</b></p>
+        <input type="text" inputmode="tel" name="name" placeholder="Ваша цена в $" [(ngModel)]="price">
+        <p><b>{{'Дата погрузки у клиента' | translate}}</b></p>
+        <input type="text" inputmode="tel" name="name" readonly placeholder="Ваша цена" [value]="item.date_send | formatTime:'DD MMMM YYYY в HH:mm'">
+        <ng-container *ngIf="item.add_two_days">
+          <p><b>{{'Укажите свою дату погрузки' | translate}}</b></p>
+          <div class="dates-loades">
+            <div class="date-load-order" [ngClass]="findDay(0) ? 'selected':''" (click)="selectDay(0)">
+              {{addDays(item.date_send,0)}}
+            </div>
+            <div class="date-load-order" [ngClass]="findDay(1) ? 'selected':''" (click)="selectDay(1)">
+              {{addDays(item.date_send,1)}}
+            </div>
+            <div class="date-load-order" [ngClass]="findDay(2) ? 'selected':''" (click)="selectDay(2)">
+              {{addDays(item.date_send,2)}}
+            </div>
+          </div>
+        </ng-container>
+      </div>
+      <button class="reg-btn accept-btn margin-top-15" [disabled]="loadingAccept" (click)="acceptOrderFinal()">{{'Отправить предложение' | translate}}</button>
+    </div>
+  </div>
+</ion-content>

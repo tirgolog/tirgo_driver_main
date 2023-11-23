@@ -1,0 +1,43 @@
+<ion-header>
+  <div class="wrapper-fluid-header">
+    <div class="logo-wrap personal-head">
+      <button class="top-back" (click)="back()"><img src="assets/img/arrow-left.svg" alt=""></button>
+      <h2>{{'Мой баланс' | translate}}</h2>
+      <div></div>
+    </div>
+  </div>
+</ion-header>
+<ion-content class="ion-no-padding ion-no-margin">
+  <div class="wrapper-fluid">
+    <div class="body-wrap" *ngIf="authService.currentUser">
+      <div class="cart-wrap">
+        <img src="assets/img/logo.png" alt="">
+        <p class="cart-wrap-balance">Активные средства: {{authService.currentUser.balance}} <span></span></p>
+        <p class="cart-wrap-balance">Замороженные средства: {{authService.currentUser.balance_off}} <span></span></p>
+      </div>
+      <p class="ion-no-padding ion-no-margin"><b>{{'Методы оплаты' | translate}}</b></p>
+      <div class="payment-method">
+        <div class="payment-method-wrap">
+          <button (click)="selectmethodpay = 'click'" [ngClass]="{'selected': selectmethodpay === 'click'}"><img src="assets/payment/click.svg" alt=""></button>
+          <button (click)="selectmethodpay = 'payme'" [ngClass]="{'selected': selectmethodpay === 'payme'}"><img src="assets/payment/payme.svg" alt=""></button>
+        </div>
+      </div>
+      <p class="ion-no-padding ion-no-margin"><b>{{'Сумма' | translate}}</b></p>
+      <div class="payment-total form-block">
+        <input type="text" inputmode="tel" name="total" placeholder="150 000" [(ngModel)]="amount">
+      </div>
+    </div>
+
+    <!--<div class="code-error personal-modal">
+      <div class="code-error-wrap">
+        <h2>Ваш счет успешно пополнен</h2>
+          <button class="next-btn">На главную</button>
+      </div>
+    </div>-->
+  </div>
+</ion-content>
+<ion-footer class="my-footer">
+  <div class="bottom-wrap personal-bottom">
+    <button class="reg-btn podpis-buy" (click)="pay()">{{'Оплатить' | translate}}</button>
+  </div>
+</ion-footer>

@@ -1,0 +1,19 @@
+<ion-header class="my-custom-header">
+  <ion-toolbar>
+    <ion-title>{{'Выбрать статус' | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        {{'Закрыть' | translate}}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content >
+  <div style="padding-top: 15px"></div>
+  <ng-container *ngFor="let row of authService.statuses">
+    <button class="set-status-btn" (click)="setStatus(row.status_id)">
+      {{row.name}}
+    </button>
+  </ng-container>
+</ion-content>

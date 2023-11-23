@@ -1,0 +1,78 @@
+<ion-content class="full-height">
+  <div class="menu">
+    <div class="main-menu" *ngIf="authService.isAuthenticated()">
+      <div class="menu-head">
+        <img class="avatar" [src]="authService.currentUser?.avatar" alt="">
+        <div class="menu-head-right">
+          <h3>{{authService.currentUser?.name}}</h3>
+          <div class="menu-head-right-row">
+            <div class="menu-rate">
+              <img src="assets/img/Star.svg" alt="">
+              <span>{{authService.currentUser?.raiting}}</span>
+            </div>
+            <div class="user-id">ID: {{authService.currentUser?.id}}</div>
+          </div>
+          <button class="my-profile" (click)="goTo('/tabs/profile/',true)">{{'Мой профиль' | translate}} <img src="assets/img/Edit.svg" alt=""></button>
+          <small class="status-text"><b>{{returnStatusName()}}</b></small>
+        </div>
+      </div>
+      <nav class="main-nav">
+        <button (click)="goTo('/tabs/home/',true)"><ion-icon src="assets/img/main.svg"></ion-icon>{{'Главная' | translate}}</button>
+        <!--<button (click)="goTo('/mysubscribers/',false)"><ion-icon src="assets/img/Document.svg"></ion-icon>Мои подписки</button>-->
+        <button (click)="goTo('/tabs/archive/',true)"><ion-icon src="assets/img/Calendar2.svg"></ion-icon>{{'Архив заказов' | translate}}</button>
+        <button (click)="goTo('/balance/',false)"><ion-icon src="assets/img/balans.svg"></ion-icon>{{'Мой баланс' | translate}}</button>
+        <!--<button (click)="updateLocation()">
+          <ion-icon name="navigate-circle-outline"></ion-icon>
+          <span class="location-detect">
+            {{'Обновить геолокацию' | translate}} <br>
+            <small>{{authService.cityinfo}}</small>
+          </span>
+        </button>-->
+        <button (click)="goTo('/support/',false)">
+          <ion-icon src="assets/img/chat.svg"></ion-icon>{{'Служба поддержки' | translate}}
+        </button>
+        <button (click)="goTo('/selectlanguageauth/',false)">
+          <ion-icon src="assets/img/language.svg"></ion-icon>
+          Язык интерфейса
+        </button>
+        <button (click)="authService.goToSupport()">
+          <ion-icon src="assets/img/tg.svg"></ion-icon>{{'Telegram' | translate}}
+        </button>
+        <button (click)="selectStatus()">
+          <ion-icon src="assets/img/status.svg"></ion-icon>
+          {{'Мой статус' | translate}}
+        </button>
+        <!--<ion-item class="ion-no-margin ion-no-padding myitem" lines="none" (click)="selectStatus()">
+          <ion-label  color="light" *ngIf="!authService.currentUser?.busy">{{'Свободен' | translate}}</ion-label>
+          <ion-label  color="light" *ngIf="authService.currentUser?.busy">{{'Занят ' | translate}}</ion-label>
+          <ion-toggle color="danger" slot="end" [checked]="authService.currentUser?.busy" (ionChange)="busySet($event)"></ion-toggle>
+        </ion-item>
+        <button><img src="assets/img/chat.svg" alt="">Мой статус</button>-->
+        <button (click)="logOut()">
+          <ion-icon src="assets/img/Logout.svg"></ion-icon>
+          {{'Выход' | translate}}
+        </button>
+        <p *ngIf="authService.currentUser && authService.currentUser.dirty < 3 && authService.currentUser.dirty !== 0" class="dirty">
+          {{'У вас имеется' | translate}} <b>{{authService.currentUser.dirty}}</b> <span>{{'предупреждение' | translate}}</span>. {{'После получения 3 предупреждений ваш профиль будет' | translate}} <b>{{'заблокирован' | translate}}</b>. {{'Вам потребуется связаться с технической поддержкой для разблокировки аккаунта' | translate}}
+        </p>
+        <p *ngIf="authService.currentUser && authService.currentUser.dirty === 3" class="dirty-warning" (click)="authService.goToSupport()">
+          {{'Вы получили 3 предупреждения Ваш аккаунт заблокирован. Обратитесь в службу поддержки' | translate}}
+        </p>
+      </nav>
+    </div>
+  </div>
+  <ion-modal [isOpen]="modalExit"  (willDismiss)="closeModal()" class="modal-append-order">
+    <ng-template>
+      <div class="code-error personal-modal filter-modal">
+        <div class="code-error-wrap">
+          <img src="assets/img/logo.png" alt="">
+          <h2 class="ion-no-margin ion-no-padding">{{'Вы действительно хотите выйти?' | translate}}</h2>
+          <div class="filter-modal-action">
+            <button (click)="logOutFull()"><b>{{'Да' | translate}}</b></button>
+            <button (click)="closeModal()">{{'Нет' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>

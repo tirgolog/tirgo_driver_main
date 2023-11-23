@@ -1,0 +1,20 @@
+<ion-content class="ion-no-padding ion-no-margin">
+  <div class="wrapper-fluid">
+    <div class="logo-wrap">
+      <img src="assets/img/logo.png" alt="">
+    </div>
+    <div class="body-wrap form-block">
+      <form action="" class="autorize">
+        <label for="pass">{{'Введите Ваше ФИО' | translate}}</label>
+        <input id="pass" type="text" name="pass" placeholder="{{'Введите Ваше ФИО' | translate}}"  [(ngModel)]="name">
+        <label for="pass" (click)="selectRegion()">{{'Укажите ваш регион' | translate}}</label>
+        <input id="region" (click)="selectRegion()"  type="text" name="region" placeholder="{{'Укажите ваш регион' | translate}}"  [(ngModel)]="country + ' г' + city">
+      </form>
+    </div>
+    <div class="bottom-wrap autorize-btns">
+      <button class="classic-btn" (click)="regUser()">{{'Зарегистрироваться' | translate}}</button>
+      <span class="or">{{'или' | translate}}</span>
+      <button class="support-btn"><img src="assets/img/support.svg" alt="">{{'Обратитесь в службу поддержки' | translate}}</button>
+    </div>
+  </div>
+</ion-content>

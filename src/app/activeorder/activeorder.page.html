@@ -1,0 +1,62 @@
+<app-header></app-header>
+<ion-content class="ion-padding">
+    <div class="order-item">
+        <div class="order-item-articul">
+            <span><img src="assets/img/circle.svg" alt=""> №{{authService.addLeadingZeros(item.id)}}</span>
+        </div>
+        <table class="table-info table-img">
+            <tbody>
+            <tr>
+                <td>{{'Отправка из' | translate}}:</td>
+                <td>{{item.route.from_city}}</td>
+            </tr>
+            <tr>
+                <td>{{'Доставка в' | translate}}:</td>
+                <td>{{item.route.to_city}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <table class="table-data">
+            <tbody>
+            <tr>
+                <td>{{'Время отправки' | translate}}</td>
+                <td>{{item.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
+            </tr>
+            <tr>
+                <td>{{'Тип транспорта' | translate}}</td>
+                <td>{{returnNameTypeTransport(item.transport_type)}}</td>
+            </tr>
+            <tr>
+                <td>{{'Тип груза' | translate}}</td>
+                <td>{{returnNameCargoType(item.type_cargo)}}</td>
+            </tr>
+            <tr *ngIf="item.no_cash">
+                <td>{{'Безналичная оплата' | translate}}</td>
+                <td>{{'Да'}}</td>
+            </tr>
+            <tr *ngIf="item.adr">
+                <td>{{'ADR' | translate}}</td>
+                <td>{{'Да'}}</td>
+            </tr>
+            <tr *ngIf="item.secure_transaction">
+                <td>{{'Безопасная сделка' | translate}}</td>
+                <td>{{'Да'}}</td>
+            </tr>
+            <tr>
+                <td>{{'Вес груза' | translate}}</td>
+                <td>{{item.weight}} кг.</td>
+            </tr>
+            <tr>
+                <td>{{'Пользователь' | translate}}</td>
+                <td>{{item.usernameorder}}</td>
+            </tr>
+            <tr>
+                <td>{{'Контакты' | translate}}</td>
+                <td>+{{item.userphoneorder}}</td>
+            </tr>
+            </tbody>
+        </table>
+        <button class="get-order-btn order-succes-btn" (click)="callMan(item.userphoneorder)">{{'Позвонить' | translate}}</button>
+        <button class="get-order-btn" (click)="finishOrder()">{{'Завершить заказ' | translate}}</button>
+    </div>
+</ion-content>

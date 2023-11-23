@@ -1,0 +1,27 @@
+.file-group{
+  max-width: 112px!important;
+  min-width: 112px!important;
+  min-height: 85px!important;
+  max-height: 85px!important;
+  width: 112px!important;
+  height: 85px!important;
+  .form-group{
+    max-width: 112px;
+    min-width: 112px;
+    min-height: 85px;
+    max-height: 85px;
+    width: 112px;
+    height: 85px;
+    margin-right: 10px;
+    img{
+      border-radius: 10px;
+      max-width: 112px;
+      min-width: 112px;
+      min-height: 85px;
+      max-height: 85px;
+      object-fit: cover;
+      width: 112px;
+      height: 85px;
+    }
+  }
+}

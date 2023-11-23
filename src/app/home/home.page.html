@@ -1,0 +1,293 @@
+<app-header></app-header>
+
+<div class="scroll-horizontal" *ngIf="authService.mytruck && authService.mytruck.length > 0">
+  <div class="scroll-item widthAuto myProfession firstItemProf"
+       [ngClass]="{'bangbang': selectedtruck === 0}" (click)="allTruck(0)">
+    <div>{{'Все' | translate}}</div>
+  </div>
+  <div class="scroll-item widthAuto myProfession" [ngClass]="{'bangbang': row.type === selectedtruck}"
+       *ngFor="let row of authService.mytruck" (click)="allTruck(row.type)">
+    <div>{{returnNameTypeTransport(row.type)}}</div>
+  </div>
+  <div class="tab">
+    <div class="tab__header">
+      <button class="tab__btn" [ngClass]="selectedType === 'world' ? 'btn':''"  (click)="selectType('world')">{{'Международные' | translate}}</button>
+      <button class="tab__btn" [ngClass]="selectedType === 'local' ? 'btn':''" (click)="selectType('local')">{{'Местные' | translate}}</button>
+      <button class="tab__btn" (click)="openFilter(true)">
+        <ion-icon name="filter-circle-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<ion-content>
+  <div *ngIf="items && items.length === 0" class="noItem">
+    <ion-icon src="assets/img/wrong.svg"></ion-icon>
+    <p>
+      {{'Пока нет заказов для вас.' | translate}}
+      <span *ngIf="authService.mytruck && authService.mytruck.length === 0">
+        {{'Без авто Вы не можете получить список заказов. У вас не добавлен транспорт.' | translate}}
+        <button class="classic-btn filter-submit" (click)="addTransport()">{{'Добавить транспорт' | translate}}</button>
+      </span>
+    </p>
+  </div>
+
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="1" pullMin="100" pullMax="200">
+    <ion-refresher-content
+      class="loadingspinner"
+      pullingIcon="arrow-dropdown"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div class="wrapper-fluid">
+    <div class="body-wrap form-block main-body body-have-bottom-menu">
+      <ng-container *ngFor="let row of items">
+        <div class="order-item" *ngIf="findAcceptedOrdersAndAccepted(row.id) && row.status !== 2 && row.status !== 1 && localOrWorldIsset(row.id)">
+          <div class="order-item-articul" (click)="viewOrderInfo(row.id)">
+            <span class="order-header">
+              <span>
+                <img *ngIf="!findAcceptedOrders(row.id)" src="assets/img/art.svg" alt="">
+                <img *ngIf="findAcceptedOrders(row.id)" src="assets/img/rel.svg" alt="">
+                №{{authService.addLeadingZeros(row.id)}}
+              </span>
+              <span class="view-order" *ngIf="vieworder !== row.id">{{'Просмотреть' | translate}}</span>
+              <span class="view-order" *ngIf="vieworder === row.id">{{'Скрыть' | translate}}</span>
+            </span>
+            <img *ngIf="row.insure_deal" class="order-item-status" src="assets/img/done.svg" alt="">
+          </div>
+          <table class="table-info" (click)="viewOrderInfo(row.id)">
+            <tbody>
+            <tr>
+              <td>{{'Отправка из' | translate}}:</td>
+              <td>{{row.route.from_city}}</td>
+            </tr>
+            <tr>
+              <td>{{'Доставка в' | translate}}:</td>
+              <td>{{row.route.to_city}}</td>
+            </tr>
+            </tbody>
+          </table>
+          <ng-container *ngIf="vieworder === row.id">
+            <table class="table-data">
+              <tbody>
+              <tr>
+                <td>{{'Время отправки' | translate}}</td>
+                <td>{{row.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
+              </tr>
+              <tr>
+                <td>Предлагаемая цена</td>
+                <td>{{row.price}} {{row.currency}}</td>
+              </tr>
+              <tr *ngIf="row.adr">
+                <td>{{'ADR (Перевозка опасных грузов)' | translate}}</td>
+                <td>{{'Да' | translate}} </td>
+              </tr>
+              <tr *ngIf="row.no_cash">
+                <td>{{'Безналичная оплата' | translate}}</td>
+                <td>{{'Да' | translate}} </td>
+              </tr>
+              <tr *ngIf="row.secure_transaction">
+                <td>{{'Безопасная сделка' | translate}}</td>
+                <td>{{'Да' | translate}} </td>
+              </tr>
+              <tr>
+                <td>{{'Тип транспорта' | translate}}</td>
+                <td *ngFor="let type of row.transport_types">{{returnNameTypeTransport(type)}}</td>
+              </tr>
+              <tr>
+                <td>{{'Тип груза' | translate}}</td>
+                <td>{{returnNameCargoType(row.type_cargo)}}</td>
+              </tr>
+              <tr>
+                <td>{{'Вес груза' | translate}}</td>
+                <td>{{row.weight}} {{'кг' | translate}}.</td>
+              </tr>
+              </tbody>
+            </table>
+            <button *ngIf="findAcceptedOrders(row.id)" class="get-order-btn" (click)="appendOrder(row)">{{'Принять' | translate}}</button>
+            <button *ngIf="!findAcceptedOrders(row.id)" class="order-btn" (click)="cancelOrder(row)">{{'Ваша заявка на рассмотрении' | translate}}</button>
+          </ng-container>
+        </div>
+      </ng-container>
+
+      <!--<div class="order-item">
+        <div class="order-item-articul">
+          <span><img src="assets/img/art.svg" alt=""> №312456</span>
+        </div>
+        <table class="table-info">
+          <tbody>
+          <tr>
+            <td>Откуда:</td>
+            <td>Россия, Москва</td>
+          </tr>
+          <tr>
+            <td>Куда:</td>
+            <td>Узбекистан, Самарканд</td>
+          </tr>
+          </tbody>
+        </table>
+        <table class="table-data">
+          <tbody>
+          <tr>
+            <td>Время отправки</td>
+            <td>19.05.2022 - 10:00</td>
+          </tr>
+          <tr>
+            <td>Фургон</td>
+            <td>Рефрижератор</td>
+          </tr>
+          <tr>
+            <td>Груз</td>
+            <td>Овощи</td>
+          </tr>
+          <tr>
+            <td>Масса</td>
+            <td>5 тонн</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>-->
+    </div>
+  </div>
+
+  <ion-modal [isOpen]="modalAppendOrderFull" (willDismiss)="closeModalAll()" class="modal-append-order-full">
+    <ng-template>
+      <div class="cta-modal">
+        <div class="cta-modal-wrap">
+          <form action="">
+            <div class="price-wrap">
+              <label for="price">{{'Ваше предложение по цене' | translate}}:</label>
+              <div class="price-wrap-row">
+                <input type="text" name="price" id="price" [(ngModel)]="price">
+                <span>$ (USD)</span>
+              </div>
+            </div>
+            <div class="date-wrap">
+              <p>{{'Дата погрузки у клиента' | translate}}:</p>
+              <div class="date-wrap-row">
+                <span>{{appendorderdate}}</span>
+              </div>
+            </div>
+
+            <div class="custom-date" *ngIf="add_two_days">
+              <p>{{'Укажите свои даты погрузки' | translate}}:</p>
+              <div class="custom-date-chekboxs">
+                <div class="data-checkbox custom-check">
+                  <div class="data-checkbox-block">
+                    <span>{{returnDay(appendorderdate,0)}}</span>
+                    <label>
+                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,0)"/>
+                      <span class="fake-checkbox"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="data-checkbox custom-check">
+                  <div class="data-checkbox-block">
+                    <span>{{returnDay(appendorderdate,1)}}</span>
+                    <label>
+                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,1)"/>
+                      <span class="fake-checkbox"></span>
+                    </label>
+                  </div>
+                </div>
+                <div class="data-checkbox custom-check">
+                  <div class="data-checkbox-block">
+                    <span>{{returnDay(appendorderdate,2)}}</span>
+                    <label>
+                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,2)"/>
+                      <span class="fake-checkbox"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--<div class="data-checkbox bs-check">
+              <label>
+                <input class="checkbox" type="checkbox"/>
+                <span class="fake-checkbox"></span> Хотите “Безопасную сделку”?
+              </label>
+            </div>-->
+            <!--<div class="bs-items">
+              <div class="data-checkbox custom-check">
+                <div class="data-checkbox-block">
+                  <span>Попросить заказчика оплатить</span>
+                  <label>
+                    <input class="checkbox" type="checkbox"/>
+                    <span class="fake-checkbox"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="data-checkbox custom-check">
+                <div class="data-checkbox-block">
+                  <span>Предложить заказчику 50 / 50</span>
+                  <label>
+                    <input class="checkbox" type="checkbox"/>
+                    <span class="fake-checkbox"></span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="data-checkbox custom-check">
+                <div class="data-checkbox-block">
+                  <span>Предложить с моей оплатой</span>
+                  <label>
+                    <input class="checkbox" type="checkbox"/>
+                    <span class="fake-checkbox"></span>
+                  </label>
+                </div>
+              </div>
+            </div>-->
+            <button class="get-order-btn filter-sort-btn" [disabled]="loadingSendButton" (click)="sendAcceptOrder()"><b>{{'ОТПРАВИТЬ ПРЕДЛОЖЕНИЕ' | translate}}</b></button>
+          </form>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [isOpen]="filter" (willDismiss)="closeModalAll()" class="modal-filter">
+    <ng-template>
+      <div class="filter form-block">
+        <h2>Фильтр по заказам</h2>
+        <form action="" class="filter-form">
+          <label for="country">Город отправления груза</label>
+          <input id="country" type="text" name="country" [(ngModel)]="filteredCityOut">
+          <!--<div class="data-checkbox">
+            <p>Безопасная сделка</p>
+            <div class="data-checkbox-block">
+              <label>
+                <input class="checkbox" type="checkbox"/>
+                <span class="fake-checkbox"></span> Да
+              </label>
+
+              <label>
+                <input class="checkbox" type="checkbox"/>
+                <span class="fake-checkbox"></span> Нет
+              </label>
+
+              <label>
+                <input class="checkbox" type="checkbox"/>
+                <span class="fake-checkbox"></span> Все
+              </label>
+            </div>
+          </div>-->
+          <button class="classic-btn filter-submit" (click)="filterOrders()">Показать заявки</button>
+          <button class="reg-btn filter-submit" (click)="filterClose()">Сбросить фильтр</button>
+        </form>
+      </div>
+    </ng-template>
+  </ion-modal>
+  <ion-modal [isOpen]="modalAppendOrder" (willDismiss)="closeModalAll()" class="modal-append-order">
+    <ng-template>
+      <div class="code-error personal-modal filter-modal">
+        <div class="code-error-wrap">
+          <h2 class="ion-no-margin ion-no-padding">{{'Вы хотите принять' | translate}} <br> {{'данный заказ?' | translate}}</h2>
+          <div class="filter-modal-action">
+            <button (click)="openModalOrderFull()"><b>{{'Да' | translate}}</b></button>
+            <button>{{'Нет' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </ion-modal>
+</ion-content>

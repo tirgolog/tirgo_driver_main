@@ -1,0 +1,71 @@
+ <ion-header>
+  <div class="wrapper-fluid-header">
+    <div class="logo-wrap personal-head">
+      <h2>{{'Добавить контакт' | translate}}</h2>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="wrapper-fluid ion-padding-tabs">
+    <div class="body-wrap form-block">
+      <div class="autorize">
+        <div class="dop-contact">
+          <div class="dop-contact-row">
+            <div class="input-contact">
+              <span id="open-modal-select-code">{{flag}} {{prefix}}</span>
+              <input type="text" inputmode="tel" class="form-control newPhone" [readOnly]="verify" [(ngModel)]="phone" [mask]="mask">
+              <!--<span class="delete-contact" [ngClass]="row.text.length > 0 ? '':'disabled-button'" (click)="deleteContact(row)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </span>-->
+            </div>
+            <div class="socials">
+              <div class="data-checkbox">
+                <label>
+                  <input class="checkbox" type="checkbox" (change)="setContactToTelegram(phone,$event)" [checked]="telegram"/>
+                  <span class="fake-checkbox"></span> {{'Можно связаться через' | translate}} Telegram
+                </label>
+                <label>
+                  <input class="checkbox" type="checkbox" (change)="setContactToWhatsapp(phone,$event)" [checked]="whatsapp"/>
+                  <span class="fake-checkbox"></span> {{'Можно связаться через' | translate}} WhatsApp
+                </label>
+                <label>
+                  <input class="checkbox" type="checkbox" (change)="setContactToViber(phone,$event)" [checked]="viber"/>
+                  <span class="fake-checkbox"></span> {{'Можно связаться через' | translate}} Viber
+                </label>
+              </div>
+            </div>
+            <div class="input-contact" *ngIf="verify">
+              <input type="text" inputmode="tel" class="form-control" [(ngModel)]="code" placeholder="{{'Проверочный код' | translate}}">
+              <!--<span class="delete-contact" [ngClass]="row.text.length > 0 ? '':'disabled-button'" (click)="deleteContact(row)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </span>-->
+            </div>
+            <button class="reg-btn ion-margin-top" (click)="addContact()" *ngIf="!verify">{{'Добавить контакт' | translate}}</button>
+            <button class="reg-btn ion-margin-top" (click)="verifyContact()" *ngIf="verify">{{'Подтвердить' | translate}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <ion-modal #modal trigger="open-modal-select-code" class="modal-phone-select-code" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 0.75]">
+    <ng-template>
+      <ion-content class="phone-code-select">
+        <ion-searchbar slot="fixed" (ionInput)="findPhoneCode($event)" placeholder="{{'Поиск кода телефона' | translate}}" (click)="modal.setCurrentBreakpoint(0.75)"></ion-searchbar>
+        <ion-list class="list-phone-code">
+          <ion-item *ngFor="let row of phonescodes" (click)="selectCode(row)" lines="none">
+            <ion-avatar slot="start">
+              <div class="flag-phone">
+                {{row.flag}}
+              </div>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{row.name}}</h2>
+              <p>{{row.code}} <b>{{row.dial_code}}</b></p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

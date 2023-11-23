@@ -1,0 +1,86 @@
+ion-header{
+  background: #1C1A28;
+  color: white;
+  h3{
+    color: white;
+  }
+  p{
+    color: white;
+  }
+}
+ion-content.disable-scroll {
+  touch-action: pan-down !important;
+}
+ion-content > ion-list.disable-scroll {
+  touch-action: pan-down !important;
+}
+ion-list > ion-item > * {
+
+}
+.bottomImg{
+  position: absolute;
+  bottom: 0;
+}
+ion-toolbar{
+  --background: none!important;
+  --padding: 0!important;
+  padding: 0!important;
+}
+
+ion-toolbar:host .toolbar-container{
+    padding: 0!important;
+}
+
+.agroinput{
+  border: 1px solid white;
+  margin-bottom: 0!important;
+  color: white!important;
+  --background: #1C1A28;
+  border-radius: 10px!important;
+}
+ion-toolbar:last-of-type{
+  --border-width: 0 0 0px;
+}
+ion-list{
+  background: none!important;
+}
+ion-item{
+  font-weight: 600;
+}
+.textHeaderCity{
+  text-align: right!important;
+  font-weight: 700;
+}
+.unrestricted_value{
+  color: #808080FF;
+}
+.searchBar{
+  border: 1px solid #989898;
+  border-radius: 10px;
+}
+ion-header{
+  padding-bottom: 0!important;
+}
+ion-content{
+  --padding-top: 0!important;
+}
+/*
+ion-list {
+  -webkit-overflow-scrolling: auto
+}
+.ios {
+  .scroll-content {
+    -webkit-overflow-scrolling: auto !important;
+  }
+}
+*/
+
+ion-header{
+  display: block!important;
+  height: auto!important;
+}
+.my-cities{
+  ion-label{
+    color: white!important;
+  }
+}

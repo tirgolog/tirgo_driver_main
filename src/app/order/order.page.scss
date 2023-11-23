@@ -1,0 +1,35 @@
+ion-header{
+  ion-toolbar{
+    --background: var(--ion-color-primary);
+    color: white;
+  }
+}
+.dates-loades{
+  display: flex;
+  div{
+    font-size: 15px;
+    border-radius: 5px;
+    border: 1px solid #252333;
+    background: #252333;
+    height: 50px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: white;
+  }
+  div:first-child{
+    margin-right: 10px;
+  }
+  div:last-child{
+    margin-left: 10px;
+  }
+  .selected{
+    border: 1px solid white;
+  }
+}
+.accept-btn{
+  background: var(--ion-color-warning);
+  color: var(--ion-color-primary);
+}

@@ -1,0 +1,158 @@
+<app-header></app-header>
+<ion-content>
+  <div class="wrapper-fluid ion-padding-tabs">
+    <div class="body-wrap form-block" *ngIf="authService.currentUser" >
+      <div class="user-photo" (click)="changeAvatar()">
+        <img [src]="authService.currentUser!.avatar" alt="">
+        <p>{{'Изменить фото' | translate}}</p>
+      </div>
+      <div class="autorize">
+
+        <p><b>{{'Ваше имя' | translate}}</b></p>
+        <input type="text" name="name" placeholder="Укажите Ваше имя" readonly [(ngModel)]="name" (click)="this.authService.alert('Ошибка','Изменение имени временно недоступно')">
+
+        <p><b>{{'Телефон' | translate}}</b></p>
+        <input type="text" name="name" readonly (click)="authService.alert('Упс','Телефон невозможно изменить')" placeholder="Ваш телефон" [value]="'+'+phone | mask: '+ 000 (00) 000 00 00'">
+
+        <p><b>{{'Ваш регион' | translate}} </b></p>
+        <input (click)="selectRegion()" id="region" [readOnly]="true" placeholder="Укажите Ваш регион" readonly type="text" name="name" [value]="this.authService.currentUser!.city + ', ' +this.authService.currentUser!.country ">
+
+        <p><b>{{'Дата рождения' | translate}}</b></p>
+        <input id="selectdate" type="text" name="name" placeholder="Дата рождения" readonly [value]="birthday | formatTime:'DD MMMM YYYY'">
+        <ion-modal trigger="selectdate" [cssClass]="'bottom-end'">
+          <ng-template>
+            <ion-datetime
+                    class="custom-calendar"
+                    #startDate
+                    [showDefaultTitle]="true"
+                    [preferWheel]="true"
+                    presentation="date"
+                    firstDayOfWeek="1"
+                    [value]="birthday | formatTime:'YYYY-MM-DD'"
+                    size="cover"
+                    doneText="Выбрать"
+                    cancelText="Отмена"
+                    [showDefaultButtons]="true"
+                    (ionChange)="selectBirthday(startDate.value)"
+            >
+              <span slot="title" style="color: white">{{'Дата рождения' | translate}}</span>
+            </ion-datetime>
+          </ng-template>
+        </ion-modal>
+        <p><b>{{'Мой транспорт' | translate}}</b></p>
+        <div class="file-uploads">
+          <div class="file-group" *ngFor="let row of authService.mytruck">
+            <div class="form-group" (click)="editTransport(row)">
+              <label class="label" >
+                {{row.name}} <br> {{row.max_weight}} {{'кг' | translate}}
+              </label>
+            </div>
+          </div>
+          <div class="file-group" *ngIf="authService.mytruck.length < 2">
+            <div class="form-group" (click)="addTransport()">
+              <label class="label">
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'транспорт' | translate}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        <!--<div class="radio-wrap">
+          <p>Выберите Ваш статус</p>
+          <ion-segment [value]="selectedstatus" class="my-custom-segment">
+            <ion-segment-button value="logist" (click)="selectType($event)">
+              Логист.компания
+            </ion-segment-button>
+            <ion-segment-button value="ip" (click)="selectType($event)">
+              ИП, самозанятый
+            </ion-segment-button>
+          </ion-segment>
+        </div>-->
+
+        <p><b>{{'Паспорт' | translate}}:</b></p>
+        <!--<input class="input-from-image" type="text" name="name" placeholder="Серия и номер паспорта" [(ngModel)]="name">-->
+        <div class="file-uploads">
+          <div class="file-group"  *ngFor="let row of passport_docks" (click)="delPassportFile(row.name.toString())">
+            <div class="del-button">
+              <ion-icon name="trash-bin-outline"></ion-icon>
+            </div>
+            <div class="form-group">
+              <img [src]="row.preview" alt="">
+            </div>
+          </div>
+          <div class="file-group" (click)="addPassportDocks()" *ngIf="passport_docks.length < 2">
+            <div class="form-group">
+              <label class="label">
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'фото паспорта' | translate}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <p><b>{{'Водительское удостоверение' | translate}}:</b></p>
+        <div class="file-uploads">
+          <div class="file-group"  *ngFor="let row of driver_license"  (click)="delDriverLicenseFile(row.name.toString())">
+            <div class="del-button">
+              <ion-icon name="trash-bin-outline"></ion-icon>
+            </div>
+            <div class="form-group">
+              <img [src]="row.preview" alt="">
+            </div>
+          </div>
+          <div class="file-group">
+            <div class="form-group" (click)="addDriverLicense()" *ngIf="driver_license.length < 2">
+              <label class="label">
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'права' | translate}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="dop-contact">
+          <h2>{{'Контакты' | translate}}</h2>
+          <div class="dop-contact-row">
+            <div class="input-contact" *ngFor="let row of authService.contacts">
+              <input type="text" inputmode="tel" class="form-control" readonly [value]="row.text | mask:'+000 (00) 000 00 00'">
+              <span class="delete-contact" [ngClass]="row.text.length > 0 ? '':'disabled-button'" (click)="deleteContact(row)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </span>
+            </div>
+          </div>
+          <button class="reg-btn ion-margin-top" (click)="addContacts()">{{'Добавить контакт' | translate}}</button>
+        </div>
+
+      </div>
+    </div>
+
+    <ion-modal [isOpen]="modalupdateuser" (willDismiss)="closeModal()" class="modal-edit-user">
+      <ng-template>
+        <div class="code-error personal-modal">
+          <div class="code-error-wrap">
+            <h2><b>{{'Ваши данные отправлены' | translate}} <br> {{'на модерацию' | translate}}</b></h2>
+            <button class="next-btn change-phone-btn" (click)="closeModal()">OK</button>
+          </div>
+        </div>
+      </ng-template>
+    </ion-modal>
+
+    <div class="bottom-wrap personal-bottom">
+      <button class="reg-btn" (click)="logOut()">{{'Выйти' | translate}}</button>
+      <button class="reg-btn" (click)="deleteProfile()">{{'Удалить аккаунт' | translate}}</button>
+    </div>
+  </div>
+  <!--<ion-modal trigger="selectDate">
+    <ng-template>
+      <ion-datetime
+              #popoverDatetime
+              presentation="date"
+              [(ngModel)]="birthday"
+              preferWheel="true"
+              doneText="Выбрать"
+              cancelText="Отмена"
+              show-default-buttons="true"
+              (select)="closeModalBirthday(popoverDatetime.value)"
+      >
+        <div slot="title">Выберите дату</div>
+      </ion-datetime>
+    </ng-template>
+  </ion-modal>-->
+</ion-content>

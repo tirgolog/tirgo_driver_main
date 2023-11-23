@@ -1,0 +1,34 @@
+.dop-contact-row{
+  .input-contact{
+    display: flex;
+    width: 100%;
+    span{
+      width: 80px;
+      background: #413f4f;
+      color: white;
+      padding: 10px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: nowrap;
+      align-content: center;
+      position: absolute;
+      height: 56px;
+      border-radius: 4px 0 0 4px;
+      font-size: 13px;
+    }
+    input{
+      width: 100% !important;
+      margin-bottom: 5px;
+    }
+    .newPhone{
+      margin-left: 70px;
+    }
+  }
+  .socials{
+    button{
+      margin-right: 10px;
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.img-logo-loading{
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-content: center;
+  justify-content: center;
+  align-items: center;
+  img{
+    max-width: 300px;
+  }
+}

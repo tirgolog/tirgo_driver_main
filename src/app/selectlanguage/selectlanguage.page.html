@@ -1,0 +1,22 @@
+<ion-content class="ion-no-margin ion-no-padding">
+  <div class="wrapper">
+    <div class="logo-wrap" *ngIf="authService.isAuthenticated()">
+      <button class="top-back" (click)="back()">
+        <img src="assets/img/arrow-left.svg" alt="">
+      </button>
+      <img src="/assets/logos/tirgo-logo.png" alt="">
+    </div>
+    <div class="logo-wrap" *ngIf="!authService.isAuthenticated()">
+      <img src="/assets/logos/tirgo-logo.png" alt="">
+    </div>
+    <div class="body-wrap lang-body">
+      <p>{{'Выберите язык интерфейса' | translate}}</p>
+      <div class="lang-body-wrap">
+        <button (click)="selectLanguage('en')"><img src="assets/flags/us.svg" alt=""> English</button>
+        <button (click)="selectLanguage('tr')"><img src="assets/flags/tr.svg" alt=""> Türkçe</button>
+        <button (click)="selectLanguage('ru')"><img src="assets/flags/ru.svg" alt=""> Русский язык</button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+

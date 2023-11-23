@@ -1,0 +1,39 @@
+<ion-header>
+  <div class="wrapper-fluid-header">
+    <div class="logo-wrap personal-head">
+      <button class="top-back" (click)="back()"><img src="assets/img/arrow-left.svg" alt=""></button>
+      <h2>{{'Служба поддержки' | translate}}</h2>
+      <div></div>
+    </div>
+  </div>
+</ion-header>
+<ion-content>
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="1" pullMin="100" pullMax="200">
+    <ion-refresher-content
+      class="loadingspinner"
+      pullingIcon="arrow-dropdown"
+      refreshingSpinner="circles">
+    </ion-refresher-content>
+  </ion-refresher>
+  <div class="wrapper-fluid">
+
+    <div class="body-have-bottom-menu ion-padding">
+      <ng-container *ngFor="let row of authService.messages | orderBy: 'created_at';">
+        <div [ngClass]="!row.user_admin_id ? 'user-message':'support-message'" >
+          <p class="ion-no-margin ion-no-padding">{{row.text}}</p>
+          <small>{{row.date | formatTime: 'DD MMMM YYYY в HH:mm'}}</small>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="bottom-wrap input-chat-support">
+      <nav class="bottom-menu support-input">
+        <input type="text" [disabled]="disablebuttonsend" placeholder="{{'Введите текст сообщения' | translate}}" [(ngModel)]="message">
+        <button (click)="sendMessage()" [disabled]="disablebuttonsend">
+          <img src="assets/img/arrow-right2.svg" alt="">
+        </button>
+      </nav>
+    </div>
+    <div class="hidden-block-chat"></div>
+  </div>
+</ion-content>

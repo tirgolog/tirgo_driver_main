@@ -1,0 +1,62 @@
+{
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-androidx-adapter": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-camera": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-device": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-file-transfer": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-geolocation": {
+      "GPS_REQUIRED": "true",
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-ionic-keyboard": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-ionic-webview": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-network-information": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-splashscreen": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-plugin-statusbar": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "mx.ferreyra.callnumber": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "phonegap-plugin-push": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-file": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "cordova-support-google-services": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    },
+    "phonegap-plugin-multidex": {
+      "PACKAGE_NAME": "io.tirgo.carrier"
+    }
+  }
+}

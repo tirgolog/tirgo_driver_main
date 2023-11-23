@@ -1,0 +1,7 @@
+{
+  "name": "tirgodriver",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "angular"
+}

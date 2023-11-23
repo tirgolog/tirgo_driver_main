@@ -1,0 +1,36 @@
+@use "sass:math";
+
+@function rem($px) {
+  @return math.div($px, 16) + rem;
+}
+
+.header {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr auto 1fr;
+  color: #fff;
+  padding-top: calc(rem(15) + env(safe-area-inset-top)) !important;
+  &__left {
+    padding: rem(5);
+    justify-self: start;
+  }
+  &__logo {
+    width: rem(180);
+  }
+  &__title {
+    font-size: rem(20);
+    font-weight: 600;
+    justify-self: center;
+  }
+  &__right {
+    padding: rem(5);
+    justify-self: right;
+
+    i.icm-notif {
+      font-size: rem(22);
+    }
+  }
+  button{
+    background: none!important;
+  }
+}

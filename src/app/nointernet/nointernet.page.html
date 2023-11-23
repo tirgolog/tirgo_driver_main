@@ -1,0 +1,13 @@
+<ion-content>
+    <main class="notfound">
+        <ng-lottie class="notfound__anim" [options]="options"></ng-lottie>
+        <h2 class="notfound__title title">{{'Ошибка подключения' | translate}}</h2>
+        <p class="notfound__subtitle">
+            {{'Проверьте подключение к интернету и попробуйте снова' | translate}}
+        </p>
+        <button class="notfound__btn btn">
+            <ion-icon src="/assets/icons/refresh.svg"></ion-icon>
+            {{'Обновить' | translate}}
+        </button>
+    </main>
+</ion-content>

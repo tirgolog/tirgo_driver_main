@@ -1,0 +1,27 @@
+<ion-header>
+  <div class="wrapper-fluid-header">
+    <div class="logo-wrap personal-head">
+      <button class="top-back" (click)="back()"><img src="assets/img/arrow-left.svg" alt=""></button>
+      <h2>{{'Уведомление' | translate}}</h2>
+      <div></div>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="wrapper-fluid">
+    <div class="body-wrap body-have-bottom-menu">
+      <div class="notice-item notice-open">
+        <p class="notece-date">{{item.date | formatTime: 'DD MMMM YYYY в HH:mm'}}</p>
+        <div class="notice-wrap">
+          <div class="notice-row">
+            <div class="notice-excerpt">
+              <h4>{{item.header}} </h4>
+              <span>{{item.text}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

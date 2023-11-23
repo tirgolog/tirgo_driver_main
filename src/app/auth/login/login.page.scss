@@ -1,0 +1,21 @@
+.agroinput{
+  padding-left: 20px;
+  ion-label{
+    color: white;
+    a{
+      color: white;
+    }
+  }
+  ion-checkbox{
+    --background: #262434;
+  }
+}
+.resend-sms{
+  display: block;
+  color: white;
+  margin-top: 10px;
+}
+.agroinput ion-checkbox {
+  --background: white!important;
+  --background-checked: #ed901e;
+}

@@ -1,0 +1,119 @@
+<ion-header class="my-custom-header">
+  <ion-toolbar>
+    <ion-title>{{'Добавить транспорт' | translate}}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="close()">
+        {{'Закрыть' | translate}}
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="wrapper-fluid ion-padding-tabs">
+    <div class="body-wrap form-block">
+      <div class="autorize">
+
+        <p><b>{{'Тип транспорта' | translate}}</b></p>
+        <input (click)="selectTypeTransport()" type="text" name="name" readonly placeholder="{{'Тип транспорта' | translate}}" [value]="returnNameTypeTransport(type)">
+
+        <ng-container>
+          <p><b>{{'Марка транспорта' | translate}}</b></p>
+          <input type="text" name="name" placeholder="{{'Марка транспорта' | translate}}" [(ngModel)]="name">
+        </ng-container>
+
+        <ng-container>
+          <p><b>{{'Описание' | translate}}</b></p>
+          <textarea rows="5" type="text" name="name" placeholder="{{'Описание' | translate}}" [(ngModel)]="description"></textarea>
+        </ng-container>
+
+        <ng-container>
+          <p><b>{{'Грузоподъемность' | translate}}</b></p>
+          <input type="text" name="name" placeholder="{{'Грузоподъемность' | translate}}" [(ngModel)]="maxweight">
+        </ng-container>
+
+        <ng-container>
+          <p><b>{{'Кубатура прицепа' | translate}}</b></p>
+          <input (click)="selectCubature()" readonly type="text" name="name" placeholder="{{'Кубатура прицепа' | translate}}" [value]="cubature + ' m3'">
+        </ng-container>
+
+        <ng-container>
+          <p><b>{{'Гос. номер Тягача' | translate}}</b></p>
+          <input type="text" name="name" placeholder="Гос. номер Тягача" [(ngModel)]="state_number">
+        </ng-container>
+
+        <ng-container>
+          <div class="data-checkbox">
+            <p>ADR</p>
+            <label>
+              <input class="checkbox" type="checkbox" (change)="setAdrUser($event)" [checked]="adr"/>
+              <span class="fake-checkbox"></span> {{'Есть разрешение на перевозку опасных грузов' | translate}}
+            </label>
+          </div>
+        </ng-container>
+
+        <p><b>{{'Тех паспорт' | translate}}</b></p>
+        <div class="file-uploads">
+          <!--<div class="file-group"  *ngFor="let row of tech_passport_files" (click)="delFileTechTransport(row.preview.toString())">-->
+          <div class="file-group"  *ngFor="let row of tech_passport_files">
+            <div class="del-button">
+              <ion-icon name="trash-bin-outline"></ion-icon>
+            </div>
+            <div class="form-group">
+              <img [src]="row.preview" alt="">
+            </div>
+          </div>
+          <div class="file-group">
+            <div class="form-group" (click)="addFilesTechPassport()">
+              <label class="label">
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'документ' | translate}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+
+        <p><b>{{'Лицензии на перевозку грузов' | translate}}</b></p>
+        <div class="file-uploads">
+          <div class="file-group" *ngFor="let row of license_files" (click)="delFileLicense(row.preview.toString())">
+            <div class="del-button">
+              <ion-icon name="trash-bin-outline"></ion-icon>
+            </div>
+            <div class="form-group">
+              <img [src]="row.preview" alt="">
+            </div>
+          </div>
+          <div class="file-group"  *ngIf="license_files.length < 3">
+            <div class="form-group" (click)="addFilesLicense()">
+              <label class="label">
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'лицензию' | translate}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <p><b>{{'Фото транспорта' | translate}}</b></p>
+        <div class="file-uploads">
+          <div class="file-group" *ngFor="let row of car_photos" (click)="delFileCarPhoto(row.preview.toString())">
+            <div class="del-button">
+              <ion-icon name="trash-bin-outline"></ion-icon>
+            </div>
+            <div class="form-group">
+              <img [src]="row.preview" alt="">
+            </div>
+          </div>
+          <div class="file-group" *ngIf="car_photos.length < 4">
+            <div class="form-group" (click)="addFilesCarPhoto()">
+              <label class="label">
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'фото' | translate}}</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-wrap personal-bottom">
+      <button class="reg-btn" [disabled]="loadingAddTransport" (click)="saveTransport()">{{'Добавить' | translate}}</button>
+    </div>
+  </div>
+</ion-content>

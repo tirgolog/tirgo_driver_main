@@ -1,0 +1,75 @@
+<ion-content class="ion-no-padding ion-no-margin">
+  <div class="wrapper-fluid">
+    <div class="logo-wrap">
+      <!--<button class="top-back" (click)="back()">
+        <img src="assets/img/arrow-left.svg" alt="">
+      </button>-->
+      <img src="/assets/logos/tirgo-logo.png" alt="">
+    </div>
+    <div class="body-wrap form-block">
+      <form action="" class="autorize">
+        <label for="phone" *ngIf="!codeon" style="position: relative;top: 20px">{{'Введите основной номер телефона' | translate}} </label>
+        <span class="input-mode-tel" *ngIf="!codeon">
+          <span id="open-modal-select-code">{{flag}} {{prefix}}</span>
+          <input class="phone-input" type="tel" inputmode="tel" id="phone" name="phone" placeholder="{{mask}}" [mask]="mask" [(ngModel)]="phone">
+        </span>
+        <ng-container *ngIf="codeon">
+          <span class="input-mode-code" >
+            <label for="pass">{{'Введите код из смс отправленный на номер телефона' | translate}} {{prefix}} {{phone}}</label>
+            <input id="pass" autocomplete="one-time-code"  type="tel" name="pass"  [(ngModel)]="code">
+          </span>
+          <span *ngIf="timer > 0" class="resend-sms">{{'Повторная отправка СМС через' | translate}} {{timer}} {{'сек' | translate}}.</span>
+        </ng-container>
+      </form>
+    </div>
+    <ng-container *ngIf="!codeon">
+      <ion-item class="agroinput ion-no-margin ion-no-padding accept-text" lines="none">
+        <ion-checkbox slot="start" [(ngModel)]="policy"></ion-checkbox>
+        <ion-label>
+          {{'Я принимаю' | translate}} <a href="https://tirgo.uz/privacy-policy/">{{'политику конфиденциальности' | translate}}</a>.
+        </ion-label>
+      </ion-item>
+      <ion-item class="agroinput ion-no-margin ion-no-padding accept-text" lines="none">
+        <ion-checkbox slot="start" [(ngModel)]="offer"></ion-checkbox>
+        <ion-label>
+          {{'Я принимаю' | translate}} <a href="https://tirgo.uz/public_offer.html">{{'публичную оферту' | translate}}</a>.
+        </ion-label>
+      </ion-item>
+    </ng-container>
+    <div class="bottom-wrap autorize-btns">
+      <button class="classic-btn" *ngIf="!codeon" [disabled]="loading"  (click)="signIn()">
+        <ng-container *ngIf="!loading">{{'Отправить СМС' | translate}}</ng-container>
+        <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
+      </button>
+      <button class="classic-btn" *ngIf="codeon" (click)="verifyCode()">
+        <ng-container *ngIf="!loading">{{'Продолжить' | translate}}</ng-container>
+        <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
+      </button>
+      <button class="support-btn" *ngIf="codeon && timer === 0" (click)="signIn()">
+        <ng-container *ngIf="!loading">{{'Отправить СМС' | translate}}</ng-container>
+        <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
+      </button>
+      <button class="support-btn" (click)="authService.goToSupport()"><img src="assets/img/support.svg" alt="">{{'Обратитесь в службу поддержки' | translate}}</button>
+    </div>
+  </div>
+  <ion-modal #modal *ngIf="!codeon" trigger="open-modal-select-code" [swipeToClose]="false" class="modal-phone-select-code" [initialBreakpoint]="0.5" [breakpoints]="[0, 0.5, 1]">
+    <ng-template>
+      <ion-content class="phone-code-select">
+        <ion-searchbar slot="fixed" (ionInput)="findPhoneCode($event)" placeholder="{{'Поиск кода телефона' | translate}}" (click)="modal.setCurrentBreakpoint(0.75)"></ion-searchbar>
+        <ion-list class="list-phone-code">
+          <ion-item *ngFor="let row of phonescodes" (click)="selectCode(row)" lines="none">
+            <ion-avatar slot="start">
+              <div class="flag-phone">
+                {{row.flag}}
+              </div>
+            </ion-avatar>
+            <ion-label>
+              <h2>{{row.name}}</h2>
+              <p>{{row.code}} <b>{{row.dial_code}}</b></p>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>

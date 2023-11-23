@@ -28,6 +28,7 @@ export class AuthenticationService {
   public contacts: any[]=[];
   public typetruck: any[] = [];
   public myorders: any[] = [];
+  public myAllorders: any[] = [];
   public myarchiveorders: any[] = [];
   public currency: any[] = [];
   public statuses: any[] = [];

@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
-import {Router} from "@angular/router";
-import {Storage} from "@ionic/storage";
-import {AlertController, Platform} from "@ionic/angular";
-import {ThemeService} from "./services/theme.service";
-import {AuthenticationService} from "./services/authentication.service";
+import { Router } from "@angular/router";
+import { Storage } from "@ionic/storage";
+import { AlertController, Platform } from "@ionic/angular";
+import { ThemeService } from "./services/theme.service";
+import { AuthenticationService } from "./services/authentication.service";
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
-import {TranslateService} from "@ngx-translate/core";
-import {User} from "./user";
-import {PushService} from "./services/push.service";
-import {SocketService} from "./services/socket.service";
-import {Network} from "@ionic-native/network/ngx";
+import { TranslateService } from "@ngx-translate/core";
+import { User } from "./user";
+import { PushService } from "./services/push.service";
+import { SocketService } from "./services/socket.service";
+import { Network } from "@ionic-native/network/ngx";
 import axios from "axios";
+import { log } from 'console';
 
 @Component({
   selector: 'app-root',
@@ -32,13 +33,13 @@ export class AppComponent {
     private geolocation: Geolocation,
   ) {
     this.initializeApp();
-    setInterval(()=>{
+    setInterval(() => {
       this.geolocation.getCurrentPosition().then(async (resp) => {
         if (this.authService.isAuthenticated()) {
-          await this.authService.updateLocation(resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
+          await this.authService.updateLocation(resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
         }
       })
-    },1800000)
+    }, 1800000)
   }
 
   async ngOnInit() {
@@ -63,19 +64,18 @@ export class AppComponent {
       if (res) {
         await this.checkSession();
       } else {
-        await this.router.navigate(['selectlanguage'], {replaceUrl: true});
+        await this.router.navigate(['selectlanguage'], { replaceUrl: true });
       }
     })
   }
-  async checkSession(){
+  async checkSession() {
     await this.authService.checkSession().toPromise().then(async (res) => {
-      if (res.status){
+      if (res.status) {
         this.authService.currentUser = new User(res.user);
         if (!this.authService.isAuthenticated()) {
           this.authService.authenticationState.next(true);
         }
-        console.log(this.authService.currentUser.name)
-        if (this.authService.currentUser.name !== null){
+        if (this.authService.currentUser.name !== null) {
           this.socketService.connect();
           if (this.platform.is('cordova')) {
             this.pushService.init();
@@ -85,34 +85,37 @@ export class AppComponent {
           this.authService.mytruck = await this.authService.getTruck().toPromise();
           this.authService.contacts = await this.authService.getContacts().toPromise();
           this.authService.myorders = await this.authService.getMyOrders().toPromise();
+          this.authService.getMyOrders().subscribe((res: any) => {
+            this.authService.myAllorders = res
+          })
           this.authService.myarchiveorders = await this.authService.getMyArchiveOrders().toPromise();
           this.authService.currency = await this.authService.getCurrency().toPromise();
           this.authService.statuses = await this.authService.getStatuses().toPromise();
-          for (let row of this.authService.myorders){
+          for (let row of this.authService.myorders) {
             const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status === 1)
-            if (index>=0){
+            if (index >= 0) {
               const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
                 status_order: number | undefined;
                 id: number | undefined;
               }) => user.id === this.authService.currentUser?.id && user.status_order === 1)
-              if (indexuser>=0){
+              if (indexuser >= 0) {
                 this.authService.activeorder = this.authService.myorders[index];
-                this.authService.myorders.splice(index,1)
+                this.authService.myorders.splice(index, 1)
               }
             }
           }
-          this.socketService.updateAllOrders().subscribe(async (res:any) => {
+          this.socketService.updateAllOrders().subscribe(async (res: any) => {
             this.authService.myorders = await this.authService.getMyOrders().toPromise();
-            for (let row of this.authService.myorders){
+            for (let row of this.authService.myorders) {
               const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status === 1)
-              if (index>=0){
+              if (index >= 0) {
                 const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
                   status_order: number | undefined;
                   user_id: number | undefined;
                 }) => user.user_id === this.authService.currentUser?.id && user.status_order === 1)
-                if (indexuser>=0){
+                if (indexuser >= 0) {
                   this.authService.activeorder = this.authService.myorders[index];
-                  this.authService.myorders.splice(index,1)
+                  this.authService.myorders.splice(index, 1)
                 }
               }
             }
@@ -120,56 +123,56 @@ export class AppComponent {
           });
           this.authService.notifications = await this.authService.getNotification().toPromise();
           this.authService.messages = await this.authService.getMessages().toPromise();
-          this.socketService.updateAllMessages().subscribe(async (res:any) => {
+          this.socketService.updateAllMessages().subscribe(async (res: any) => {
             this.authService.messages = await this.authService.getMessages().toPromise();
           })
           //this.authService.allordersfree = await this.authService.getAllOrdersFree().toPromise();
           //this.authService.allmyordersprocessing = await this.authService.getAllMyOrdersProcessing().toPromise();
-          await this.router.navigate(['/tabs/home'], {replaceUrl: true});
+          await this.router.navigate(['/tabs/home'], { replaceUrl: true });
           this.geolocation.getCurrentPosition().then(async (resp) => {
             this.authService.geolocationCheck = true;
             console.log(this.authService.geolocationCheck)
-            await this.authService.updateLocation(resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
-            const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey="+ this.authService.currentUser?.config.key_api_maps+"&lang=ru-RU"
+            await this.authService.updateLocation(resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
+            const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
             axios.get(get)
-                .then( res => {
-                  if (res.status){
-                    this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
-                    console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description)
-                    console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.name)
-                  }
-                })
-                .catch(async(error) => {
-                  await this.authService.alert('Ошибка','Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-                });
-          }).catch(async(error) => {
-            await this.authService.alert('Ошибка','Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+              .then(res => {
+                if (res.status) {
+                  this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
+                  console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description)
+                  console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.name)
+                }
+              })
+              .catch(async (error) => {
+                await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+              });
+          }).catch(async (error) => {
+            await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
-        }else {
+        } else {
           console.log('here')
-          await this.router.navigate(['/name'], {replaceUrl: true});
+          await this.router.navigate(['/name'], { replaceUrl: true });
         }
-      }else {
+      } else {
         this.authService.authenticationState.next(false);
-        await this.router.navigate(['selectlanguage'], {replaceUrl: true});
+        await this.router.navigate(['selectlanguage'], { replaceUrl: true });
       }
-    }).catch(async (err)=>{
+    }).catch(async (err) => {
       this.authService.authenticationState.next(false);
-      await this.router.navigate(['selectlanguage'], {replaceUrl: true});
+      await this.router.navigate(['selectlanguage'], { replaceUrl: true });
     })
   }
   initializeApp() {
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {
         console.log('onDisconnect')
-        this.router.navigate(['noconnect'], {replaceUrl: true});
+        this.router.navigate(['noconnect'], { replaceUrl: true });
       });
       this.network.onConnect().subscribe(() => {
         console.log('onConnect')
-        if (this.authService.isAuthenticated()){
-          this.router.navigate(['tabs','home'], {replaceUrl: true});
-        }else {
-          this.router.navigate(['selectlanguage'], {replaceUrl: true});
+        if (this.authService.isAuthenticated()) {
+          this.router.navigate(['tabs', 'home'], { replaceUrl: true });
+        } else {
+          this.router.navigate(['selectlanguage'], { replaceUrl: true });
         }
       });
       this.themeService.restore();

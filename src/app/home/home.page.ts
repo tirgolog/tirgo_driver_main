@@ -350,13 +350,15 @@ export class HomePage implements OnInit {
   allTruck(id: number) {
     this.selectedtruck = id;
     if (this.selectedtruck > 0) {
-      this.getOrders()
+      this.getOrders();
       this.items = this.items.filter((item) => {
         return +item.transport_type === +this.selectedtruck;
       });
     } else {
-      // this.items = this.authService.myorders
-      this.getOrders()
+      this.items = this.authService.myAllorders
+      console.log(this.items);
+      
+      // this.getOrders();
     }
   }
   filterOrders() {

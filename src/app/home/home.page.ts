@@ -84,6 +84,7 @@ export class HomePage implements OnInit {
     }
   }
   returnNameTypeTransport(type: number) {
+    console.log('type', type)
     const index = this.authService.typetruck.findIndex(e => +e.id === +type)
     if (index >= 0) {
       return this.authService.typetruck[index].name

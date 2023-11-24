@@ -76,7 +76,7 @@
               <ion-icon name="trash-bin-outline"></ion-icon>
             </div>
             <div class="form-group">
-              <img [src]="row.preview" alt="">
+              <img [src]="'https://admin.tirgo.io/api/download/'+row.filename" alt="">
             </div>
           </div>
           <div class="file-group" (click)="addPassportDocks()" *ngIf="passport_docks.length < 2">

@@ -48,7 +48,7 @@
               <span>
                 <img *ngIf="!findAcceptedOrders(row.id)" src="assets/img/art.svg" alt="">
                 <img *ngIf="findAcceptedOrders(row.id)" src="assets/img/rel.svg" alt="">
-                №{{authService.addLeadingZeros(row.id)}}
+                №{{authService.addLeadingZeros(row.id)}} salom
               </span>
               <span class="view-order" *ngIf="vieworder !== row.id">{{'Просмотреть' | translate}}</span>
               <span class="view-order" *ngIf="vieworder === row.id">{{'Скрыть' | translate}}</span>

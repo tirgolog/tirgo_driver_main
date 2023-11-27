@@ -92,8 +92,9 @@
               </tr>
               <tr>
                 <td>{{'Тип транспорта' | translate}}</td>
-                <td *ngFor="let type of row.transport_types">{{ type | transporttype }}</td>
-              </tr>
+                <td>
+                  <div *ngFor="let type of row.transport_types">{{returnNameTypeTransport(type)}}</div>
+                </td>              </tr>
               <tr>
                 <td>{{'Тип груза' | translate}}</td>
                 <td>{{returnNameCargoType(row.type_cargo)}}</td>

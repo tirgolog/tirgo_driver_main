@@ -45,9 +45,8 @@ export class OrderPage implements OnInit {
           .then( async res => {
             if (res.status){
               this.loading.dismiss();
-              cityUser = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',')[res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',').length - 1].replace(' ','')
-              cityOrder = this.item.route.from_city.split(',')[1].replace(' ','')
-              console.log(cityUser,cityOrder)
+              cityUser = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',')[res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',').length - 1]?.replace(' ','')
+              cityOrder = this.item.route.from_city.split(',')[1]?.replace(' ','')
               if (cityUser === cityOrder){
                 await this.authService.acceptOrder(this.item.id,this.price,this.selecteddays).toPromise()
                     .then(async (res) => {

@@ -117,38 +117,43 @@ export class HomePage implements OnInit  {
   };
 
   getOrders() {
-    this.authService.getTruck().subscribe((res: any) => {
-      this.myTruckTypeIds = res.map((el: any) => el.type);
-      this.authService.getMyOrders().subscribe((order: any) => {
-        this.items = order.filter((el: any) => this.haveSameContents(el.transport_types, this.myTruckTypeIds));
-        this.items.forEach((v,k) => {
-          v.transport_types = JSON.parse(v.transport_types)
+    if(this.selectedtruck == 0) {
+      this.allTruck(0)
+    }
+    else {
+      this.authService.getTruck().subscribe((res: any) => {
+        this.myTruckTypeIds = res.map((el: any) => el.type);
+        this.authService.getMyOrders().subscribe((order: any) => {
+          this.items = order.filter((el: any) => this.haveSameContents(el.transport_types, [this.selectedtruck]));
+          this.items.forEach((v,k) => {
+            v.transport_types = JSON.parse(v.transport_types)
+          })
         })
       })
-    })
+    }
   }
 
   ngOnInit() {
-    this.getOrders()
-    this.routerOutlet.swipeGesture = false;
-    this.socketService.updateAllOrders().subscribe(async (res: any) => {
-      for (let row of this.authService.myorders) {
-        const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status !== 2)
-        if (index >= 0) {
-          const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
-            status_order: Boolean | undefined;
-            id: number | undefined;
-          }) => user.id === this.authService.currentUser?.id && user.status_order)
-          if (indexuser >= 0) {
-            this.authService.activeorder = this.authService.myorders[index];
-            this.authService.myorders.splice(index, 1)
+      this.getOrders()
+      this.routerOutlet.swipeGesture = false;
+      this.socketService.updateAllOrders().subscribe(async (res: any) => {
+        for (let row of this.authService.myorders) {
+          const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status !== 2)
+          if (index >= 0) {
+            const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
+              status_order: Boolean | undefined;
+              id: number | undefined;
+            }) => user.id === this.authService.currentUser?.id && user.status_order)
+            if (indexuser >= 0) {
+              this.authService.activeorder = this.authService.myorders[index];
+              this.authService.myorders.splice(index, 1)
+            }
           }
         }
-      }
-      // this.items = this.authService.myorders;
-      this.getOrders()
-    });
-    this.filterOrderLocal();
+        // this.items = this.authService.myorders;
+        this.getOrders()
+      });
+      this.filterOrderLocal();
   }
   viewOrderInfo(id: number) {
     if (this.vieworder === id) {
@@ -360,8 +365,12 @@ export class HomePage implements OnInit  {
         return +item.transport_type === +this.selectedtruck;
       });
     } else {
-      // this.items = this.authService.myAllorders      
-      this.getOrders();
+      this.authService.getMyOrders().subscribe((order: any) => {
+        this.items = order
+        this.items.forEach((v,k) => {
+          v.transport_types = JSON.parse(v.transport_types)
+        })
+      })
     }
   }
   filterOrders() {

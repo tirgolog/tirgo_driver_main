@@ -1,22 +1,22 @@
 <app-header></app-header>
 
 <div class="scroll-horizontal" *ngIf="authService.mytruck && authService.mytruck.length > 0">
-  <div class="scroll-item widthAuto myProfession firstItemProf"
-       [ngClass]="{'bangbang': selectedtruck === 0}" (click)="allTruck(0)">
+  <div class="scroll-item widthAuto myProfession firstItemProf" [ngClass]="{'bangbang': selectedtruck === 0}"
+    (click)="allTruck(0)">
     <div>{{'Все' | translate}}</div>
   </div>
   <div class="scroll-item widthAuto myProfession" [ngClass]="{'bangbang': row.type === selectedtruck}"
-       *ngFor="let row of authService.mytruck" (click)="allTruck(row.type)">
+    *ngFor="let row of authService.mytruck" (click)="allTruck(row.type)">
     <div>{{returnNameTypeTransport(row.type)}}</div>
   </div>
   <div class="tab">
-    <div class="tab__header">
+    <!-- <div class="tab__header">
       <button class="tab__btn" [ngClass]="selectedType === 'world' ? 'btn':''"  (click)="selectType('world')">{{'Международные' | translate}}</button>
       <button class="tab__btn" [ngClass]="selectedType === 'local' ? 'btn':''" (click)="selectType('local')">{{'Местные' | translate}}</button>
       <button class="tab__btn" (click)="openFilter(true)">
         <ion-icon name="filter-circle-outline"></ion-icon>
       </button>
-    </div>
+    </div> -->
   </div>
 </div>
 <ion-content>
@@ -32,17 +32,14 @@
   </div>
 
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)" pullFactor="1" pullMin="100" pullMax="200">
-    <ion-refresher-content
-      class="loadingspinner"
-      pullingIcon="arrow-dropdown"
-      refreshingSpinner="circles">
+    <ion-refresher-content class="loadingspinner" pullingIcon="arrow-dropdown" refreshingSpinner="circles">
     </ion-refresher-content>
   </ion-refresher>
 
   <div class="wrapper-fluid">
     <div class="body-wrap form-block main-body body-have-bottom-menu">
-      <ng-container *ngFor="let row of items">
-        <div class="order-item" *ngIf="findAcceptedOrdersAndAccepted(row.id) && row.status !== 2 && row.status !== 1 && localOrWorldIsset(row.id)">
+      <ng-container *ngFor="let row of items ">
+        <div class="order-item">
           <div class="order-item-articul" (click)="viewOrderInfo(row.id)">
             <span class="order-header">
               <span>
@@ -57,56 +54,59 @@
           </div>
           <table class="table-info" (click)="viewOrderInfo(row.id)">
             <tbody>
-            <tr>
-              <td>{{'Отправка из' | translate}}:</td>
-              <td>{{row.route.from_city}}</td>
-            </tr>
-            <tr>
-              <td>{{'Доставка в' | translate}}:</td>
-              <td>{{row.route.to_city}}</td>
-            </tr>
+              <tr>
+                <td>{{'Отправка из' | translate}}:</td>
+                <td>{{row.route.from_city}}</td>
+              </tr>
+              <tr>
+                <td>{{'Доставка в' | translate}}:</td>
+                <td>{{row.route.to_city}}</td>
+              </tr>
             </tbody>
           </table>
           <ng-container *ngIf="vieworder === row.id">
             <table class="table-data">
               <tbody>
-              <tr>
-                <td>{{'Время отправки' | translate}}</td>
-                <td>{{row.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
-              </tr>
-              <tr>
-                <td>Предлагаемая цена</td>
-                <td>{{row.price}} {{row.currency}}</td>
-              </tr>
-              <tr *ngIf="row.adr">
-                <td>{{'ADR (Перевозка опасных грузов)' | translate}}</td>
-                <td>{{'Да' | translate}} </td>
-              </tr>
-              <tr *ngIf="row.no_cash">
-                <td>{{'Безналичная оплата' | translate}}</td>
-                <td>{{'Да' | translate}} </td>
-              </tr>
-              <tr *ngIf="row.secure_transaction">
-                <td>{{'Безопасная сделка' | translate}}</td>
-                <td>{{'Да' | translate}} </td>
-              </tr>
-              <tr>
-                <td>{{'Тип транспорта' | translate}}</td>
-                <td>
-                  <div *ngFor="let type of row.transport_types">{{returnNameTypeTransport(type)}}</div>
-                </td>              </tr>
-              <tr>
-                <td>{{'Тип груза' | translate}}</td>
-                <td>{{returnNameCargoType(row.type_cargo)}}</td>
-              </tr>
-              <tr>
-                <td>{{'Вес груза' | translate}}</td>
-                <td>{{row.weight}} {{'кг' | translate}}.</td>
-              </tr>
+                <tr>
+                  <td>{{'Время отправки' | translate}}</td>
+                  <td>{{row.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
+                </tr>
+                <tr>
+                  <td>Предлагаемая цена</td>
+                  <td>{{row.price}} {{row.currency}}</td>
+                </tr>
+                <tr *ngIf="row.adr">
+                  <td>{{'ADR (Перевозка опасных грузов)' | translate}}</td>
+                  <td>{{'Да' | translate}} </td>
+                </tr>
+                <tr *ngIf="row.no_cash">
+                  <td>{{'Безналичная оплата' | translate}}</td>
+                  <td>{{'Да' | translate}} </td>
+                </tr>
+                <tr *ngIf="row.secure_transaction">
+                  <td>{{'Безопасная сделка' | translate}}</td>
+                  <td>{{'Да' | translate}} </td>
+                </tr>
+                <tr>
+                  <td>{{'Тип транспорта' | translate}}</td>
+                  <td>
+                    <div *ngFor="let type of row.transport_types">{{returnNameTypeTransport(type)}}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>{{'Тип груза' | translate}}</td>
+                  <td>{{returnNameCargoType(row.type_cargo)}}</td>
+                </tr>
+                <tr>
+                  <td>{{'Вес груза' | translate}}</td>
+                  <td>{{row.weight}} {{'кг' | translate}}.</td>
+                </tr>
               </tbody>
             </table>
-            <button *ngIf="findAcceptedOrders(row.id)" class="get-order-btn" (click)="appendOrder(row)">{{'Принять' | translate}}</button>
-            <button *ngIf="!findAcceptedOrders(row.id)" class="order-btn" (click)="cancelOrder(row)">{{'Ваша заявка на рассмотрении' | translate}}</button>
+            <button *ngIf="findAcceptedOrders(row.id)" class="get-order-btn" (click)="appendOrder(row)">{{'Принять' |
+              translate}}</button>
+            <button *ngIf="!findAcceptedOrders(row.id)" class="order-btn" (click)="cancelOrder(row)">{{'Ваша заявка на
+              рассмотрении' | translate}}</button>
           </ng-container>
         </div>
       </ng-container>
@@ -177,7 +177,7 @@
                   <div class="data-checkbox-block">
                     <span>{{returnDay(appendorderdate,0)}}</span>
                     <label>
-                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,0)"/>
+                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,0)" />
                       <span class="fake-checkbox"></span>
                     </label>
                   </div>
@@ -186,7 +186,7 @@
                   <div class="data-checkbox-block">
                     <span>{{returnDay(appendorderdate,1)}}</span>
                     <label>
-                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,1)"/>
+                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,1)" />
                       <span class="fake-checkbox"></span>
                     </label>
                   </div>
@@ -195,7 +195,7 @@
                   <div class="data-checkbox-block">
                     <span>{{returnDay(appendorderdate,2)}}</span>
                     <label>
-                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,2)"/>
+                      <input class="checkbox" type="checkbox" (change)="selectDay($event,appendorderdate,2)" />
                       <span class="fake-checkbox"></span>
                     </label>
                   </div>
@@ -240,7 +240,8 @@
                 </div>
               </div>
             </div>-->
-            <button class="get-order-btn filter-sort-btn" [disabled]="loadingSendButton" (click)="sendAcceptOrder()"><b>{{'ОТПРАВИТЬ ПРЕДЛОЖЕНИЕ' | translate}}</b></button>
+            <button class="get-order-btn filter-sort-btn" [disabled]="loadingSendButton"
+              (click)="sendAcceptOrder()"><b>{{'ОТПРАВИТЬ ПРЕДЛОЖЕНИЕ' | translate}}</b></button>
           </form>
         </div>
       </div>
@@ -282,7 +283,8 @@
     <ng-template>
       <div class="code-error personal-modal filter-modal">
         <div class="code-error-wrap">
-          <h2 class="ion-no-margin ion-no-padding">{{'Вы хотите принять' | translate}} <br> {{'данный заказ?' | translate}}</h2>
+          <h2 class="ion-no-margin ion-no-padding">{{'Вы хотите принять' | translate}} <br> {{'данный заказ?' |
+            translate}}</h2>
           <div class="filter-modal-action">
             <button (click)="openModalOrderFull()"><b>{{'Да' | translate}}</b></button>
             <button>{{'Нет' | translate}}</button>

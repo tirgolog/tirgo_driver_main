@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, OnInit } from '@angular/core';
 import { AlertController, IonRouterOutlet, LoadingController, ModalController } from "@ionic/angular";
 import { AuthenticationService } from "../services/authentication.service";
 import { OrderPage } from "../order/order.page";
@@ -12,8 +12,9 @@ import { log } from 'console';
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit  {
   modalAppendOrder: boolean = false;
   modalAppendOrderFull: boolean = false;
   filter: boolean = false;
@@ -33,6 +34,7 @@ export class HomePage implements OnInit {
   loadingSendButton: boolean = false;
   filteredCityOut: string = '';
   myTruckTypeIds: any;
+
   constructor(
     public authService: AuthenticationService,
     public alertController: AlertController,
@@ -40,23 +42,23 @@ export class HomePage implements OnInit {
     private socketService: SocketService,
     private loadingCtrl: LoadingController,
     private geolocation: Geolocation,
-    private routerOutlet: IonRouterOutlet
+    private routerOutlet: IonRouterOutlet,
   ) {
   }
 
   async doRefresh(event: any) {
     this.authService.myorders = await this.authService.getMyOrders().toPromise();
-    this.items = this.authService.myorders;
+    // this.items = this.authService.myorders;
     if (this.selectedtruck > 0) {
       this.items = this.authService.myorders.filter((item) => {
         return +item.transport_type === +this.selectedtruck;
       });
     } else {
-      this.items = this.authService.myorders
+      // this.items = this.authService.myorders
     }
     setTimeout(() => {
       event.target.complete();
-      this.filterOrderLocal()
+      this.filterOrderLocal();
     }, 1000)
   }
   selectType(type: string) {
@@ -65,15 +67,15 @@ export class HomePage implements OnInit {
   }
   filterOrderLocal() {
     for (let row of this.items) {
-      if (row.route.from_city_id === row.route.to_city_id) {
+      if (row.route.from_city === row.route.to_city) {
         this.localItems.push({ id: row.id })
       } else {
         this.worldItems.push({ id: row.id })
       }
     }
   }
-  localOrWorldIsset(id: number) {
-    if (this.selectedType === 'local') {
+  localOrWorldIsset(id: number) {    
+    if (this.selectedType === 'local') {      
       const index = this.localItems.findIndex(e => e.id === id)
       return index >= 0;
     } else if (this.selectedType === 'world') {
@@ -84,7 +86,6 @@ export class HomePage implements OnInit {
     }
   }
   returnNameTypeTransport(type: number) {
-    console.log('type', type)
     const index = this.authService.typetruck.findIndex(e => +e.id === +type)
     if (index >= 0) {
       return this.authService.typetruck[index].name
@@ -146,9 +147,8 @@ export class HomePage implements OnInit {
       }
       // this.items = this.authService.myorders;
       this.getOrders()
-      
     });
-    this.filterOrderLocal()
+    this.filterOrderLocal();
   }
   viewOrderInfo(id: number) {
     if (this.vieworder === id) {
@@ -183,7 +183,7 @@ export class HomePage implements OnInit {
   findAcceptedOrders(id: number) {
     const index = this.items.findIndex(e => e.id === id)
     if (index >= 0) {
-      const indexuser = this.items[index].orders_accepted.findIndex((user: { id: number | undefined; }) => user.id === this.authService.currentUser?.id)
+      const indexuser = this.items[index].orders_accepted.findIndex((user: { id: number }) => user.id === this.authService.currentUser?.id)
       return indexuser < 0;
     } return true
   }
@@ -200,9 +200,12 @@ export class HomePage implements OnInit {
   async appendOrder(item: any) {
     if (this.authService.activeorder) {
       await this.authService.alert('Принятие заказа', 'К сожалению Вы не можете принять заказ так как не завершили активный.')
+      this.loading = false;
     } else if (this.authService.currentUser?.dirty === 3) {
       await this.authService.alert('Принятие заказа', 'К сожалению Вы не можете принять заказ так как ваш аккаунт заблокирован. Обратитесь в службу поддержки для дополнительно информации.')
+      this.loading = false;
     } else {
+      this.loading = false;
       await this.acceptOrder(item)
       /*const alert = await this.alertController.create({
         header: 'Вы уверены?',
@@ -265,13 +268,13 @@ export class HomePage implements OnInit {
     }
     console.log(this.dates)
   }
-  async sendAcceptOrder() {
-    console.log('ok');
 
+  async sendAcceptOrder() {
     this.loadingSendButton = true;
     this.loading = await this.loadingCtrl.create({
       message: 'Проверяем геопозицию',
     });
+    
     this.loading.present();
     this.geolocation.getCurrentPosition().then(async (resp) => {
       console.log(resp.coords)
@@ -279,14 +282,15 @@ export class HomePage implements OnInit {
       axios.get(get)
         .then(res => {
           if (res.status) {
-            console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description)
-            console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.name)
+            this.loading.dismiss()
             this.authService.acceptOrder(this.appendorderid, this.price, this.dates).toPromise().then((res) => {
               if (res.data) {
+              this.loading.dismiss()
                 this.loadingSendButton = false;
                 this.closeModalAll();
               }
             }).catch(err => {
+              this.loading.dismiss()
               this.loadingSendButton = false;
               this.closeModalAll();
             })
@@ -356,10 +360,8 @@ export class HomePage implements OnInit {
         return +item.transport_type === +this.selectedtruck;
       });
     } else {
-      this.items = this.authService.myAllorders
-      console.log(this.items);
-      
-      // this.getOrders();
+      // this.items = this.authService.myAllorders      
+      this.getOrders();
     }
   }
   filterOrders() {

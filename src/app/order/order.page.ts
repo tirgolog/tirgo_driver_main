@@ -1,10 +1,11 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {addDays} from 'date-fns';
-import {formatDate} from "@angular/common";
-import {AuthenticationService} from "../services/authentication.service";
-import {AlertController, LoadingController, ModalController} from "@ionic/angular";
+import { Component, Input, OnInit } from '@angular/core';
+import { addDays } from 'date-fns';
+import { formatDate } from "@angular/common";
+import { AuthenticationService } from "../services/authentication.service";
+import { AlertController, LoadingController, ModalController } from "@ionic/angular";
 import axios from "axios";
-import {Geolocation} from "@awesome-cordova-plugins/geolocation/ngx";
+import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
+import { log } from 'console';
 
 @Component({
   selector: 'app-order',
@@ -13,22 +14,22 @@ import {Geolocation} from "@awesome-cordova-plugins/geolocation/ngx";
 })
 export class OrderPage implements OnInit {
   @Input('item') item: any;
-  loadingAccept:boolean = false;
-  price:string = '';
-  selecteddays:any[]=[];
-  loading:any;
+  loadingAccept: boolean = false;
+  price: string = '';
+  selecteddays: any[] = [];
+  loading: any;
   constructor(
-      public authService: AuthenticationService,
-      private loadingCtrl: LoadingController,
-      public alertController: AlertController,
-      private geolocation: Geolocation,
-      private modalController: ModalController
-      ) { }
+    public authService: AuthenticationService,
+    private loadingCtrl: LoadingController,
+    public alertController: AlertController,
+    private geolocation: Geolocation,
+    private modalController: ModalController
+  ) { }
 
   ngOnInit() {
   }
-  addDays(date:any,num:number){
-    return formatDate(new Date(addDays(date,num).toISOString()), 'dd MMMM', 'ru');
+  addDays(date: any, num: number) {
+    return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept(){
     let cityOrder = '';
@@ -39,7 +40,6 @@ export class OrderPage implements OnInit {
     this.loading.present();
     this.loadingAccept = false;
     this.geolocation.getCurrentPosition().then(async (resp) => {
-      console.log(resp.coords)
       const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey="+ this.authService.currentUser?.config.key_api_maps+"&lang=ru-RU"
       axios.get(get)
           .then( async res => {
@@ -67,19 +67,27 @@ export class OrderPage implements OnInit {
                 })
               }
             }
+            else {
+              this.loadingAccept = false;
+              this.loading.dismiss();
+              await this.authService.alert('Упс','Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+            }
           })
           .catch(async(error) => {
             this.loading.dismiss();
             await this.authService.alert('Ошибка',error.toString())
           });
     }).catch(async (err) => {
+      this.loadingAccept = false;
       this.loading.dismiss();
       await this.authService.alert('Упс','Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
     });
+    
   }
-  async acceptOrderFinal(){
+
+  async acceptOrderFinal() {
     this.loadingAccept = true;
-    if (this.price){
+    if (this.price) {
       const alert = await this.alertController.create({
         header: 'Внимание',
         message: 'Вы действительно хотите отправить предложение?',
@@ -102,20 +110,20 @@ export class OrderPage implements OnInit {
         ]
       });
       await alert.present();
-    }else {
-      await this.authService.alert('Упс','Требуется указать цену Ваше предложение по цене.');
+    } else {
+      await this.authService.alert('Упс', 'Требуется указать цену Ваше предложение по цене.');
       this.loadingAccept = false;
     }
   }
-  findDay(num:number){
+  findDay(num: number) {
     const index = this.selecteddays.findIndex(e => e === num)
     return index >= 0;
   }
-  selectDay(num:number){
+  selectDay(num: number) {
     const index = this.selecteddays.findIndex(e => e === num)
-    if (index>=0){
-      this.selecteddays.splice(index,1)
-    }else {
+    if (index >= 0) {
+      this.selecteddays.splice(index, 1)
+    } else {
       this.selecteddays.push(num)
     }
   }

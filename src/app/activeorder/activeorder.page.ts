@@ -5,6 +5,7 @@ import {Geolocation} from "@awesome-cordova-plugins/geolocation/ngx";
 import {AlertController, LoadingController, ModalController, Platform} from "@ionic/angular";
 import {Router} from "@angular/router";
 import {SetraitingPage} from "../setraiting/setraiting.page";
+import { log } from 'console';
 
 @Component({
   selector: 'app-activeorder',
@@ -52,8 +53,8 @@ export class ActiveorderPage implements OnInit {
             });
             this.loading.present();
             this.geolocation.getCurrentPosition().then(async (resp) => {
-              console.log(resp.coords)
               const res = await this.authService.finishOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
+              
               const modal = await this.modalCtrl.create({
                 component: SetraitingPage,
                 swipeToClose: true,

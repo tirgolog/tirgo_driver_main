@@ -44,59 +44,59 @@
           "/*": [
             {
               "xml": "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
-              "count": 20
+              "count": 12
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.POST_NOTIFICATIONS\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.CAMERA\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-feature android:name=\"android.hardware.camera.autofocus\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-feature android:name=\"android.hardware.camera\" android:required=\"true\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-feature android:name=\"android.hardware.microphone\" android:required=\"true\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.MICROPHONE\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.MODIFY_AUDIO_SETTINGS\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.RECORD_AUDIO\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.WAKE_LOCK\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
-              "count": 18
+              "count": 10
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
-              "count": 17
+              "count": 9
             },
             {
               "xml": "<uses-permission android:name=\"android.permission.ACCESS_FINE_LOCATION\" />",
-              "count": 18
+              "count": 10
             },
             {
               "xml": "<queries><intent><action android:name=\"android.media.action.IMAGE_CAPTURE\" /></intent><intent><action android:name=\"android.intent.action.GET_CONTENT\" /></intent><intent><action android:name=\"android.intent.action.PICK\" /></intent><intent><action android:name=\"com.android.camera.action.CROP\" /><data android:mimeType=\"image/*\" android:scheme=\"content\" /></intent></queries>",

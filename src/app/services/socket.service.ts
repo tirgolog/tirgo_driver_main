@@ -16,7 +16,9 @@ export class SocketService {
         }
     }
     connect() {
+        console.log('connect', this.socket)
         this.socket = io('https://admin.tirgo.io/api');
+        console.log(this.socket)
         this.socket.on('connect', () => {
                 this.socket.emit('authenticate', {token: AuthenticationService.jwt})
                     .on('authenticated', (data:any) => {

@@ -119,11 +119,12 @@ export class HomePage implements OnInit  {
   getOrders() {
     if(this.selectedtruck == 0) {
       this.allTruck(0)
-    }else {
+    }
+    else {
       this.authService.getTruck().subscribe((res: any) => {
         this.myTruckTypeIds = res.map((el: any) => el.type);
         this.authService.getMyOrders().subscribe((order: any) => {
-          this.items = order.filter((el: any) => this.haveSameContents(el.transport_types, this.myTruckTypeIds));
+          this.items = order.filter((el: any) => this.haveSameContents(el.transport_types, [this.selectedtruck]));
           this.items.forEach((v,k) => {
             v.transport_types = JSON.parse(v.transport_types)
           })
@@ -133,7 +134,6 @@ export class HomePage implements OnInit  {
   }
 
   ngOnInit() {
-    
       this.getOrders()
       this.routerOutlet.swipeGesture = false;
       this.socketService.updateAllOrders().subscribe(async (res: any) => {

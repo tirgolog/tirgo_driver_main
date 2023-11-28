@@ -9,7 +9,7 @@
     <div class="body-wrap form-block">
       <div class="autorize">
         <p><b>{{'Ваше предложение по цене' | translate}} ($)</b></p>
-        <input type="text" inputmode="tel" name="name" placeholder="Ваша цена в $" [(ngModel)]="price">
+        <input type="text" inputmode="number" name="name" placeholder="Ваша цена в $" [(ngModel)]="price">
         <p><b>{{'Дата погрузки у клиента' | translate}}</b></p>
         <input type="text" inputmode="tel" name="name" readonly placeholder="Ваша цена" [value]="item.date_send | formatTime:'DD MMMM YYYY в HH:mm'">
         <ng-container *ngIf="item.add_two_days">

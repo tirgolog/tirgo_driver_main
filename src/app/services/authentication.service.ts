@@ -12,7 +12,7 @@ import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
 const TOKEN_KEY = 'jwttirgotoken';
 const API_URL = 'https://admin.tirgo.io/api';
 
-@Injectable({
+@Injectable({ 
   providedIn: 'root'
 })
 export class AuthenticationService {

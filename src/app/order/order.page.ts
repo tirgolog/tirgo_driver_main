@@ -73,22 +73,34 @@ export class OrderPage implements OnInit {
             else {
               this.loadingAccept = false;
               this.loading.dismiss();
+              await this.modalController.dismiss({
+                accepted: false
+              })
               await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
             }
           })
           .catch(async (error) => {
             this.loading.dismiss();
+            await this.modalController.dismiss({
+              accepted: false
+            })
             await this.authService.alert('Ошибка', error.toString())
           });
       }).catch(async (err) => {
         this.loadingAccept = false;
         this.loading.dismiss();
+        await this.modalController.dismiss({
+          accepted: false
+        })
         await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
       });
        console.log('on');
     }).catch(async(error) => {
       await console.log('off');
       await this.loading.dismiss();
+      await this.modalController.dismiss({
+        accepted: false
+      })
       this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
     });
   }

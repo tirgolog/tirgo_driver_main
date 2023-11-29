@@ -33,76 +33,53 @@ export class OrderPage implements OnInit {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept() {
+    console.log(this.authService.geolocationCheck);
+    
     let cityOrder = '';
     let cityUser = '';
+
     this.loading = await this.loadingCtrl.create({
       message: 'Проверяем геопозицию',
     });
 
     this.loading.present();
     this.loadingAccept = false;
-    this.geolocation.getCurrentPosition().then((position: GeolocationPosition) => {
-      this.geolocation.getCurrentPosition().then(async (resp) => {
-        const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
-        axios.get(get)
-          .then(async res => {
-            if (res.status) {
-              this.loading.dismiss();
-              cityUser = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',')[res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',').length - 1]?.replace(' ', '')
-              cityOrder = this.item.route.from_city.split(',')[1]?.replace(' ', '')
-              if (cityUser === cityOrder) {
-                await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays).toPromise()
-                  .then(async (res) => {
-                    if (res.status) {
-                      this.authService.myorders = await this.authService.getMyOrders().toPromise();
-                      await this.modalController.dismiss({
-                        accepted: true
-                      })
-                    }
-                  })
-                  .catch(async (err) => {
+    if ( this.authService.geolocationCheck) {
+      const resp = await this.geolocation.getCurrentPosition();
+      const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU";
 
-                  });
-              } else {
-                await this.authService.alert('Ошибка', 'К сожалению Вы не можете принять заказ. Вы не находитесь в городе отправки груза.')
-                await this.modalController.dismiss({
-                  accepted: false
-                })
-              }
-            }
-            else {
-              this.loadingAccept = false;
-              this.loading.dismiss();
-              await this.modalController.dismiss({
-                accepted: false
-              })
-              await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-            }
-          })
-          .catch(async (error) => {
+      axios.get(get)
+        .then(async res => {
+          if (res.status) {
             this.loading.dismiss();
-            await this.modalController.dismiss({
-              accepted: false
-            })
-            await this.authService.alert('Ошибка', error.toString())
-          });
-      }).catch(async (err) => {
-        this.loadingAccept = false;
-        this.loading.dismiss();
-        await this.modalController.dismiss({
-          accepted: false
+            cityUser = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',')[res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',').length - 1].replace(' ', '');
+            cityOrder = this.item.route.from_city.split(',')[1].replace(' ', '');
+
+            if (cityUser === cityOrder) {
+              const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays).toPromise();
+
+              if (acceptRes.status) {
+                this.authService.myorders = await this.authService.getMyOrders().toPromise();
+                await this.modalController.dismiss({
+                  accepted: true,
+                });
+              }
+            } else {
+              await this.authService.alert('Ошибка', 'К сожалению Вы не можете принять заказ. Вы не находитесь в городе отправки груза.');
+              await this.modalController.dismiss({
+                accepted: false,
+              });
+            }
+          }
         })
-        await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-      });
-       console.log('on');
-    }).catch(async(error) => {
-      await console.log('off');
-      await this.loading.dismiss();
-      await this.modalController.dismiss({
-        accepted: false
-      })
-      this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-    });
+        .catch(async (error) => {
+          this.loading.dismiss();
+          await this.authService.alert('Ошибка', error.toString());
+        });
+    } else {
+      this.loading.dismiss();
+      await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
+    }
   }
 
   async acceptOrderFinal() {

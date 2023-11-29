@@ -165,7 +165,7 @@ export class HomePage implements OnInit  {
   async acceptOrder(item: any) {
     const modal = await this.modalController.create({
       component: OrderPage,
-      swipeToClose: true,
+      canDismiss: true,
       showBackdrop: true,
       breakpoints: [0, 0.9],
       initialBreakpoint: 0.9,

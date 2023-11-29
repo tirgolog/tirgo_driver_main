@@ -30,7 +30,7 @@ export class AppComponent {
     private translateService: TranslateService,
     public alertController: AlertController,
     private router: Router,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
   ) {
     this.initializeApp();
     setInterval(() => {
@@ -137,15 +137,18 @@ export class AppComponent {
             axios.get(get)
               .then(res => {
                 if (res.status) {
+                  this.authService.geolocationCheck = true;
                   this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
                   console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description)
                   console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.name)
                 }
               })
               .catch(async (error) => {
+                this.authService.geolocationCheck = false;
                 await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
               });
           }).catch(async (error) => {
+            this.authService.geolocationCheck = false
             await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
         } else {
@@ -162,6 +165,9 @@ export class AppComponent {
     })
   }
   initializeApp() {
+    this.checkSession();
+    console.log(this.authService.geolocationCheck);
+    
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {
         console.log('onDisconnect')

@@ -391,10 +391,6 @@ export class AuthenticationService {
       }));
   }
 
-
-
-
-
   setJwt(jwt: string) {
     AuthenticationService.jwt = jwt;
     this.storage.set(TOKEN_KEY, jwt);

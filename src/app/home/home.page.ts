@@ -74,7 +74,7 @@ export class HomePage implements OnInit  {
       }
     }
   }
-  localOrWorldIsset(id: number) {    
+  localOrWorldIsset(id: number) {
     if (this.selectedType === 'local') {      
       const index = this.localItems.findIndex(e => e.id === id)
       return index >= 0;
@@ -165,7 +165,7 @@ export class HomePage implements OnInit  {
   async acceptOrder(item: any) {
     const modal = await this.modalController.create({
       component: OrderPage,
-      swipeToClose: true,
+      canDismiss: true,
       showBackdrop: true,
       breakpoints: [0, 0.9],
       initialBreakpoint: 0.9,

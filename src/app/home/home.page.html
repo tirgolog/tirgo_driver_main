@@ -39,7 +39,7 @@
   <div class="wrapper-fluid">
     <div class="body-wrap form-block main-body body-have-bottom-menu">
       <ng-container *ngFor="let row of items ">
-        <div class="order-item">
+        <div class="order-item" *ngIf="row.status !== 2 || row.status !== 3">
           <div class="order-item-articul" (click)="viewOrderInfo(row.id)">
             <span class="order-header">
               <span>

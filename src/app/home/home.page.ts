@@ -74,7 +74,7 @@ export class HomePage implements OnInit  {
       }
     }
   }
-  localOrWorldIsset(id: number) {    
+  localOrWorldIsset(id: number) {
     if (this.selectedType === 'local') {      
       const index = this.localItems.findIndex(e => e.id === id)
       return index >= 0;

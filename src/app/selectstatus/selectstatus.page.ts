@@ -22,12 +22,12 @@ export class SelectstatusPage implements OnInit {
     })
   }
   async setStatus(status:any){
-    console.log(status)
+    // console.log(status)
     const res = await this.authService.setBusy(status).toPromise();
     if (res.status){
       this.authService.currentUser.busy = status;
       await this.close();
     }
-    console.log(status)
+    // console.log(status)
   }
 }

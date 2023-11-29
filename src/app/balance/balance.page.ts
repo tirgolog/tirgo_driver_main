@@ -41,7 +41,6 @@ export class BalancePage implements OnInit {
         }*/
       }else if(this.selectmethodpay === 'payme'){
         let base64 = btoa("m=636ca5172cfb25761a99e6af;ac.UserID="+this.authService.currentUser.id+";a="+this.amount+"00");
-        console.log(btoa("m=636ca5172cfb25761a99e6af;ac.UserID="+this.authService.currentUser.id+";a="+this.amount+"00"));
         this.iab.create('https://checkout.paycom.uz/'+base64,'_system');
       }
     }else {

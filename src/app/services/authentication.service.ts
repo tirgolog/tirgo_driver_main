@@ -112,7 +112,6 @@ export class AuthenticationService {
     });
     return this.http.post<any>(sUrl, body)
         .pipe(map(res => {
-          console.log(res)
           if (res.status) {
             return res.data.suggestions;
           } else {
@@ -185,7 +184,6 @@ export class AuthenticationService {
     const body = JSON.stringify({
       id
     });
-    console.log(body)
     return this.http.post<any>(sUrl, body);
   }
   saveDeviceToken(token: any) {
@@ -193,7 +191,6 @@ export class AuthenticationService {
     const body = JSON.stringify({
       token_device: token
     });
-    console.log(body)
     return this.http.post<any>(sUrl, body);
   }
   delTransport(id: number) {
@@ -235,7 +232,6 @@ export class AuthenticationService {
     const sUrl = API_URL + '/users/getAllMessages';
     return this.http.get<any>(sUrl)
         .pipe(map(res => {
-          console.log(res)
           if (res.data) {
             return res.data;
           } else {
@@ -284,7 +280,6 @@ export class AuthenticationService {
     const sUrl = API_URL + '/users/getTypeTruck';
     return this.http.get<any>(sUrl)
         .pipe(map(res => {
-          console.log(res)
           if (res.status) {
             return res.data;
           } else {
@@ -345,7 +340,6 @@ export class AuthenticationService {
     const sUrl = API_URL + '/users/getNotifyDriver';
     return this.http.get<any>(sUrl)
       .pipe(map(res => {
-        console.log(res)
         if (res.status) {
           return res.data;
         } else {
@@ -358,7 +352,6 @@ export class AuthenticationService {
     const sUrl = API_URL + '/truck-booking/orders';
     return this.http.get<any>(sUrl)
       .pipe(map(res => {
-        console.log(res)
         if (res.data) {
           return res.data;
         } else {
@@ -370,7 +363,6 @@ export class AuthenticationService {
     const sUrl = API_URL + '/truck-booking?status=processing';
     return this.http.get<any>(sUrl)
       .pipe(map(res => {
-        console.log(res)
         if (res.data) {
           return res.data;
         } else {
@@ -382,7 +374,6 @@ export class AuthenticationService {
     const sUrl = API_URL + '/truck-booking?status=done';
     return this.http.get<any>(sUrl)
       .pipe(map(res => {
-        console.log(res)
         if (res.data) {
           return res.data;
         } else {

@@ -29,7 +29,6 @@ export class ActiveorderPage implements OnInit {
 
   ngOnInit() {
     this.item = this.authService.activeorder;
-    console.log(this.item)
   }
   async finishOrder(){
     const alert = await this.alertController.create({

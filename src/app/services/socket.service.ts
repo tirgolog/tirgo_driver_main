@@ -16,10 +16,9 @@ export class SocketService {
         }
     }
     connect() {
-        console.log('connect', this.socket)
-        this.socket = io('https://admin.tirgo.io/api');
-        console.log(this.socket)
+        this.socket = io('https://admin.tirgo.io/', {transports: ['websocket']});
         this.socket.on('connect', () => {
+            console.log('connect')
                 this.socket.emit('authenticate', {token: AuthenticationService.jwt})
                     .on('authenticated', (data:any) => {
                         console.warn('подключился к сокету')
@@ -29,6 +28,10 @@ export class SocketService {
                         // throw new Error(msg.data.type);
                     });
             });
+            this.socket.on('connect_error', (error: any) => {
+                console.error('Socket connection error:', error);
+              });
+              
     }
     emit(event:any, ...args: any[]) {
         this.socket.emit(event, ...args);

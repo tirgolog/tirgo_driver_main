@@ -60,7 +60,6 @@ export class LoginPage implements OnInit {
   }
   async signIn(){
     this.loading = true;
-    console.log(this.phone.length)
     if (this.phone.length < this.mask.length){
       await this.authService.alert('Ошибка','Введите корректный номер телефона')
       this.loading = false;

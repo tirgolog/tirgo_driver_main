@@ -19,8 +19,7 @@ export class ApiInterceptor implements HttpInterceptor  {
       return next.handle(req).pipe(
           map((event: HttpEvent<any>) => {
               if (event instanceof HttpResponse) {
-                  // console.log(event);
-                  console.log(`\n${req.method}: ${req.url}`, req.body, '\nRESPONSE:', event.body);
+                  // console.log(`\n${req.method}: ${req.url}`, req.body, '\nRESPONSE:', event.body);
                   // this.errorDialogService.openDialog(event);
               }
               return event;

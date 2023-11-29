@@ -61,7 +61,6 @@ export class NamePage implements OnInit {
         await modal.present();
         const {data} = await modal.onWillDismiss();
         if (data && data.city) {
-            console.log(data.city.data)
             await this.authService.saveCityInfo(data.city.data).toPromise()
                 .then(async (res: any) => {
                     if (res.status) {

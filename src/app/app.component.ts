@@ -131,15 +131,12 @@ export class AppComponent {
           await this.router.navigate(['/tabs/home'], { replaceUrl: true });
           this.geolocation.getCurrentPosition().then(async (resp) => {
             this.authService.geolocationCheck = true;
-            console.log(this.authService.geolocationCheck)
             await this.authService.updateLocation(resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
             const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
             axios.get(get)
               .then(res => {
                 if (res.status) {
                   this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
-                  console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description)
-                  console.log(res.data.response.GeoObjectCollection.featureMember[0].GeoObject.name)
                 }
               })
               .catch(async (error) => {

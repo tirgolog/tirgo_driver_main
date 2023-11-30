@@ -42,12 +42,12 @@
 
         <p><b>{{'Тех паспорт' | translate}}</b></p>
         <div class="file-uploads">
-          <div class="file-group"  *ngFor="let row of tech_passport_files" (click)="delFileTechTransport(row.preview.toString())">
+          <div class="file-group"  *ngFor="let row of tech_passport_files" (click)="delFileTechTransport(row.preview)">
             <div class="del-button">
               <ion-icon name="trash-bin-outline"></ion-icon>
             </div>
             <div class="form-group">
-              <img [src]="row.preview" alt="">
+              <img [src]="file_url+row.filename" alt="">
             </div>
           </div>
           <div class="file-group">
@@ -62,12 +62,12 @@
 
         <p><b>{{'Лицензии на перевозку грузов' | translate}}</b></p>
         <div class="file-uploads">
-          <div class="file-group" *ngFor="let row of license_files" (click)="delFileLicense(row.preview.toString())">
+          <div class="file-group" *ngFor="let row of license_files;let i=index" (click)="delFileLicense(i)">
             <div class="del-button">
               <ion-icon name="trash-bin-outline"></ion-icon>
             </div>
             <div class="form-group">
-              <img [src]="row.preview" alt="">
+              <img [src]="file_url+row.filename" alt="">
             </div>
           </div>
           <div class="file-group">
@@ -81,12 +81,12 @@
 
         <p><b>{{'Фото транспорта' | translate}}</b></p>
         <div class="file-uploads">
-          <div class="file-group" *ngFor="let row of car_photos" (click)="delFileCarPhoto(row.preview.toString())">
+          <div class="file-group" *ngFor="let row of car_photos;let i=index" (click)="delFileCarPhoto(i)">
             <div class="del-button">
               <ion-icon name="trash-bin-outline"></ion-icon>
             </div>
             <div class="form-group">
-              <img [src]="row.preview" alt="">
+              <img [src]="file_url+row.filename" alt="">
             </div>
           </div>
           <div class="file-group">

@@ -47,15 +47,15 @@ export class HomePage implements OnInit  {
   }
 
   async doRefresh(event: any) {
-    this.authService.myorders = await this.authService.getMyOrders().toPromise();
-    // this.items = this.authService.myorders;
-    if (this.selectedtruck > 0) {
-      this.items = this.authService.myorders.filter((item) => {
-        return +item.transport_type === +this.selectedtruck;
-      });
-    } else {
-      // this.items = this.authService.myorders
-    }
+    this.allTruck(this.selectedtruck)
+
+    // this.authService.myorders = await this.authService.getMyOrders().toPromise();
+    // if (this.selectedtruck > 0) {
+    //   this.allTruck(this.selectedtruck)
+      // this.items = this.authService.myorders.filter((item) => {
+      //   return +item.transport_type === +this.selectedtruck;
+      // });
+    // } 
     setTimeout(() => {
       event.target.complete();
       this.filterOrderLocal();

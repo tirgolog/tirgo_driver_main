@@ -10,6 +10,8 @@ import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer
 })
 export class EdittransportPage implements OnInit {
   @Input('item') item: any;
+    file_url: string = 'https://admin.tirgo.io/api/download/';
+
   type:number = 0;
   maxweight:number = 0;
   name:string = '';
@@ -62,7 +64,7 @@ export class EdittransportPage implements OnInit {
   }
   async close(){
     await this.modalController.dismiss({
-
+      accepted: true,
     })
   }
   returnNameTypeTransport(type:number){
@@ -135,18 +137,22 @@ export class EdittransportPage implements OnInit {
       this.authService.alert('Ошибка','Требуется указать гос. номер тягача')
       this.loadingAddTransport = false;
     }else {
+      this.loadingAddTransport = false;
     await this.authService.editTransport(this.name,this.description,this.maxweight,this.type,this.adr,this.item.id,this.car_photos,this.license_files,this.tech_passport_files,this.cubature,this.state_number).toPromise()
         .then(async (res:any) => {
           if (res.status){
+            this.loadingAddTransport = false;
             this.authService.mytruck = await this.authService.getTruck().toPromise();
             this.authService.myorders = await this.authService.getMyOrders().toPromise();
             await this.close()
             await this.authService.alert('Отлично','Транспорт успешно изменен')
           }else {
+            this.loadingAddTransport = false;
             await this.authService.alert('Ошибка',res.error)
           }
         })
         .catch(async (err:any) => {
+          this.loadingAddTransport = false;
           console.log(err)
         });
     }
@@ -174,10 +180,14 @@ export class EdittransportPage implements OnInit {
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
       if (res.status){
         this.tech_passport_files.push(res.file)
+        this.tech_passport_files.forEach((v) => {
+          v.reviewUrl = this.file_url + v.name
+        })
         this.loading.dismiss();
       }
     })
-  }async delFileTechTransport(file:string){
+  }
+  async delFileTechTransport(file:string){
     const alert = await this.alertController.create({
       header: 'Удаление фото',
       message: 'Вы уверены что хотите удалить изображение.',
@@ -228,7 +238,7 @@ export class EdittransportPage implements OnInit {
       }
     })
   }
-  async delFileLicense(file: string){
+  async delFileLicense(file){
     const alert = await this.alertController.create({
       header: 'Удаление фото',
       message: 'Вы уверены что хотите удалить изображение.',
@@ -245,10 +255,10 @@ export class EdittransportPage implements OnInit {
           text: 'Удалить',
           role:'destructive',
           handler: async (data) => {
-            const index = this.license_files.findIndex(e => e.preview === file)
-            if (index>=0){
-              this.license_files.splice(index,1)
-            }
+            // const index = this.license_files.findIndex(e => e.preview === file)
+            // if (index>=0){
+              this.license_files.splice(file,1)
+            // }
           }
         }
       ],
@@ -279,7 +289,7 @@ export class EdittransportPage implements OnInit {
       }
     })
   }
-  async delFileCarPhoto(file: string){
+  async delFileCarPhoto(file){
     const alert = await this.alertController.create({
       header: 'Удаление фото',
       message: 'Вы уверены что хотите удалить изображение.',
@@ -296,10 +306,10 @@ export class EdittransportPage implements OnInit {
           text: 'Удалить',
           role:'destructive',
           handler: async (data) => {
-            const index = this.car_photos.findIndex(e => e.preview === file)
-            if (index>=0){
-              this.car_photos.splice(index,1)
-            }
+            // const index = this.car_photos.findIndex(e => e.preview === file)
+            // if (index>=0){
+              this.car_photos.splice(file,1)
+            // }
           }
         }
       ],

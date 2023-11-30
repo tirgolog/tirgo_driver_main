@@ -259,8 +259,6 @@ export class HomePage implements OnInit  {
     if (+number < 10) {
       number = '0' + number
     }
-    console.log(number)
-    console.log(ev.target.checked)
     const index = this.dates.findIndex((e: string) => e === number);
     if (ev.target.checked) {
       if (index < 0) {
@@ -271,7 +269,6 @@ export class HomePage implements OnInit  {
     } else {
       this.dates.splice(index, 1)
     }
-    console.log(this.dates)
   }
 
   async sendAcceptOrder() {
@@ -282,7 +279,6 @@ export class HomePage implements OnInit  {
     
     this.loading.present();
     this.geolocation.getCurrentPosition().then(async (resp) => {
-      console.log(resp.coords)
       const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.latitude.toString() + "," + resp.coords.longitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
       axios.get(get)
         .then(res => {

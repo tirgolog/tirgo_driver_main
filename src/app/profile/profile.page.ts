@@ -57,7 +57,6 @@ export class ProfilePage implements OnInit {
         this.country = this.authService.currentUser?.country;
         this.city = this.authService.currentUser?.city;
         this.adr = this.authService.currentUser?.adr;
-        console.log(this.authService.currentUser)
         for (let row of this.authService.currentUser?.files){
             if (row.type_file === 'passport'){
                 this.passport_docks.push(row)

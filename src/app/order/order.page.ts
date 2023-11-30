@@ -33,7 +33,7 @@ export class OrderPage implements OnInit {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept() {
-    console.log(this.authService.geolocationCheck);
+    this.authService.checkGeolocation()
     
     let cityOrder = '';
     let cityUser = '';
@@ -124,4 +124,5 @@ export class OrderPage implements OnInit {
       this.selecteddays.push(num)
     }
   }
+
 }

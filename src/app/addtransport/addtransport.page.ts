@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {AlertController, LoadingController, ModalController} from "@ionic/angular";
-import {AuthenticationService} from "../services/authentication.service";
-import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer/ngx";
+import { AlertController, LoadingController, ModalController } from "@ionic/angular";
+import { AuthenticationService } from "../services/authentication.service";
+import { FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer/ngx";
 
 @Component({
   selector: 'app-addtransport',
@@ -9,27 +9,28 @@ import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer
   styleUrls: ['./addtransport.page.scss'],
 })
 export class AddtransportPage implements OnInit {
-  type:number = 0;
-  maxweight:number = 21000;
-  name:string = '';
-  description:string = '';
-  typetransport:any[]=[];
-  adr:boolean = false
-  cubature:string = '96';
-  state_number:string = '';
+  file_url: string = 'https://admin.tirgo.io/api/download/';
+  type: number = 0;
+  maxweight: number = 21000;
+  name: string = '';
+  description: string = '';
+  typetransport: any[] = [];
+  adr: boolean = false
+  cubature: string = '96';
+  state_number: string = '';
 
-  tech_passport_files:any[]=[];
-  license_files:any[]=[];
-  car_photos:any[]=[];
+  tech_passport_files: any[] = [];
+  license_files: any[] = [];
+  car_photos: any[] = [];
 
-  loading:any;
-  loadingAddTransport:boolean = false;
+  loading: any;
+  loadingAddTransport: boolean = false;
 
   constructor(
-      private modalController:ModalController,
-      private loadingCtrl: LoadingController,
-      public authService:AuthenticationService,
-      private alertController: AlertController
+    private modalController: ModalController,
+    private loadingCtrl: LoadingController,
+    public authService: AuthenticationService,
+    private alertController: AlertController
   ) { }
 
   ngOnInit() {
@@ -41,28 +42,28 @@ export class AddtransportPage implements OnInit {
       };
     });
   }
-  async close(){
+  async close() {
     await this.modalController.dismiss({
-
+      accepted: true,
     })
   }
-  returnNameTypeTransport(type:number){
+  returnNameTypeTransport(type: number) {
     const index = this.authService.typetruck.findIndex(e => +e.id === +type)
-    if (index>=0){
+    if (index >= 0) {
       return this.authService.typetruck[index].name
-    }else {
+    } else {
       return 'Не выбрано'
     }
   }
-  returnMaxWeightTransport(type:number){
+  returnMaxWeightTransport(type: number) {
     const index = this.authService.typetruck.findIndex(e => +e.id === +type)
-    if (index>=0){
+    if (index >= 0) {
       return this.authService.typetruck[index].weight
-    }else {
+    } else {
       return 0
     }
   }
-  async selectTypeTransport(){
+  async selectTypeTransport() {
     const alert = await this.alertController.create({
       header: 'Выберите тип транспорта',
       cssClass: 'customAlert',
@@ -86,10 +87,10 @@ export class AddtransportPage implements OnInit {
     });
     await alert.present();
   }
-  async selectCubature(){
-    if (this.type === 0){
-      this.authService.alert('Выберите тип','Для выбора кубатуры прицепа требуется выбрать тип прицепа')
-    }else {
+  async selectCubature() {
+    if (this.type === 0) {
+      this.authService.alert('Выберите тип', 'Для выбора кубатуры прицепа требуется выбрать тип прицепа')
+    } else {
       const alert = await this.alertController.create({
         header: 'Выберите кубатуру',
         cssClass: 'customAlert',
@@ -144,62 +145,62 @@ export class AddtransportPage implements OnInit {
       await alert.present();
     }
   }
-  async saveTransport(){
+  async saveTransport() {
     this.loadingAddTransport = true;
-    if (this.type === 0){
-      this.authService.alert('Ошибка','Требуется выбрать тип транспорта.')
+    if (this.type === 0) {
+      this.authService.alert('Ошибка', 'Требуется выбрать тип транспорта.')
       this.loadingAddTransport = false;
     }/*else if(!this.description.length){
       this.authService.alert('Ошибка','Требуется ввести описание транспорта. Это поможет клиенту понять подходит ли транспорт под его требования.')
       this.loadingAddTransport = false;
-    }*/else if(!this.name.length){
-      this.authService.alert('Ошибка','Требуется ввести марку, модель транспорта')
+    }*/else if (!this.name.length) {
+      this.authService.alert('Ошибка', 'Требуется ввести марку, модель транспорта')
       this.loadingAddTransport = false;
-    }else if(this.maxweight < 1000){
-      this.authService.alert('Ошибка','Грузоподъемность не может быть менее 1 000 кг.')
+    } else if (this.maxweight < 1000) {
+      this.authService.alert('Ошибка', 'Грузоподъемность не может быть менее 1 000 кг.')
       this.loadingAddTransport = false;
-    }else if(this.maxweight > 35000){
-      this.authService.alert('Ошибка','Грузоподъемность не может быть более 35 000 кг.')
+    } else if (this.maxweight > 35000) {
+      this.authService.alert('Ошибка', 'Грузоподъемность не может быть более 35 000 кг.')
       this.loadingAddTransport = false;
     }/*else if(!this.license_files.length){
       this.authService.alert('Ошибка','Требуется добавить фото лицензии на перевозку грузов')
       this.loadingAddTransport = false;
-    }*/else if(!this.car_photos.length){
-      this.authService.alert('Ошибка','Требуется добавить фото транспорта')
+    }*/else if (!this.car_photos.length) {
+      this.authService.alert('Ошибка', 'Требуется добавить фото транспорта')
       this.loadingAddTransport = false;
-    }else if(!this.tech_passport_files.length){
-      this.authService.alert('Ошибка','Требуется добавить фото технического транспорта на транспорт')
+    } else if (!this.tech_passport_files.length) {
+      this.authService.alert('Ошибка', 'Требуется добавить фото технического транспорта на транспорт')
       this.loadingAddTransport = false;
-    }else if(this.cubature === ''){
-      this.authService.alert('Ошибка','Требуется указать кубатуру прицепа')
+    } else if (this.cubature === '') {
+      this.authService.alert('Ошибка', 'Требуется указать кубатуру прицепа')
       this.loadingAddTransport = false;
-    }else if(this.state_number === ''){
-      this.authService.alert('Ошибка','Требуется указать гос. номер тягача')
+    } else if (this.state_number === '') {
+      this.authService.alert('Ошибка', 'Требуется указать гос. номер тягача')
       this.loadingAddTransport = false;
-    }else {
-      await this.authService.addTransport(this.name,this.description,this.maxweight,this.type,this.car_photos,this.license_files,this.tech_passport_files,this.adr,this.cubature,this.state_number).toPromise()
-          .then(async (res:any) => {
-            if (res.status){
-              this.authService.mytruck = await this.authService.getTruck().toPromise();
-              this.authService.myorders = await this.authService.getMyOrders().toPromise();
-              await this.close()
-              await this.authService.alert('Отлично','Транспорт успешно добавлен')
-            }
-          })
-          .catch(async (err:any) => {
-            console.log(err)
-          });
+    } else {
+      await this.authService.addTransport(this.name, this.description, this.maxweight, this.type, this.car_photos, this.license_files, this.tech_passport_files, this.adr, this.cubature, this.state_number).toPromise()
+        .then(async (res: any) => {
+          if (res.status) {
+            this.authService.mytruck = await this.authService.getTruck().toPromise();
+            this.authService.myorders = await this.authService.getMyOrders().toPromise();
+            await this.close()
+            await this.authService.alert('Отлично', 'Транспорт успешно добавлен')
+          }
+        })
+        .catch(async (err: any) => {
+          console.log(err)
+        });
     }
   }
-  async addFilesTechPassport(){
+  async addFilesTechPassport() {
     this.loading = await this.loadingCtrl.create({
       message: 'Отгружаем фото',
       cssClass: 'custom-loading'
     });
-    await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
+    await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
       this.loading.present()
       const fileTransfer: FileTransferObject = await this.authService.transfer.create();
-      const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
+      const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
@@ -207,15 +208,15 @@ export class AddtransportPage implements OnInit {
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
-      uploadOpts.params = {typeUser:'driver',typeImage:'car-docks'};
+      uploadOpts.params = { typeUser: 'driver', typeImage: 'car-docks' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-      if (res.status){
+      if (res.status) {
         this.tech_passport_files.push(res.file)
         this.loading.dismiss();
       }
     })
   }
-  async delFileTechTransport(file:string){
+  async delFileTechTransport(file: string) {
     const alert = await this.alertController.create({
       header: 'Удаление фото',
       message: 'Вы уверены что хотите удалить изображение.',
@@ -230,11 +231,11 @@ export class AddtransportPage implements OnInit {
           }
         }, {
           text: 'Удалить',
-          role:'destructive',
+          role: 'destructive',
           handler: async (data) => {
             const index = this.tech_passport_files.findIndex(e => e.preview === file)
-            if (index>=0){
-              this.tech_passport_files.splice(index,1)
+            if (index >= 0) {
+              this.tech_passport_files.splice(index, 1)
             }
           }
         }
@@ -242,15 +243,15 @@ export class AddtransportPage implements OnInit {
     });
     await alert.present();
   }
-  async addFilesLicense(){
+  async addFilesLicense() {
     this.loading = await this.loadingCtrl.create({
       message: 'Отгружаем фото',
       cssClass: 'custom-loading'
     });
-    await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
+    await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
       this.loading.present()
       const fileTransfer: FileTransferObject = await this.authService.transfer.create();
-      const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
+      const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
@@ -258,16 +259,16 @@ export class AddtransportPage implements OnInit {
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
-      uploadOpts.params = {typeUser:'driver',typeImage:'car-docks'};
+      uploadOpts.params = { typeUser: 'driver', typeImage: 'car-docks' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-      if (res.status){
+      if (res.status) {
         this.license_files.push(res.file)
         this.loading.dismiss();
       }
     })
   }
 
-  async delFileLicense(file: string){
+  async delFileLicense(file) {
     const alert = await this.alertController.create({
       header: 'Удаление фото',
       message: 'Вы уверены что хотите удалить изображение.',
@@ -282,27 +283,27 @@ export class AddtransportPage implements OnInit {
           }
         }, {
           text: 'Удалить',
-          role:'destructive',
+          role: 'destructive',
           handler: async (data) => {
-            const index = this.license_files.findIndex(e => e.preview === file)
-            if (index>=0){
-              this.license_files.splice(index,1)
-            }
+            // const index = this.license_files.findIndex(e => e.preview === file)
+            // if (index>=0){
+            this.license_files.splice(file, 1)
+            // }
           }
         }
       ],
     });
     await alert.present();
   }
-  async addFilesCarPhoto(){
+  async addFilesCarPhoto() {
     this.loading = await this.loadingCtrl.create({
       message: 'Отгружаем фото',
       cssClass: 'custom-loading'
     });
-    await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
+    await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
       this.loading.present()
       const fileTransfer: FileTransferObject = await this.authService.transfer.create();
-      const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
+      const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
@@ -310,15 +311,15 @@ export class AddtransportPage implements OnInit {
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
-      uploadOpts.params = {typeUser:'driver',typeImage:'car-docks'};
+      uploadOpts.params = { typeUser: 'driver', typeImage: 'car-docks' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-      if (res.status){
+      if (res.status) {
         this.car_photos.push(res.file)
         this.loading.dismiss();
       }
     })
   }
-  async delFileCarPhoto(file: string){
+  async delFileCarPhoto(file) {
     const alert = await this.alertController.create({
       header: 'Удаление фото',
       message: 'Вы уверены что хотите удалить изображение.',
@@ -333,12 +334,12 @@ export class AddtransportPage implements OnInit {
           }
         }, {
           text: 'Удалить',
-          role:'destructive',
+          role: 'destructive',
           handler: async (data) => {
-            const index = this.car_photos.findIndex(e => e.preview === file)
-            if (index>=0){
-              this.car_photos.splice(index,1)
-            }
+            // const index = this.license_files.findIndex(e => e.preview === file)
+            // if (index>=0){
+            this.license_files.splice(file, 1)
+            // }
           }
         }
       ],

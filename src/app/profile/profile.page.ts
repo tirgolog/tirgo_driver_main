@@ -8,6 +8,7 @@ import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer
 import {Storage} from "@ionic/storage";
 import {Router} from "@angular/router";
 import {AddcontactPage} from "../addcontact/addcontact.page";
+import { log } from 'console';
 
 @Component({
     selector: 'app-profile',
@@ -15,6 +16,7 @@ import {AddcontactPage} from "../addcontact/addcontact.page";
     styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
+    file_url: string = 'https://admin.tirgo.io/api/download/';
     name: string | undefined = '';
     phone: string | undefined = '';
     birthday = new Date().toISOString();
@@ -89,7 +91,6 @@ export class ProfilePage implements OnInit {
     selectBirthDay() {
 
     }
-
 
     async selectRegion() {
         await this.authService.alert('Ошибка','Изменение региона временно недоступно')

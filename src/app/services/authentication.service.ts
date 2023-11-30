@@ -459,4 +459,16 @@ export class AuthenticationService {
   }
 
 
+  checkGeolocation() {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          this.geolocationCheck = true;
+        },
+        (error) => {
+          this.geolocationCheck = false;
+        }
+      );
+    } 
+  }
 }

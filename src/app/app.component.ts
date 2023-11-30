@@ -163,7 +163,6 @@ export class AppComponent {
   }
   initializeApp() {
     this.checkSession();
-    console.log(this.authService.geolocationCheck);
     
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {

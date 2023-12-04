@@ -8,6 +8,7 @@ import {AlertController, LoadingController} from "@ionic/angular";
 import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
 import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer/ngx";
 import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
+import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
 
 const TOKEN_KEY = 'jwttirgotoken';
 const API_URL = 'https://admin.tirgo.io/api';
@@ -17,7 +18,7 @@ const API_URL = 'https://admin.tirgo.io/api';
 })
 export class AuthenticationService {
   authenticationState = new BehaviorSubject({});
-  geolocationCheck:boolean = false;
+  geolocationCheck:boolean;
   public API_URL: string = 'https://admin.tirgo.io/api';
   public currentUser: User | undefined;
   public viewintro: boolean = false
@@ -54,6 +55,7 @@ export class AuthenticationService {
     private storage: Storage,
     public camera: Camera,
     public transfer: FileTransfer,
+    private geolocation: Geolocation
   ) {
   }
   goToSupport(){
@@ -458,7 +460,6 @@ export class AuthenticationService {
     return this.http.post<any>(sUrl, body);
   }
 
-
   checkGeolocation() {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
@@ -471,4 +472,5 @@ export class AuthenticationService {
       );
     } 
   }
+
 }

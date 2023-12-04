@@ -20,7 +20,7 @@
   </div>
 </div>
 <ion-content>
-  <div *ngIf="items && items.length === 0" class="noItem">
+  <div *ngIf="items && items.length === 0 || authService.mytruck.length === 0" class="noItem">
     <ion-icon src="assets/img/wrong.svg"></ion-icon>
     <p>
       {{'Пока нет заказов для вас.' | translate}}
@@ -36,10 +36,10 @@
     </ion-refresher-content>
   </ion-refresher>
 
-  <div class="wrapper-fluid">
+  <div class="wrapper-fluid" *ngIf="authService.mytruck.length != 0">
     <div class="body-wrap form-block main-body body-have-bottom-menu">
       <ng-container *ngFor="let row of items ">
-        <div class="order-item" *ngIf="row.status != 2">
+        <div class="order-item" *ngIf="row.status != 2 && row.status != 1">
           <div class="order-item-articul" (click)="viewOrderInfo(row.id)">
             <span class="order-header">
               <span>

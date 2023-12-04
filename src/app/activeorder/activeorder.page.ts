@@ -89,6 +89,8 @@ export class ActiveorderPage implements OnInit {
                 //this.authService.alert('Ошибка','Для завершения заказа нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
               });
             }else {
+              console.log('ok');
+              
               this.loading.dismiss();
               this.authService.alert('Ошибка','Для завершения заказа нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
             }

@@ -10,7 +10,7 @@ import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native
 import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
 
 const TOKEN_KEY = 'jwttirgotoken';
-const API_URL = 'https://admin.tirgo.io/api';
+const API_URL = 'http://localhost:4000';
 
 @Injectable({ 
   providedIn: 'root'
@@ -18,7 +18,7 @@ const API_URL = 'https://admin.tirgo.io/api';
 export class AuthenticationService {
   authenticationState = new BehaviorSubject({});
   geolocationCheck:boolean = false;
-  public API_URL: string = 'https://admin.tirgo.io/api';
+  public API_URL: string = 'http://localhost:4000';
   public currentUser: User | undefined;
   public viewintro: boolean = false
   static jwt: any;

@@ -1,0 +1,87 @@
+.white-label {
+  color: #ffffff;
+}
+
+.agroinput {
+  padding-left: 20px;
+
+  ion-label {
+    color: white;
+
+    a {
+      color: white;
+    }
+  }
+
+  ion-checkbox {
+    --background: #262434;
+  }
+}
+
+.resend-sms {
+  display: block;
+  text-align: center;
+  color: white;
+  margin-top: 10px;
+}
+
+.agroinput ion-checkbox {
+  --background: white !important;
+  --background-checked: #ed901e;
+}
+
+.file-group {
+  max-width: 100px !important;
+  min-width: 100px !important;
+  min-height: 70px !important;
+  max-height: 70px !important;
+  width: 100px !important;
+  height: 70px !important;
+
+  .form-group {
+    max-width: 100px;
+    min-width: 100px;
+    min-height: 70px;
+    max-height: 70px;
+    width: 100px;
+    height: 70px;
+    margin-right: 10px;
+
+    img {
+      border-radius: 10px;
+      max-width: 100px;
+      min-width: 100px;
+      min-height: 70px;
+      max-height: 70px;
+      object-fit: cover;
+      width: 100px;
+      height: 70px;
+    }
+  }
+}
+
+.input-mode-code {
+  width: 100%;
+
+  label {
+    display: block;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
+  }
+}
+
+.large-icon {
+  font-size: 10em;
+}
+
+.alert-image {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-top: 16px;
+}
+
+.card-alert {
+  width: 100px;
+  height: 100px;
+}

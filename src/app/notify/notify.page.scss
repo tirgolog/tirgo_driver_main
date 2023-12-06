@@ -1,0 +1,19 @@
+.card-alert {
+    padding: 0;
+    margin: 0;
+    height: 100px;
+    width: 100px;
+}
+
+ion-alert {
+    .alert-wrapper {
+      ion-title {
+        order: 1;
+      }
+  
+      .alert-message {
+        order: 2; 
+      }
+    }
+  }
+  

@@ -31,7 +31,7 @@ export class ActiveorderPage implements OnInit {
     this.item = this.authService.activeorder;
     this.item.transport_types = JSON.parse(this.item.transport_types)
   }
-  async finishOrder(){
+  async finishOrder(item: any){
     const alert = await this.alertController.create({
       header: 'Вы уверены?',
       message: 'Вы действительно хотите завершить заказ?',
@@ -55,8 +55,12 @@ export class ActiveorderPage implements OnInit {
             this.loading.present();
             if(this.authService.geolocationCheck) {
               this.geolocation.getCurrentPosition().then(async (resp) => {
-                const res = await this.authService.finishOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
-                
+                let res: any = '';
+                if(item.isMerchant) {
+                  res = await this.authService.finishMerchantOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString(), item.route?.to_city).toPromise();
+                } else {
+                  res = await this.authService.finishOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
+                }
                 const modal = await this.modalCtrl.create({
                   component: SetraitingPage,
                   swipeToClose: true,

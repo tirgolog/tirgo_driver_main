@@ -122,10 +122,10 @@ export class AuthenticationService {
         }));
   }
 
-  acceptOrder(orderid:number,price:string,dates:any){
+  acceptOrder(orderid:number,price:string,dates:any, isMerchant: boolean){
     const sUrl = API_URL + '/users/acceptOrderDriver';
     const body = JSON.stringify({
-      orderid,price,dates
+      orderid,price,dates, isMerchant
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -140,6 +140,14 @@ export class AuthenticationService {
     const sUrl = API_URL + '/users/fonishOrderDriver';
     const body = JSON.stringify({
       id,lat,lng
+    });
+    return this.http.post<any>(sUrl, body);
+  }
+
+  finishMerchantOrder(id:number,lat:string,lng:string, toCity: any){
+    const sUrl = API_URL + '/users/finishMerchantOrderDriver';
+    const body = JSON.stringify({
+      id,lat,lng,toCity
     });
     return this.http.post<any>(sUrl, body);
   }

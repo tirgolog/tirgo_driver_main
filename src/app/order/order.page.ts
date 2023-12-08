@@ -58,7 +58,10 @@ export class OrderPage implements OnInit {
             cityOrder = this.item.route.from_city.split(',')[1].replace(' ', '');
 
             if (cityUser === cityOrder) {
-              const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays).toPromise();
+              if(this.item.isMerchant) {
+                this.item.id = +this.item.id.split('M')[1];
+              }
+              const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays, this.item.isMerchant).toPromise();
 
               if (acceptRes.status) {
                 this.authService.myorders = await this.authService.getMyOrders().toPromise();

@@ -84,7 +84,7 @@ export class VerificationPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
@@ -108,7 +108,7 @@ export class VerificationPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
@@ -132,7 +132,7 @@ export class VerificationPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
@@ -156,7 +156,7 @@ export class VerificationPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
@@ -180,7 +180,7 @@ export class VerificationPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };

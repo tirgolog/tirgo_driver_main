@@ -260,13 +260,14 @@ export class ProfilePage implements OnInit {
             cssClass: 'custom-loading'
         });
         await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
+            console.log(imageData)
             this.loading.present()
             const fileTransfer: FileTransferObject = await this.authService.transfer.create();
             const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
             const uploadOpts: FileUploadOptions = {
                 headers: headers,
                 fileKey: 'file',
-                mimeType: "image/jpeg",
+                mimeType: "image/*",
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };
@@ -291,7 +292,7 @@ export class ProfilePage implements OnInit {
             const uploadOpts: FileUploadOptions = {
                 headers: headers,
                 fileKey: 'file',
-                mimeType: "image/jpeg",
+                mimeType: "image/*",
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };
@@ -315,7 +316,7 @@ export class ProfilePage implements OnInit {
             const uploadOpts: FileUploadOptions = {
                 headers: headers,
                 fileKey: 'file',
-                mimeType: "image/jpeg",
+                mimeType: "image/*",
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };

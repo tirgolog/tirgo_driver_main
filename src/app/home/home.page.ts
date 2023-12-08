@@ -126,7 +126,7 @@ export class HomePage implements OnInit  {
         this.authService.getMyOrders().subscribe((order: any) => {
           this.items = order.filter((el: any) => this.haveSameContents(el.transport_types, [this.selectedtruck]));
           this.items.forEach((v,k) => {
-            v.transport_types = JSON.parse(v.transport_types)
+            // v.transport_types = JSON.parse(v.transport_types)
           })
         })
       })
@@ -285,7 +285,7 @@ export class HomePage implements OnInit  {
         .then(res => {
           if (res.status) {
             this.loading.dismiss()
-            this.authService.acceptOrder(this.appendorderid, this.price, this.dates).toPromise().then((res) => {
+            this.authService.acceptOrder(this.appendorderid, this.price, this.dates, false).toPromise().then((res) => {
               if (res.data) {
               this.loading.dismiss()
                 this.loadingSendButton = false;
@@ -365,7 +365,7 @@ export class HomePage implements OnInit  {
       this.authService.getMyOrders().subscribe((order: any) => {
         this.items = order
         this.items.forEach((v,k) => {
-          v.transport_types = JSON.parse(v.transport_types)
+          // v.transport_types = JSON.parse(v.transport_types)
         })
       })
     }

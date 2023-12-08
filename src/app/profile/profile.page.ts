@@ -16,7 +16,7 @@ import { log } from 'console';
     styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-    file_url: string = 'http://localhost:9000/tirgo/';
+    file_url: string = 'https://admin.tirgo.io/file/';
     name: string | undefined = '';
     phone: string | undefined = '';
     birthday = new Date().toISOString();

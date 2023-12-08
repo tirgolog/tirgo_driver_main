@@ -18,7 +18,7 @@ export class NotifyPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.presentActionSheet()
+    // this.presentActionSheet()
   }
   back() {
     this.navCtrl.back()

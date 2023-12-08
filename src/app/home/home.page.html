@@ -48,7 +48,7 @@
                 №{{authService.addLeadingZeros(row.id)}}
               </span>
               <span>
-                <img src="assets/img/done.svg" alt="verification">
+                <img src="assets/img/done.svg" *ngIf="false" alt="verification">
                 <span class="view-order" *ngIf="vieworder !== row.id">{{'Просмотреть' | translate}}</span>
                 <span class="view-order" *ngIf="vieworder === row.id">{{'Скрыть' | translate}}</span>
               </span>

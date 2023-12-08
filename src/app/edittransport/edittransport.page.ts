@@ -10,7 +10,7 @@ import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer
 })
 export class EdittransportPage implements OnInit {
   @Input('item') item: any;
-  file_url: string = 'http://185.183.243.223:9000/tirgo/';
+  file_url: string = 'http://localhost:9000/tirgo/';
 
   type:number = 0;
   maxweight:number = 0;

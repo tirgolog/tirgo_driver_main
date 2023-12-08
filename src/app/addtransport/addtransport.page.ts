@@ -9,7 +9,7 @@ import { FileTransferObject, FileUploadOptions } from "@ionic-native/file-transf
   styleUrls: ['./addtransport.page.scss'],
 })
 export class AddtransportPage implements OnInit {
-  file_url: string = 'http://185.183.243.223:9000/tirgo/';
+  file_url: string = 'http://localhost:9000/tirgo/';
   type: number = 0;
   maxweight: number = 21000;
   name: string = '';
@@ -165,13 +165,16 @@ export class AddtransportPage implements OnInit {
     }/*else if(!this.license_files.length){
       this.authService.alert('Ошибка','Требуется добавить фото лицензии на перевозку грузов')
       this.loadingAddTransport = false;
-    }*/else if (!this.car_photos.length) {
-      this.authService.alert('Ошибка', 'Требуется добавить фото транспорта')
-      this.loadingAddTransport = false;
-    } else if (!this.tech_passport_files.length) {
-      this.authService.alert('Ошибка', 'Требуется добавить фото технического транспорта на транспорт')
-      this.loadingAddTransport = false;
-    } else if (this.cubature === '') {
+    }*/
+    // else if (!this.car_photos.length) {
+    //   this.authService.alert('Ошибка', 'Требуется добавить фото транспорта')
+    //   this.loadingAddTransport = false;
+    // } 
+    // else if (!this.tech_passport_files.length) {
+    //   this.authService.alert('Ошибка', 'Требуется добавить фото технического транспорта на транспорт')
+    //   this.loadingAddTransport = false;
+    // } 
+    else if (this.cubature === '') {
       this.authService.alert('Ошибка', 'Требуется указать кубатуру прицепа')
       this.loadingAddTransport = false;
     } else if (this.state_number === '') {

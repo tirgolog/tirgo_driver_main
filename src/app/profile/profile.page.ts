@@ -16,7 +16,7 @@ import { log } from 'console';
     styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
-    file_url: string = 'http://185.183.243.223:9000/tirgo/';
+    file_url: string = 'http://localhost:9000/tirgo/';
     name: string | undefined = '';
     phone: string | undefined = '';
     birthday = new Date().toISOString();

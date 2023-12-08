@@ -9,7 +9,7 @@ import { FileTransferObject, FileUploadOptions } from "@ionic-native/file-transf
   styleUrls: ['./addtransport.page.scss'],
 })
 export class AddtransportPage implements OnInit {
-  file_url: string = 'http://localhost:4000/download/';
+  file_url: string = 'http://185.183.243.223:9000/tirgo/';
   type: number = 0;
   maxweight: number = 21000;
   name: string = '';

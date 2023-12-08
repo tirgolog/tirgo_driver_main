@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {AlertController, ModalController, NavController} from "@ionic/angular";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import {AlertController, IonInput, ModalController, NavController, Platform} from "@ionic/angular";
 import {Router} from "@angular/router";
 import {Storage} from "@ionic/storage";
 import {AuthenticationService} from "../../services/authentication.service";
@@ -30,16 +30,21 @@ export class LoginPage implements OnInit {
   phonescodesOriginal:any;
   phonescodes:any;
   loading:boolean = false;
+  @ViewChild('passInput') passInput: IonInput;
   constructor(
     private router: Router,
     private app: AppComponent,
-    private storage: Storage,
     private modalCtrl:ModalController,
     private httpClient: HttpClient,
     public authService: AuthenticationService,
     private navCtrl: NavController,
-    public alertController: AlertController
-  ) { }
+    public alertController: AlertController,
+    private platform: Platform,
+  ) { 
+    this.platform.ready().then(() => {
+      this.setAutocompleteAttribute();
+    });
+  }
 
   ngOnInit() : void {
     this.getJSONFromLocal().subscribe(
@@ -48,6 +53,17 @@ export class LoginPage implements OnInit {
           this.phonescodes = this.phonescodesOriginal;
         },
         error => console.error(`Failed because: ${error}`));
+  }
+
+  setAutocompleteAttribute() {
+    if (this.passInput) {
+      const nativeInput = this.passInput.getInputElement();
+      if (nativeInput) {
+        nativeInput.then((input: HTMLInputElement) => {
+          input.autocomplete = 'one-time-code';
+        });
+      }
+    }
   }
   public getJSONFromLocal(): Observable<any> {
     return this.httpClient.get("./assets/json/phone.json");

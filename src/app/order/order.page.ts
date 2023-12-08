@@ -46,7 +46,7 @@ export class OrderPage implements OnInit {
 
     this.loading.present();
     this.loadingAccept = false;
-    if (await this.authService.geolocationCheck) {
+    if (this.authService.geolocationCheck) {
       const resp = await this.geolocation.getCurrentPosition();
       const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU";
 

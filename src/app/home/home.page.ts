@@ -272,6 +272,7 @@ export class HomePage implements OnInit  {
   }
 
   async sendAcceptOrder() {
+    
     this.loadingSendButton = true;
     this.loading = await this.loadingCtrl.create({
       message: 'Проверяем геопозицию',

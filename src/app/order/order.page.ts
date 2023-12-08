@@ -6,6 +6,7 @@ import { AlertController, LoadingController, ModalController, Platform } from "@
 import axios from "axios";
 import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { log } from 'console';
+import { AddtransportPage } from '../addtransport/addtransport.page';
 
 @Component({
   selector: 'app-order',
@@ -27,14 +28,15 @@ export class OrderPage implements OnInit {
     private platform: Platform
   ) { }
 
-  ngOnInit() {
+  async ngOnInit() {
+    await this.authService.checkGeolocation()
   }
   addDays(date: any, num: number) {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept() {
-    this.authService.checkGeolocation()
-    
+    await this.authService.checkGeolocation()
+     
     let cityOrder = '';
     let cityUser = '';
 
@@ -112,6 +114,7 @@ export class OrderPage implements OnInit {
       this.loadingAccept = false;
     }
   }
+  
   findDay(num: number) {
     const index = this.selecteddays.findIndex(e => e === num)
     return index >= 0;
@@ -125,4 +128,21 @@ export class OrderPage implements OnInit {
     }
   }
 
+  async addTransport() {
+    const modal = await this.modalController.create({
+      component: AddtransportPage,
+      swipeToClose: true,
+      showBackdrop: true,
+      breakpoints: [0, 1],
+      initialBreakpoint: 1,
+      presentingElement: await this.modalController.getTop(),
+      backdropDismiss: true,
+      cssClass: 'modalCss',
+      mode: 'ios',
+    });
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    if (data) {
+    }
+  }
 }

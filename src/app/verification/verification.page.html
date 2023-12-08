@@ -1,0 +1,134 @@
+<ion-header>
+  <div class="wrapper-fluid-header">
+    <div class="logo-wrap personal-head">
+      <button class="top-back" (click)="back()"><img src="assets/img/arrow-left.svg" alt=""></button>
+      <h2>Подтверждение номера</h2>
+      <div></div>
+    </div>
+  </div>
+</ion-header>
+
+<ion-content>
+  <div class="body-wrap form-block">
+    <ng-container *ngIf="codeon&&!verify">
+      <span class="input-mode-code">
+        <label for="pass">{{'Введите код, который мы отправили вам на номер ' | translate}} {{prefix}}
+          {{phone}}</label>
+        <input id="pass" autocomplete="one-time-code" type="tel" name="pass" [(ngModel)]="code">
+      </span>
+      <span *ngIf="timer > 0" class="resend-sms">{{'Повторная отправка СМС через' | translate}} {{timer}} {{'сек' |
+        translate}}.</span>
+    </ng-container>
+    <ng-container *ngIf="verify">
+      <span class="input-mode-code">
+        <label for="fullName">{{'ФИО *' | translate}} </label>
+        <input id="fullName" autocomplete="one-time-code" type="text" name="fullName" [(ngModel)]="fullName">
+      </span>
+    </ng-container>
+    <ng-container *ngIf="verify">
+      <p><b>{{'Фото паспорта с вашим лицом селфи' | translate}}:</b></p>
+      <div class="file-uploads">
+        <div class="file-group">
+          <div class="form-group" (click)="addPassport()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+        <div class="file-group">
+          <div class="form-group">
+            <img src="../../assets/img/passport.png" alt="">
+          </div>
+        </div>
+      </div>
+
+      <span class="input-mode-code">
+        <label for="cardNumber">{{'Банковская карта *' | translate}} </label>
+        <input id="cardNumber" autocomplete="one-time-code" type="text" name="cardNumber" [mask]="mask"
+          [(ngModel)]="bankNumber">
+      </span>
+
+      <span class="input-mode-code">
+        <label for="cardName">{{'Название банка выпущенного карты*' | translate}} </label>
+        <input id="cardName" autocomplete="one-time-code" type="text" name="cardName" [(ngModel)]="bankName">
+      </span>
+
+      <p><b>{{'Фото спереди' | translate}}:</b></p>
+      <div class="file-uploads">
+        <div class="file-group">
+          <div class="form-group" (click)="addPhotoOpposite()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+        <div class="file-group">
+          <div class="form-group">
+            <img src="../../assets/truck/opposite.png" alt="">
+          </div>
+        </div>
+      </div>
+      <p><b>{{'Фото сзади' | translate}}:</b></p>
+      <div class="file-uploads">
+        <div class="file-group">
+          <div class="form-group" (click)="addPhotoBack()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+        <div class="file-group">
+          <div class="form-group">
+            <img src="../../assets/truck/back.png" alt="">
+          </div>
+        </div>
+      </div>
+      <p><b>{{'Фото сбоку' | translate}}:</b></p>
+      <div class="file-uploads">
+        <div class="file-group">
+          <div class="form-group" (click)="addPhotoLeft()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+        <div class="file-group">
+          <div class="form-group">
+            <img src="../../assets/truck/right.png" alt="">
+          </div>
+        </div>
+      </div>
+      <p><b>{{'Фото ADR' | translate}}:</b></p>
+      <div class="file-uploads">
+        <div class="file-group">
+          <div class="form-group" (click)="addPhotoAdr()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="bottom-wrap autorize-btns" *ngIf="!verify">
+    <button class="classic-btn" *ngIf="!codeon" [disabled]="loading" (click)="signIn()">
+      <ng-container *ngIf="!loading">{{'Отправить СМС' | translate}}</ng-container>
+      <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
+    </button>
+    <button class="classic-btn" *ngIf="codeon" (click)="verifyCode()">
+      <ng-container *ngIf="!loading">{{'Продолжить' | translate}}</ng-container>
+      <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
+    </button>
+    <button class="support-btn" *ngIf="codeon && timer === 0" (click)="signIn()">
+      <ng-container *ngIf="!loading">{{'Отправить СМС' | translate}}</ng-container>
+      <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
+    </button>
+  </div>
+  <div class="bottom-wrap autorize-btns" *ngIf="verify">
+    <button class="classic-btn" (click)="presentActionSheet()">
+      <ng-container *ngIf="loading" id="present-alert">{{'Отправить на проверку' |
+        translate}}</ng-container>
+      <ng-container *ngIf="!loading"><ion-spinner></ion-spinner></ng-container>
+    </button>
+  </div>
+</ion-content>

@@ -9,7 +9,6 @@ import { LoginPageRoutingModule } from './login-routing.module';
 import { LoginPage } from './login.page';
 import {NgxMaskIonicModule} from "ngx-mask-ionic";
 import {TranslateModule} from "@ngx-translate/core";
-
 @NgModule({
     imports: [
         CommonModule,
@@ -17,7 +16,7 @@ import {TranslateModule} from "@ngx-translate/core";
         IonicModule,
         LoginPageRoutingModule,
         NgxMaskIonicModule,
-        TranslateModule
+        TranslateModule,
     ],
   declarations: [LoginPage]
 })

@@ -79,7 +79,11 @@ const routes: Routes = [
   {
     path: 'selectlanguageauth',
     loadChildren: () => import('./selectlanguageauth/selectlanguageauth.module').then( m => m.SelectlanguageauthPageModule)
+  },  {
+    path: 'verification',
+    loadChildren: () => import('./verification/verification.module').then( m => m.VerificationPageModule)
   },
+
 ];
 @NgModule({
   imports: [

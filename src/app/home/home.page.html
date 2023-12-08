@@ -47,8 +47,11 @@
                 <img *ngIf="findAcceptedOrders(row.id)" src="assets/img/rel.svg" alt="">
                 №{{authService.addLeadingZeros(row.id)}}
               </span>
-              <span class="view-order" *ngIf="vieworder !== row.id">{{'Просмотреть' | translate}}</span>
-              <span class="view-order" *ngIf="vieworder === row.id">{{'Скрыть' | translate}}</span>
+              <span>
+                <img src="assets/img/done.svg" *ngIf="false" alt="verification">
+                <span class="view-order" *ngIf="vieworder !== row.id">{{'Просмотреть' | translate}}</span>
+                <span class="view-order" *ngIf="vieworder === row.id">{{'Скрыть' | translate}}</span>
+              </span>
             </span>
             <img *ngIf="row.insure_deal" class="order-item-status" src="assets/img/done.svg" alt="">
           </div>

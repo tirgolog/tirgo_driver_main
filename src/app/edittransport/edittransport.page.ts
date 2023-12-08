@@ -10,7 +10,7 @@ import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer
 })
 export class EdittransportPage implements OnInit {
   @Input('item') item: any;
-    file_url: string = 'https://admin.tirgo.io/api/download/';
+  file_url: string = 'https://admin.tirgo.io/file/';
 
   type:number = 0;
   maxweight:number = 0;
@@ -172,7 +172,7 @@ export class EdittransportPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
@@ -226,7 +226,7 @@ export class EdittransportPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
@@ -277,7 +277,7 @@ export class EdittransportPage implements OnInit {
       const uploadOpts: FileUploadOptions = {
         headers: headers,
         fileKey: 'file',
-        mimeType: "image/jpeg",
+        mimeType: "image/*",
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };

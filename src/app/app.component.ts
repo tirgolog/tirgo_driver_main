@@ -11,7 +11,6 @@ import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
 import axios from "axios";
-import { log } from 'console';
 
 @Component({
   selector: 'app-root',

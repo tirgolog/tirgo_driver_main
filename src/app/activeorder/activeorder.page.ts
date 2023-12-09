@@ -31,7 +31,7 @@ export class ActiveorderPage implements OnInit {
     this.item = this.authService.activeorder;
     this.item.transport_types = JSON.parse(this.item.transport_types)
   }
-  async finishOrder(item: any){
+  async finishOrder(item){
     const alert = await this.alertController.create({
       header: 'Вы уверены?',
       message: 'Вы действительно хотите завершить заказ?',
@@ -48,57 +48,44 @@ export class ActiveorderPage implements OnInit {
           text: 'Да',
           handler: async () => {
             await alert.present();
-            this.authService.checkGeolocation();
             this.loading = await this.loadingCtrl.create({
               message: 'Завершаем заказ',
             });
             this.loading.present();
-            if(this.authService.geolocationCheck) {
-              this.geolocation.getCurrentPosition().then(async (resp) => {
-                let res: any = '';
-                if(item.isMerchant) {
-                  res = await this.authService.finishMerchantOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString(), item.route?.to_city).toPromise();
-                } else {
-                  res = await this.authService.finishOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
+            this.geolocation.getCurrentPosition().then(async (resp) => {
+              console.log(resp.coords)
+              const res = await this.authService.finishOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
+              const modal = await this.modalCtrl.create({
+                component: SetraitingPage,
+                swipeToClose: true,
+                showBackdrop: true,
+                breakpoints: [0, 0.6],
+                initialBreakpoint: 0.6,
+                presentingElement: await this.modalCtrl.getTop(),
+                backdropDismiss: true,
+                cssClass: 'modalCss',
+                mode: 'ios',
+                componentProps: {
+                  orderid:this.authService.activeorder.id,
+                  userid:this.authService.activeorder.user_id,
                 }
-                const modal = await this.modalCtrl.create({
-                  component: SetraitingPage,
-                  swipeToClose: true,
-                  showBackdrop: true,
-                  breakpoints: [0, 0.6],
-                  initialBreakpoint: 0.6,
-                  presentingElement: await this.modalCtrl.getTop(),
-                  backdropDismiss: true,
-                  cssClass: 'modalCss',
-                  mode: 'ios',
-                  componentProps: {
-                    orderid:this.authService.activeorder.id,
-                    userid:this.authService.activeorder.user_id,
-                  }
-                });
-                await modal.present();
-                if (res.status){
-                  this.loading.dismiss();
-                  if (res.error){
-                    await this.authService.alert('Ошибка',res.error)
-                  }
-                  this.authService.activeorder = null;
-                  await this.router.navigate(['/tabs/home'], {replaceUrl: true});
-                }else {
-                  this.loading.dismiss();
+              });
+              await modal.present();
+              if (res.status){
+                this.loading.dismiss();
+                if (res.error){
                   await this.authService.alert('Ошибка',res.error)
                 }
-              }).catch(async (err) => {
+                this.authService.activeorder = null;
+                await this.router.navigate(['/tabs/home'], {replaceUrl: true});
+              }else {
                 this.loading.dismiss();
-                //this.authService.alert('Ошибка','Для завершения заказа нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-              });
-            }else {
-              console.log('ok');
-              
+                await this.authService.alert('Ошибка',res.error)
+              }
+            }).catch(async (err) => {
               this.loading.dismiss();
-              this.authService.alert('Ошибка','Для завершения заказа нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-            }
-            
+              //this.authService.alert('Ошибка','Для завершения заказа нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+            });
           }
         }
       ]

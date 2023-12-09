@@ -193,6 +193,11 @@ input[type="number"]:focus {
   text-align: center;
   color: #FFFFFF;
 }
+
+.reg-btn:disabled {
+  opacity: .4;
+}
+
 .classic-btn {
   background: #F7941C;
   border-radius: 4px;

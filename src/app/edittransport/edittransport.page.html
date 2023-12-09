@@ -100,7 +100,7 @@
       </div>
     </div>
     <div class="bottom-wrap personal-bottom">
-      <button class="reg-btn" (click)="saveTransport()">{{'Сохранить' | translate}}</button>
+      <button [disabled]="loadingAddTransport" class="reg-btn" (click)="saveTransport()">{{'Сохранить' | translate}}</button>
     </div>
   </div>
 </ion-content>

@@ -147,25 +147,25 @@ export class AddtransportPage implements OnInit {
   }
   async saveTransport() {
     this.loadingAddTransport = true;
-    if (this.type === 0) {
-      this.authService.alert('Ошибка', 'Требуется выбрать тип транспорта.')
-      this.loadingAddTransport = false;
-    }/*else if(!this.description.length){
-      this.authService.alert('Ошибка','Требуется ввести описание транспорта. Это поможет клиенту понять подходит ли транспорт под его требования.')
-      this.loadingAddTransport = false;
-    }*/else if (!this.name.length) {
-      this.authService.alert('Ошибка', 'Требуется ввести марку, модель транспорта')
-      this.loadingAddTransport = false;
-    } else if (this.maxweight < 1000) {
-      this.authService.alert('Ошибка', 'Грузоподъемность не может быть менее 1 000 кг.')
-      this.loadingAddTransport = false;
-    } else if (this.maxweight > 35000) {
-      this.authService.alert('Ошибка', 'Грузоподъемность не может быть более 35 000 кг.')
-      this.loadingAddTransport = false;
-    }/*else if(!this.license_files.length){
-      this.authService.alert('Ошибка','Требуется добавить фото лицензии на перевозку грузов')
-      this.loadingAddTransport = false;
-    }*/
+    // if (this.type === 0) {
+    //   this.authService.alert('Ошибка', 'Требуется выбрать тип транспорта.')
+    //   this.loadingAddTransport = false;
+    // }else if(!this.description.length){
+    //   this.authService.alert('Ошибка','Требуется ввести описание транспорта. Это поможет клиенту понять подходит ли транспорт под его требования.')
+    //   this.loadingAddTransport = false;
+    // }else if (!this.name.length) {
+    //   this.authService.alert('Ошибка', 'Требуется ввести марку, модель транспорта')
+    //   this.loadingAddTransport = false;
+    // } else if (this.maxweight < 1000) {
+    //   this.authService.alert('Ошибка', 'Грузоподъемность не может быть менее 1 000 кг.')
+    //   this.loadingAddTransport = false;
+    // } else if (this.maxweight > 35000) {
+    //   this.authService.alert('Ошибка', 'Грузоподъемность не может быть более 35 000 кг.')
+    //   this.loadingAddTransport = false;
+    // }else if(!this.license_files.length){
+    //   this.authService.alert('Ошибка','Требуется добавить фото лицензии на перевозку грузов')
+    //   this.loadingAddTransport = false;
+    // }
     // else if (!this.car_photos.length) {
     //   this.authService.alert('Ошибка', 'Требуется добавить фото транспорта')
     //   this.loadingAddTransport = false;
@@ -174,13 +174,14 @@ export class AddtransportPage implements OnInit {
     //   this.authService.alert('Ошибка', 'Требуется добавить фото технического транспорта на транспорт')
     //   this.loadingAddTransport = false;
     // } 
-    else if (this.cubature === '') {
-      this.authService.alert('Ошибка', 'Требуется указать кубатуру прицепа')
-      this.loadingAddTransport = false;
-    } else if (this.state_number === '') {
-      this.authService.alert('Ошибка', 'Требуется указать гос. номер тягача')
-      this.loadingAddTransport = false;
-    } else {
+    // else if (this.cubature === '') {
+    //   this.authService.alert('Ошибка', 'Требуется указать кубатуру прицепа')
+    //   this.loadingAddTransport = false;
+    // } else if (this.state_number === '') {
+    //   this.authService.alert('Ошибка', 'Требуется указать гос. номер тягача')
+    //   this.loadingAddTransport = false;
+    // }
+    //  else {
       await this.authService.addTransport(this.name, this.description, this.maxweight, this.type, this.car_photos, this.license_files, this.tech_passport_files, this.adr, this.cubature, this.state_number).toPromise()
         .then(async (res: any) => {
           if (res.status) {
@@ -193,7 +194,7 @@ export class AddtransportPage implements OnInit {
         .catch(async (err: any) => {
           console.log(err)
         });
-    }
+    // }
   }
   async addFilesTechPassport() {
     this.loading = await this.loadingCtrl.create({

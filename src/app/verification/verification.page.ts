@@ -171,8 +171,10 @@ export class VerificationPage implements OnInit {
       message: 'Фото паспорта с вашим лицом селфи',
       cssClass: 'custom-loading'
     });
+    console.log('Before calling getPicture');
     await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
       this.loading.present()
+      console.log('photos')
       const fileTransfer: FileTransferObject = await this.authService.transfer.create();
       const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
       const uploadOpts: FileUploadOptions = {
@@ -182,8 +184,12 @@ export class VerificationPage implements OnInit {
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
+      console.log('photos2')
+
       uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
+      console.log('photos3')
+      console.log(res?.file?.filename)
       this.formData.selfies_with_passport = res?.file?.filename
       if (res.status) {
         this.loading.dismiss();

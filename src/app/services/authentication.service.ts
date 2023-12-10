@@ -1,45 +1,45 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-import {User} from '../user';
-import {Storage} from '@ionic/storage';
-import {AlertController, LoadingController} from "@ionic/angular";
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { map } from 'rxjs/operators';
+import { User } from '../user';
+import { Storage } from '@ionic/storage';
+import { AlertController, LoadingController } from "@ionic/angular";
 import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
-import {FileTransfer, FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer/ngx";
-import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
-import {Geolocation} from '@awesome-cordova-plugins/geolocation/ngx';
+import { FileTransfer, FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer/ngx";
+import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
+import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 
 const TOKEN_KEY = 'jwttirgotoken';
 const API_URL = 'https://admin.tirgo.io/api';
 
-@Injectable({ 
+@Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
   authenticationState = new BehaviorSubject({});
-  geolocationCheck:boolean;
+  geolocationCheck: boolean;
   public API_URL: string = 'https://admin.tirgo.io/api';
   public currentUser: User | undefined;
   public viewintro: boolean = false
   static jwt: any;
   public language: string = "ru";
   public addresses: any[] = [];
-  public mytruck: any[]=[];
-  public contacts: any[]=[];
+  public mytruck: any[] = [];
+  public contacts: any[] = [];
   public typetruck: any[] = [];
   public myorders: any[] = [];
   public myAllorders: any[] = [];
   public myarchiveorders: any[] = [];
   public currency: any[] = [];
   public statuses: any[] = [];
-  public activeorder:any;
+  public activeorder: any;
   public typecargo: any[] = [];
   public notifications: any[] = [];
   public messages: any[] = [];
   public allordersfree: any[] = [];
   public allmyordersprocessing: any[] = [];
-  public cityinfo:string = '';
+  public cityinfo: string = '';
   public optionsCamera: CameraOptions = {
     quality: 50,
     destinationType: this.camera.DestinationType.FILE_URI,
@@ -58,24 +58,24 @@ export class AuthenticationService {
     private geolocation: Geolocation
   ) {
   }
-  goToSupport(){
-    this.iab.create('https://t.me/tirgosupportbot','_system');
+  goToSupport() {
+    this.iab.create('https://t.me/tirgosupportbot', '_system');
   }
-  addLeadingZeros(num:number) {
+  addLeadingZeros(num: number) {
     return String(num).padStart(6, '0');
   }
 
-  loginUser(phone: string,country_code:string) {
+  loginUser(phone: string, country_code: string) {
     const sUrl = API_URL + '/users/login';
     const body = JSON.stringify({
-      phone,country_code
+      phone, country_code
     });
     return this.http.post<any>(sUrl, body);
   }
-  verifyCode(phone: string,code:string) {
+  verifyCode(phone: string, code: string) {
     const sUrl = API_URL + '/users/codeverify';
     const body = JSON.stringify({
-      phone,code
+      phone, code
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -95,11 +95,11 @@ export class AuthenticationService {
   updateLocation(lat: string, lng: string) {
     const sUrl = API_URL + '/users/updateLocationDriver';
     const body = JSON.stringify({
-      lat,lng
+      lat, lng
     });
     return this.http.post<any>(sUrl, body);
   }
-  setBusy(busy:any) {
+  setBusy(busy: any) {
     const sUrl = API_URL + '/users/setBusy';
     const body = JSON.stringify({
       busy
@@ -107,47 +107,47 @@ export class AuthenticationService {
     return this.http.post<any>(sUrl, body);
   }
 
-  findCity(query:any): Observable<any[]> {
+  findCity(query: any): Observable<any[]> {
     const sUrl = API_URL + '/users/findCity';
     const body = JSON.stringify({
       query
     });
     return this.http.post<any>(sUrl, body)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data.suggestions;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data.suggestions;
+        } else {
+          return [];
+        }
+      }));
   }
 
-  acceptOrder(orderid:number,price:string,dates:any, isMerchant: boolean){
+  acceptOrder(orderid: number, price: string, dates: any, isMerchant: boolean) {
     const sUrl = API_URL + '/users/acceptOrderDriver';
     const body = JSON.stringify({
-      orderid,price,dates, isMerchant
+      orderid, price, dates, isMerchant
     });
     return this.http.post<any>(sUrl, body);
   }
-  cancelOrder(item:any){
+  cancelOrder(item: any) {
     const sUrl = API_URL + '/users/cancelOrderDriver';
     const body = JSON.stringify({
       item
     });
     return this.http.post<any>(sUrl, body);
   }
-  finishOrder(id:number,lat:string,lng:string){
+  finishOrder(id: number, lat: string, lng: string) {
     const sUrl = API_URL + '/users/fonishOrderDriver';
     const body = JSON.stringify({
-      id,lat,lng
+      id, lat, lng
     });
     return this.http.post<any>(sUrl, body);
   }
 
-  finishMerchantOrder(id:number,lat:string,lng:string, toCity: any){
+  finishMerchantOrder(id: number, lat: string, lng: string, toCity: any) {
     const sUrl = API_URL + '/users/finishMerchantOrderDriver';
     const body = JSON.stringify({
-      id,lat,lng,toCity
+      id, lat, lng, toCity
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -175,17 +175,17 @@ export class AuthenticationService {
     });
     return this.http.post<any>(sUrl, body);
   }
-  addContact(phone: string,telegram:boolean,whatsapp:boolean,viber:boolean) {
+  addContact(phone: string, telegram: boolean, whatsapp: boolean, viber: boolean) {
     const sUrl = API_URL + '/users/addContact';
     const body = JSON.stringify({
-      phone,telegram,whatsapp,viber
+      phone, telegram, whatsapp, viber
     });
     return this.http.post<any>(sUrl, body);
   }
-  verifyNewContact(phone: string,code:string) {
+  verifyNewContact(phone: string, code: string) {
     const sUrl = API_URL + '/users/verifyNewContact';
     const body = JSON.stringify({
-      phone,code
+      phone, code
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -210,21 +210,27 @@ export class AuthenticationService {
     });
     return this.http.post<any>(sUrl, body);
   }
-  addTransport(name:string,description:string,maxweight:number,type:number,car_photos:any,license_files:any,tech_passport_files:any,adr:boolean,cubature:string,state_number:string) {
+  addTransport(name: string, description: string, maxweight: number, type: number, car_photos: any, license_files: any, tech_passport_files: any, adr: boolean, cubature: string, state_number: string) {
     const sUrl = API_URL + '/users/addTransport';
     const body = JSON.stringify({
-      name,description,maxweight,type,car_photos,license_files,tech_passport_files,adr,cubature,state_number
+      name, description, maxweight, type, car_photos, license_files, tech_passport_files, adr, cubature, state_number
     });
     return this.http.post<any>(sUrl, body);
   }
-  editTransport(name:string,description:string,maxweight:number,type:number,adr:boolean,id:number,car_photos:any,license_files:any,tech_passport_files:any,cubature:string,state_number:string) {
+  editTransport(name: string, description: string, maxweight: number, type: number, adr: boolean, id: number, car_photos: any, license_files: any, tech_passport_files: any, cubature: string, state_number: string) {
     const sUrl = API_URL + '/users/editTransport';
     const body = JSON.stringify({
-      name,description,maxweight,type,adr,id,car_photos,license_files,tech_passport_files,cubature,state_number
+      name, description, maxweight, type, adr, id, car_photos, license_files, tech_passport_files, cubature, state_number
     });
     return this.http.post<any>(sUrl, body);
   }
-
+  Verification(full_name: string, selfies_with_passport: string, bank_card: string, bank_cardname: string, transport_front_photo: string, transport_back_photo: string, transport_side_photo: string, adr_photo: string, transport_registration_country: string, state_registration_truckNumber: string, driver_license: string, transportation_license_photo: string, techpassport_photo1: string, techpassport_photo2: string) {
+    const sUrl = API_URL + '/users/verification';
+    const body = JSON.stringify({
+      full_name, selfies_with_passport, bank_card, bank_cardname, transport_front_photo, transport_back_photo, transport_side_photo, adr_photo, transport_registration_country, state_registration_truckNumber, driver_license, transportation_license_photo, techpassport_photo1, techpassport_photo2
+    });
+    return this.http.post<any>(sUrl, body);
+  }
 
   getTruck() {
     const sUrl = API_URL + '/users/getMyTrack';
@@ -241,25 +247,25 @@ export class AuthenticationService {
   getMessages() {
     const sUrl = API_URL + '/users/getAllMessages';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.data) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.data) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
-  sendMessage(message:string){
+  sendMessage(message: string) {
     const sUrl = API_URL + '/users/sendMessageSupport';
     const body = JSON.stringify({
       message
     });
     return this.http.post<any>(sUrl, body);
   }
-  delPhotoUser(file:string){
+  delPhotoUser(file: string) {
     const sUrl = API_URL + '/users/delPhotoUser';
     const body = JSON.stringify({
-      filename:file
+      filename: file
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -278,71 +284,71 @@ export class AuthenticationService {
   getTypeCargo() {
     const sUrl = API_URL + '/users/getTypeCargo';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
   getTypeTruck() {
     const sUrl = API_URL + '/users/getTypeTruck';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
 
   getMyOrders() {
     const sUrl = API_URL + '/users/getMyOrdersDriver';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
 
   getMyArchiveOrders() {
     const sUrl = API_URL + '/users/getMyArchiveOrdersDriver';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
 
   getCurrency() {
     const sUrl = API_URL + '/users/getCurrency';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
   getStatuses() {
     const sUrl = API_URL + '/users/getStatuses';
     return this.http.get<any>(sUrl)
-        .pipe(map(res => {
-          if (res.status) {
-            return res.data;
-          } else {
-            return [];
-          }
-        }));
+      .pipe(map(res => {
+        if (res.status) {
+          return res.data;
+        } else {
+          return [];
+        }
+      }));
   }
 
 
@@ -451,10 +457,10 @@ export class AuthenticationService {
     });
     return this.http.post<any>(sUrl, body);
   }
-  setRaiting(orderid: string,star: number,comment: string,userid:string) {
+  setRaiting(orderid: string, star: number, comment: string, userid: string) {
     const sUrl = API_URL + '/users/setRaitingUser';
     const body = JSON.stringify({
-      orderid,star,comment,userid
+      orderid, star, comment, userid
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -478,7 +484,7 @@ export class AuthenticationService {
           this.geolocationCheck = false;
         }
       );
-    } 
+    }
   }
 
 }

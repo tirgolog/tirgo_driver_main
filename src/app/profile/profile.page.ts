@@ -1,14 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {AuthenticationService} from "../services/authentication.service";
 import {ActionSheetController, AlertController, LoadingController, ModalController, Platform} from "@ionic/angular";
-import {ChoiceCityPage} from "../choice-city/choice-city.page";
 import {AddtransportPage} from "../addtransport/addtransport.page";
 import {EdittransportPage} from "../edittransport/edittransport.page";
 import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer/ngx";
 import {Storage} from "@ionic/storage";
 import {Router} from "@angular/router";
 import {AddcontactPage} from "../addcontact/addcontact.page";
-import { log } from 'console';
 
 @Component({
     selector: 'app-profile',
@@ -296,7 +294,7 @@ export class ProfilePage implements OnInit {
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };
-            uploadOpts.params = {typeUser:'driver',typeImage:'passport'};
+            uploadOpts.params = {typeUser:'driver',typeImage:'verification'};
             const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
             if (res.status){
                 this.passport_docks.push(res.file)

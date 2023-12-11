@@ -140,47 +140,47 @@
         <ion-select-option value="Таджикистан">Таджикистан</ion-select-option>
         <ion-select-option value="Киргизистон">Киргизистон</ion-select-option>
       </ion-select>
+      <p *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b></p>
+      <div class="file-uploads">
+        <div class="file-group" *ngFor="let row of license_files;let i=index">
+          <div class="del-button">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
+          <div class="form-group">
+            <img [src]="file_url+row.filename" alt="">
+          </div>
+        </div>
+        <div class="file-group">
+          <div class="form-group" (click)="addFilesLicense()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
+      <div class="file-uploads" *ngIf="tech_passport_files.length<=1">
+        <div class="file-group" *ngFor="let row of tech_passport_files;let i=index">
+          <div class="del-button">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
+          <div class="form-group">
+            <img [src]="file_url+row.filename" alt="">
+          </div>
+        </div>
+        <div class="file-group">
+          <div class="form-group" (click)="addFilesCarPhoto()">
+            <label class="label">
+              <span class="title"><span>+</span> </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <p *ngIf="!this.authService.mytruck[0].state_number"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <input type="text" name="name" *ngIf="!this.authService.mytruck[0].state_number"
+        (click)="authService.alert('Ошибка','Запрещено редактировать Гос. номер Тягача в существующем транспорте. Вы можете добавить новый транспорт')"
+        placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
     </ng-container>
-    <p *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b></p>
-    <div class="file-uploads">
-      <div class="file-group" *ngFor="let row of license_files;let i=index">
-        <div class="del-button">
-          <ion-icon name="trash-bin-outline"></ion-icon>
-        </div>
-        <div class="form-group">
-          <img [src]="file_url+row.filename" alt="">
-        </div>
-      </div>
-      <div class="file-group">
-        <div class="form-group" (click)="addFilesLicense()">
-          <label class="label">
-            <span class="title"><span>+</span> </span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <p *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
-    <div class="file-uploads" *ngIf="tech_passport_files.length<=1">
-      <div class="file-group" *ngFor="let row of tech_passport_files;let i=index">
-        <div class="del-button">
-          <ion-icon name="trash-bin-outline"></ion-icon>
-        </div>
-        <div class="form-group">
-          <img [src]="file_url+row.filename" alt="">
-        </div>
-      </div>
-      <div class="file-group">
-        <div class="form-group" (click)="addFilesCarPhoto()">
-          <label class="label">
-            <span class="title"><span>+</span> </span>
-          </label>
-        </div>
-      </div>
-    </div>
-    <p *ngIf="!this.authService.mytruck[0].state_number"><b>{{'Гос. номер Тягача' | translate}}</b></p>
-    <input type="text" name="name" *ngIf="!this.authService.mytruck[0].state_number"
-      (click)="authService.alert('Ошибка','Запрещено редактировать Гос. номер Тягача в существующем транспорте. Вы можете добавить новый транспорт')"
-      placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
   </div>
   <div class="bottom-wrap autorize-btns" *ngIf="!verify">
     <button class="classic-btn" *ngIf="!codeon" [disabled]="loading" (click)="signIn()">
@@ -191,7 +191,7 @@
       <ng-container *ngIf="!loading">{{'Продолжить' | translate}}</ng-container>
       <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
     </button>
-    <button class="support-btn" *ngIf="codeon && timer === 0" (click)="signIn()">
+    <button class="support-btn" *ngIf="codeon && timer === 0" (click)="verifyCode()">
       <ng-container *ngIf="!loading">{{'Отправить СМС' | translate}}</ng-container>
       <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
     </button>

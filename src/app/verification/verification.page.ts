@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActionSheetController, AlertController, IonicSafeString, LoadingController, NavController } from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
-import { AppComponent } from '../app.component';
 import { FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { Router } from '@angular/router';
 
@@ -23,7 +22,7 @@ export class VerificationPage implements OnInit {
   bankNumber: string = '';
   bankName: string = '';
   codeon: boolean = true;
-  verify: boolean = true;
+  verify: boolean = false;
   loading: any;
   loadingSubmit: any;
   error: boolean = false;
@@ -46,8 +45,8 @@ export class VerificationPage implements OnInit {
     driver_license: '',
     transportation_license_photo: '',
     state_registration_truckNumber: '',
-    techpassport_photo1: '',
-    techpassport_photo2: ''
+    techpassport_photo: '',
+    // techpassport_photo: ''
   };
   constructor(
     private router: Router,
@@ -67,11 +66,11 @@ export class VerificationPage implements OnInit {
         this.tech_passport_files.push(row)
       }
     }
-    // this.sendSms()
+    this.sendSms()
   }
 
   async sendSms() {
-    await this.authService.loginUser(this.authService.currentUser.phone, this.country_code).toPromise()
+    await this.authService.driverVerification(this.authService.currentUser.phone, this.country_code).toPromise()
       .then(async (res) => {
         if (res.status) {
           this.codeon = true;
@@ -92,7 +91,7 @@ export class VerificationPage implements OnInit {
   }
 
   async verifyCode() {
-    await this.authService.verifyCode(this.authService.currentUser.phone, this.code).toPromise()
+    await this.authService.verifyCodeDriver(this.authService.currentUser.phone, this.code).toPromise()
       .then(async (res) => {
         if (res.status) {
           this.loading = true;
@@ -154,11 +153,8 @@ export class VerificationPage implements OnInit {
       uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
       if (res.status) {
-        if (!this.formData.techpassport_photo1) {
-          this.formData.techpassport_photo1 = res?.file?.filename
-        } else {
-          this.formData.techpassport_photo2 = res?.file?.filename
-        }
+        this.formData.techpassport_photo = res?.file?.filename
+
         this.car_photos.push(res.file)
         this.loading.dismiss();
       }
@@ -357,22 +353,22 @@ export class VerificationPage implements OnInit {
           {
             text: 'OK',
             cssClass: 'icon-alert-button',
-            handler: async() => {
-              await this.authService.Verification(this.formData.full_name, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo1, this.formData.techpassport_photo2).toPromise()
-              .then(async (res: any) => {
-                if (res.status) {
+            handler: async () => {
+              await this.authService.Verification(this.formData.full_name, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo).toPromise()
+                .then(async (res: any) => {
+                  if (res.status) {
+                    this.loadingSubmit = false;
+                    await this.authService.alert('Отлично', 'Транспорт успешно изменен')
+                    await this.router.navigate(['/tabs/home']);
+                  } else {
+                    this.loadingSubmit = false;
+                    await this.authService.alert('Ошибка', res.error)
+                  }
+                })
+                .catch(async (err: any) => {
                   this.loadingSubmit = false;
-                  await this.authService.alert('Отлично', 'Транспорт успешно изменен')
-                  await this.router.navigate(['/tabs/home']);
-                } else {
-                  this.loadingSubmit = false;
-                  await this.authService.alert('Ошибка', res.error)
-                }
-              })
-              .catch(async (err: any) => {
-                this.loadingSubmit = false;
-                console.log(err)
-              });
+                  console.log(err)
+                });
             }
           }
         ]

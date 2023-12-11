@@ -34,6 +34,7 @@ export class VerificationPage implements OnInit {
   formData = {
     user_id: 0,
     full_name: '',
+    phone: '',
     selfies_with_passport: '',
     bank_card: '',
     bank_cardname: '',
@@ -57,6 +58,7 @@ export class VerificationPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.formData.phone = this.authService.currentUser.phone;
     this.formData.user_id = this.authService.currentUser.id;
     this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
     for (let row of this.authService.currentUser.files) {
@@ -377,32 +379,7 @@ export class VerificationPage implements OnInit {
     }
   }
 
-  async signIn() {
-    this.loading = true;
-    await this.authService.loginUser(this.prefix + '' + this.phone, this.country_code).toPromise()
-      .then(async (res) => {
-        if (res.status) {
-          this.codeon = true;
-          this.loading = false;
-          this.timer = 59;
-          setInterval(() => {
-            if (this.timer > 0) {
-              this.timer = this.timer - 1
-            }
-          }, 1000);
-        }
-        this.error = false;
-      })
-      .catch(async (err) => {
-        this.loading = false;
-        this.error = true;
-      });
-  }
   back() {
     this.navCtrl.back()
-  }
-
-  submitForm() {
-    console.log('Form submitted with data:', this.formData);
   }
 }

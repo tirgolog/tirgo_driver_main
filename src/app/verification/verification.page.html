@@ -183,10 +183,6 @@
     </ng-container>
   </div>
   <div class="bottom-wrap autorize-btns" *ngIf="!verify">
-    <button class="classic-btn" *ngIf="!codeon" [disabled]="loading" (click)="signIn()">
-      <ng-container *ngIf="!loading">{{'Отправить СМС' | translate}}</ng-container>
-      <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
-    </button>
     <button class="classic-btn" *ngIf="codeon" (click)="verifyCode()">
       <ng-container *ngIf="!loading">{{'Продолжить' | translate}}</ng-container>
       <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>

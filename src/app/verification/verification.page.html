@@ -1,8 +1,18 @@
-<ion-header>
+<ion-header *ngIf="codeon&&!verify">
   <div class="wrapper-fluid-header">
     <div class="logo-wrap personal-head">
       <button class="top-back" (click)="back()"><img src="assets/img/arrow-left.svg" alt=""></button>
       <h2>Подтверждение номера</h2>
+      <div></div>
+    </div>
+  </div>
+</ion-header>
+
+<ion-header *ngIf="verify">
+  <div class="wrapper-fluid-header">
+    <div class="logo-wrap personal-head">
+      <button class="top-back" (click)="back()"><img src="assets/img/arrow-left.svg" alt=""></button>
+      <h2>Страница подтверждения</h2>
       <div></div>
     </div>
   </div>
@@ -19,13 +29,12 @@
       <span *ngIf="timer > 0" class="resend-sms">{{'Повторная отправка СМС через' | translate}} {{timer}} {{'сек' |
         translate}}.</span>
     </ng-container>
+
     <ng-container *ngIf="verify">
       <span class="input-mode-code">
         <label for="fullName">{{'ФИО *' | translate}} </label>
         <input id="fullName" type="text" name="fullName" [(ngModel)]="formData.full_name">
       </span>
-    </ng-container>
-    <ng-container *ngIf="verify">
       <p><b>{{'Фото паспорта с вашим лицом селфи' | translate}}:</b></p>
       <div class="file-uploads">
         <div class="file-group">

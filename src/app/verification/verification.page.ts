@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActionSheetController, AlertController, IonicSafeString, LoadingController, NavController } from '@ionic/angular';
+import { AlertController, IonicSafeString, LoadingController, NavController } from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
 import { FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { Router } from '@angular/router';
@@ -46,19 +46,20 @@ export class VerificationPage implements OnInit {
     driver_license: '',
     transportation_license_photo: '',
     state_registration_truckNumber: '',
-    techpassport_photo: '',
-    // techpassport_photo: ''
+    techpassport_photo1: '',
+    techpassport_photo2: ''
   };
   constructor(
     private router: Router,
     private navCtrl: NavController,
     public authService: AuthenticationService,
     private loadingCtrl: LoadingController,
-    public alertController: AlertController,
-  ) { }
+    public alertController: AlertController) { }
 
   ngOnInit() {
-    this.formData.phone = this.authService.currentUser.phone;
+    // this.phone = this.authService.currentUser.phone;
+    this.phone = '998935421324';
+    // this.formData.phone = this.authService.currentUser.phone;
     this.formData.user_id = this.authService.currentUser.id;
     this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
     for (let row of this.authService.currentUser.files) {
@@ -72,7 +73,7 @@ export class VerificationPage implements OnInit {
   }
 
   async sendSms() {
-    await this.authService.driverVerification(this.authService.currentUser.phone, this.country_code).toPromise()
+    await this.authService.driverVerification(this.phone, this.country_code).toPromise()
       .then(async (res) => {
         if (res.status) {
           this.codeon = true;
@@ -93,7 +94,7 @@ export class VerificationPage implements OnInit {
   }
 
   async verifyCode() {
-    await this.authService.verifyCodeDriver(this.authService.currentUser.phone, this.code).toPromise()
+    await this.authService.verifyCodeDriver(this.phone, this.code).toPromise()
       .then(async (res) => {
         if (res.status) {
           this.loading = true;
@@ -155,8 +156,10 @@ export class VerificationPage implements OnInit {
       uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
       if (res.status) {
-        this.formData.techpassport_photo = res?.file?.filename
-
+        this.formData.techpassport_photo1 = res?.file?.filename;
+        if (this.formData.techpassport_photo1) {
+          this.formData.techpassport_photo2 = res?.file?.filename;
+        }
         this.car_photos.push(res.file)
         this.loading.dismiss();
       }
@@ -172,7 +175,6 @@ export class VerificationPage implements OnInit {
     console.log('Before calling getPicture');
     await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
       this.loading.present()
-      console.log('photos')
       const fileTransfer: FileTransferObject = await this.authService.transfer.create();
       const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
       const uploadOpts: FileUploadOptions = {
@@ -182,12 +184,8 @@ export class VerificationPage implements OnInit {
         chunkedMode: false,
         fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
       };
-      console.log('photos2')
-
       uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-      console.log('photos3')
-      console.log(res?.file?.filename)
       this.formData.selfies_with_passport = res?.file?.filename
       if (res.status) {
         this.loading.dismiss();
@@ -336,14 +334,29 @@ export class VerificationPage implements OnInit {
     } else if (this.formData.transport_side_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото сбоку обязательно.')
       this.loadingSubmit = false;
-    } else if (this.formData.transport_side_photo) {
+    } else if (this.formData.adr_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото  ADR обязательно.')
       this.loadingSubmit = false;
-    } else if (this.formData.transport_side_photo) {
+    } else if (this.formData.transportation_license_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото  Водительское удостоверение  обязательно.')
       this.loadingSubmit = false;
+    } else if (this.formData.driver_license) {
+      this.authService.alert('Ошибка', 'Требуется фотографии Фото  Водительские права.')
+      this.loadingSubmit = false;
     } else if (this.formData.transport_registration_country) {
-      this.authService.alert('Ошибка', 'Требуется фотографии Фото  Страна регистрации транспорта обязательно.')
+      this.authService.alert('Ошибка', 'Требуется   Страна регистрации транспорта обязательно.')
+      this.loadingSubmit = false;
+    }
+    else if (this.formData.state_registration_truckNumber) {
+      this.authService.alert('Ошибка', 'Требуется Номер государственной регистрации ТС.')
+      this.loadingSubmit = false;
+    }
+    else if (this.formData.techpassport_photo1) {
+      this.authService.alert('Ошибка', 'Требуется фотографии Фото техпаспорта 1.')
+      this.loadingSubmit = false;
+    }
+    else if (this.formData.techpassport_photo2) {
+      this.authService.alert('Ошибка', 'Требуется фотографии Фото техпаспорта 2.')
       this.loadingSubmit = false;
     } else {
       this.loadingSubmit = false;
@@ -356,7 +369,7 @@ export class VerificationPage implements OnInit {
             text: 'OK',
             cssClass: 'icon-alert-button',
             handler: async () => {
-              await this.authService.Verification(this.formData.full_name, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo).toPromise()
+              await this.authService.Verification(this.formData.full_name, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo1, this.formData.techpassport_photo2).toPromise()
                 .then(async (res: any) => {
                   if (res.status) {
                     this.loadingSubmit = false;

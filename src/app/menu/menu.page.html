@@ -11,7 +11,8 @@
               <span>{{authService.currentUser?.raiting}}</span>
             </div>
             <div class="user-id">ID: {{authService.currentUser?.id}}</div>
-            <div class="user-id" *ngIf="false"><img src="assets/img/verification.png" alt=""></div>
+            <div class="user-id" *ngIf="authService?.currentUser?.driver_verification==1"><img
+                src="assets/img/verification.png" alt=""></div>
           </div>
           <button class="my-profile" (click)="goTo('/tabs/profile/',true)">{{'Мой профиль' | translate}} <img
               src="assets/img/Edit.svg" alt=""></button>

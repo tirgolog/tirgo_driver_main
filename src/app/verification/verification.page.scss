@@ -63,7 +63,7 @@
 .input-mode-code {
   width: 100%;
   margin-top: 15px !important;
-  margin-bottom: 15px; 
+  margin-bottom: 15px !important; 
   label {
     display: block;
     margin-top: 15px !important;
@@ -88,4 +88,12 @@
 }
 ion-select.custom-input {
   color: white;
+}
+
+.mt-10{
+  margin-top: 10px !important
+}
+
+.file-uploads{
+  margin-bottom: 10px !important;
 }

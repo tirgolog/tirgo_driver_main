@@ -334,10 +334,12 @@ export class VerificationPage implements OnInit {
     } else if (this.formData.transport_side_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото сбоку обязательно.')
       this.loadingSubmit = false;
-    } else if (this.formData.adr_photo) {
-      this.authService.alert('Ошибка', 'Требуется фотографии Фото  ADR обязательно.')
-      this.loadingSubmit = false;
-    } else if (this.formData.transportation_license_photo) {
+    } 
+    // else if (this.formData.adr_photo) {
+    //   this.authService.alert('Ошибка', 'Требуется фотографии Фото  ADR обязательно.')
+    //   this.loadingSubmit = false;
+    // } 
+    else if (this.formData.transportation_license_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото  Водительское удостоверение  обязательно.')
       this.loadingSubmit = false;
     } else if (this.formData.driver_license) {

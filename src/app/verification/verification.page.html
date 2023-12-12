@@ -78,7 +78,7 @@
           </div>
         </div>
       </div>
-      <p><b>{{'Фото сзади' | translate}}:</b></p>
+      <p class="mt-10"><b>{{'Фото сзади' | translate}}:</b></p>
       <div class="file-uploads">
         <div class="file-group">
           <div class="form-group" (click)="addPhotoBack()">
@@ -94,7 +94,7 @@
           </div>
         </div>
       </div>
-      <p><b>{{'Фото сбоку' | translate}}:</b></p>
+      <p class="mt-10"><b>{{'Фото сбоку' | translate}}:</b></p>
       <div class="file-uploads">
         <div class="file-group">
           <div class="form-group" (click)="addPhotoLeft()">
@@ -110,7 +110,7 @@
           </div>
         </div>
       </div>
-      <p><b>{{'Фото ADR' | translate}}:</b></p>
+      <p class="mt-10"><b>{{'Фото ADR' | translate}}:</b></p>
       <div class="file-uploads">
         <div class="file-group">
           <div class="form-group" (click)="addPhotoAdr()">
@@ -125,7 +125,7 @@
           </div>
         </div>
       </div>
-      <p><b>{{'Водительское удостоверение' | translate}}:</b></p>
+      <p class="mt-10"><b>{{'Водительское удостоверение' | translate}}:</b></p>
       <div class="file-uploads">
         <div class="file-group">
           <div class="form-group" (click)="addPhotoLicence()">
@@ -140,16 +140,15 @@
           </div>
         </div>
       </div>
-      <p><b>{{'Страна регистрации транспорта' | translate}}:</b></p>
+      <p class="mt-10"><b>{{'Страна регистрации транспорта' | translate}}:</b></p>
       <ion-select placeholder="Страна регистрации транспорта" class="custom-input"
         [(ngModel)]="formData.transport_registration_country">
-        <ion-select-option value="снг">снг </ion-select-option>
         <ion-select-option value="Ўзбекистон">Ўзбекистон </ion-select-option>
         <ion-select-option value="Казахстан">Казахстан</ion-select-option>
         <ion-select-option value="Таджикистан">Таджикистан</ion-select-option>
         <ion-select-option value="Киргизистон">Киргизистон</ion-select-option>
       </ion-select>
-      <p *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b></p>
+      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b></p>
       <div class="file-uploads">
         <div class="file-group" *ngFor="let row of license_files;let i=index">
           <div class="del-button">
@@ -167,7 +166,7 @@
           </div>
         </div>
       </div>
-      <p *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
+      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
       <div class="file-uploads" *ngIf="tech_passport_files.length<=1">
         <div class="file-group" *ngFor="let row of tech_passport_files;let i=index">
           <div class="del-button">
@@ -185,7 +184,7 @@
           </div>
         </div>
       </div>
-      <p *ngIf="!this.authService.mytruck[0].state_number"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <p class="mt-10"  *ngIf="!this.authService.mytruck[0].state_number"><b>{{'Гос. номер Тягача' | translate}}</b></p>
       <input type="text" name="name" *ngIf="!this.authService.mytruck[0].state_number"
         (click)="authService.alert('Ошибка','Запрещено редактировать Гос. номер Тягача в существующем транспорте. Вы можете добавить новый транспорт')"
         placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">

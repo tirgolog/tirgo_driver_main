@@ -57,9 +57,8 @@ export class VerificationPage implements OnInit {
     public alertController: AlertController) { }
 
   ngOnInit() {
-    // this.phone = this.authService.currentUser.phone;
-    this.phone = '998935421324';
-    // this.formData.phone = this.authService.currentUser.phone;
+    this.phone = this.authService.currentUser.phone;
+    this.formData.phone = this.authService.currentUser.phone;
     this.formData.user_id = this.authService.currentUser.id;
     this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
     for (let row of this.authService.currentUser.files) {

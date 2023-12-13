@@ -11,7 +11,7 @@ import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 
 const TOKEN_KEY = 'jwttirgotoken';
-const API_URL = 'http://localhost:7790';
+const API_URL = 'https://admin.tirgo.io/api';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,7 @@ const API_URL = 'http://localhost:7790';
 export class AuthenticationService {
   authenticationState = new BehaviorSubject({});
   geolocationCheck: boolean;
-  public API_URL: string = 'http://localhost:7790';
+  public API_URL: string = 'https://admin.tirgo.io/api';
   public currentUser: User | undefined;
   public viewintro: boolean = false
   static jwt: any;
@@ -62,7 +62,6 @@ export class AuthenticationService {
     this.iab.create('https://t.me/tirgosupportbot', '_system');
   }
   addLeadingZeros(num: number) {
-    console.log(num, String(num).padStart(6, '0'))
     return String(num).padStart(6, '0');
   }
 

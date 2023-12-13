@@ -7,6 +7,7 @@ import axios from "axios";
 import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { log } from 'console';
 import { AddtransportPage } from '../addtransport/addtransport.page';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-order',
@@ -25,6 +26,7 @@ export class OrderPage implements OnInit {
     public alertController: AlertController,
     private geolocation: Geolocation,
     private modalController: ModalController,
+    private router: Router,
     private platform: Platform
   ) { }
 
@@ -36,7 +38,7 @@ export class OrderPage implements OnInit {
   }
   async acceptOrderFinalAccept() {
     await this.authService.checkGeolocation()
-     
+
     let cityOrder = '';
     let cityUser = '';
 
@@ -58,7 +60,7 @@ export class OrderPage implements OnInit {
             cityOrder = this.item.route.from_city.split(',')[1].replace(' ', '');
 
             if (cityUser === cityOrder) {
-              if(this.item.isMerchant) {
+              if (this.item.isMerchant) {
                 this.item.id = +this.item.id.split('M')[1];
               }
               const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays, this.item.isMerchant).toPromise();
@@ -88,36 +90,54 @@ export class OrderPage implements OnInit {
   }
 
   async acceptOrderFinal() {
-    this.loadingAccept = true;
-    if (this.price) {
-      const alert = await this.alertController.create({
-        header: 'Внимание',
-        message: 'Вы действительно хотите отправить предложение?',
-        cssClass: 'customAlert',
+    if (this.authService?.currentUser?.driver_verification == 0 || this.authService?.currentUser?.driver_verification == undefined) {
+      const actionSheet = await this.alertController.create({
+        header: 'Вы должны идентифицироваться чтобы иметь возможность  совершать “Безопасеые сделки',
+        cssClass: 'custom-alert',
         buttons: [
           {
-            text: 'Нет',
-            role: 'cancel',
-            cssClass: 'secondary',
-            handler: () => {
-              this.loadingAccept = false;
-              console.log('Confirm Cancel');
-            }
-          }, {
-            text: 'Да',
-            handler: () => {
-              this.acceptOrderFinalAccept();
+            text: 'OK',
+            cssClass: 'icon-alert-button',
+            handler: async () => {
+              await this.router.navigate(['/notify']);
             }
           }
         ]
       });
-      await alert.present();
-    } else {
-      await this.authService.alert('Упс', 'Требуется указать цену Ваше предложение по цене.');
-      this.loadingAccept = false;
+      await actionSheet.present();
+    }
+    else {
+      this.loadingAccept = true;
+      if (this.price) {
+        const alert = await this.alertController.create({
+          header: 'Внимание',
+          message: 'Вы действительно хотите отправить предложение?',
+          cssClass: 'customAlert',
+          buttons: [
+            {
+              text: 'Нет',
+              role: 'cancel',
+              cssClass: 'secondary',
+              handler: () => {
+                this.loadingAccept = false;
+                console.log('Confirm Cancel');
+              }
+            }, {
+              text: 'Да',
+              handler: () => {
+                this.acceptOrderFinalAccept();
+              }
+            }
+          ]
+        });
+        await alert.present();
+      } else {
+        await this.authService.alert('Упс', 'Требуется указать цену Ваше предложение по цене.');
+        this.loadingAccept = false;
+      }
     }
   }
-  
+
   findDay(num: number) {
     const index = this.selecteddays.findIndex(e => e === num)
     return index >= 0;

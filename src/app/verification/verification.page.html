@@ -22,7 +22,7 @@
   <div class="body-wrap form-block">
     <ng-container *ngIf="codeon&&!verify">
       <span class="input-mode-code">
-        <label for="pass">{{'Введите код, который мы отправили вам на номер ' | translate}} {{prefix}}
+        <label for="pass">{{'Введите код, который мы отправили вам на номер ' | translate}} +
           {{phone}}</label>
         <input id="pass" autocomplete="one-time-code" type="tel" name="pass" [(ngModel)]="code">
       </span>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { AlertController, IonicSafeString, LoadingController, NavController } from '@ionic/angular';
 import { AuthenticationService } from '../services/authentication.service';
 import { FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
@@ -31,6 +31,7 @@ export class VerificationPage implements OnInit {
   license_files: any[] = [];
   car_photos: any[] = [];
   tech_passport_files: any[] = [];
+  stepper: number = 0
   formData = {
     user_id: 0,
     full_name: '',
@@ -54,6 +55,7 @@ export class VerificationPage implements OnInit {
     private navCtrl: NavController,
     public authService: AuthenticationService,
     private loadingCtrl: LoadingController,
+    private zone: NgZone,
     public alertController: AlertController) { }
 
   ngOnInit() {
@@ -154,12 +156,13 @@ export class VerificationPage implements OnInit {
       };
       uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-      if (res.status) {
+      if (this.stepper == 0) {
         this.formData.techpassport_photo1 = res?.file?.filename;
-        if (this.formData.techpassport_photo1) {
-          this.formData.techpassport_photo2 = res?.file?.filename;
-        }
-        this.car_photos.push(res.file)
+        this.stepper++;
+      } else {
+        this.formData.techpassport_photo2 = res?.file?.filename;
+      }
+      if (res.status) {
         this.loading.dismiss();
       }
     })
@@ -171,7 +174,6 @@ export class VerificationPage implements OnInit {
       message: 'Фото паспорта с вашим лицом селфи',
       cssClass: 'custom-loading'
     });
-    console.log('Before calling getPicture');
     await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
       this.loading.present()
       const fileTransfer: FileTransferObject = await this.authService.transfer.create();
@@ -214,6 +216,36 @@ export class VerificationPage implements OnInit {
         this.loading.dismiss();
       }
     })
+  }
+
+  async deleteFile(file: string, field: string) {
+    const alert = await this.alertController.create({
+      header: 'Удаление фото',
+      message: 'Вы уверены что хотите удалить фото паспорта?',
+      cssClass: 'customAlert',
+      buttons: [
+        {
+          text: 'Отмена',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+
+          }
+        }, {
+          text: 'Удалить',
+          role: 'destructive',
+          handler: async (data) => {
+            const res = await this.authService.delPhotoUser(file).toPromise()
+            if (res.status) {
+              this.formData[field] = ''
+            } else {
+              this.authService.alert('Ошибка', res.error)
+            }
+          }
+        }
+      ],
+    });
+    await alert.present();
   }
   async addPhotoBack() {
     this.loading = await this.loadingCtrl.create({
@@ -315,48 +347,48 @@ export class VerificationPage implements OnInit {
     if (!this.formData.full_name) {
       this.authService.alert('Ошибка', 'Требуется  ввести свое имя и фамилию')
       this.loadingSubmit = false;
-    } else if (!this.formData.selfies_with_passport.length) {
+    } else if (!this.formData.selfies_with_passport) {
       this.authService.alert('Ошибка', 'Требуется фотографии паспорта обязательно.')
       this.loadingSubmit = false;
     } else if (!this.formData.bank_card) {
       this.authService.alert('Ошибка', 'Требуется номер банковской карты.')
       this.loadingSubmit = false;
-    } else if (this.formData.bank_cardname) {
+    } else if (!this.formData.bank_cardname) {
       this.authService.alert('Ошибка', 'Требуется указать название банковской карты.')
       this.loadingSubmit = false;
-    } else if (this.formData.transport_front_photo) {
+    } else if (!this.formData.transport_front_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото спереди обязательно.')
       this.loadingSubmit = false;
-    } else if (this.formData.transport_back_photo) {
+    } else if (!this.formData.transport_back_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото сзади обязательно.')
       this.loadingSubmit = false;
-    } else if (this.formData.transport_side_photo) {
+    } else if (!this.formData.transport_side_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото сбоку обязательно.')
       this.loadingSubmit = false;
-    } 
+    }
     // else if (this.formData.adr_photo) {
     //   this.authService.alert('Ошибка', 'Требуется фотографии Фото  ADR обязательно.')
     //   this.loadingSubmit = false;
     // } 
-    else if (this.formData.transportation_license_photo) {
+    else if (!this.formData.transportation_license_photo) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото  Водительское удостоверение  обязательно.')
       this.loadingSubmit = false;
-    } else if (this.formData.driver_license) {
+    } else if (!this.formData.driver_license) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото  Водительские права.')
       this.loadingSubmit = false;
-    } else if (this.formData.transport_registration_country) {
+    } else if (!this.formData.transport_registration_country) {
       this.authService.alert('Ошибка', 'Требуется   Страна регистрации транспорта обязательно.')
       this.loadingSubmit = false;
     }
-    else if (this.formData.state_registration_truckNumber) {
+    else if (!this.formData.state_registration_truckNumber) {
       this.authService.alert('Ошибка', 'Требуется Номер государственной регистрации ТС.')
       this.loadingSubmit = false;
     }
-    else if (this.formData.techpassport_photo1) {
+    else if (!this.formData.techpassport_photo1) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото техпаспорта 1.')
       this.loadingSubmit = false;
     }
-    else if (this.formData.techpassport_photo2) {
+    else if (!this.formData.techpassport_photo2) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото техпаспорта 2.')
       this.loadingSubmit = false;
     } else {
@@ -370,21 +402,23 @@ export class VerificationPage implements OnInit {
             text: 'OK',
             cssClass: 'icon-alert-button',
             handler: async () => {
-              await this.authService.Verification(this.formData.full_name, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo1, this.formData.techpassport_photo2).toPromise()
-                .then(async (res: any) => {
+              try {
+                const res: any = await this.authService.Verification(this.formData.full_name, this.formData.phone, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo1, this.formData.techpassport_photo2).toPromise()
+                this.zone.runOutsideAngular(() => {
                   if (res.status) {
                     this.loadingSubmit = false;
-                    await this.authService.alert('Отлично', 'Транспорт успешно изменен')
-                    await this.router.navigate(['/tabs/home']);
+                    this.zone.run(() => {
+                      this.router.navigate(['/tabs/home']);
+                    });
                   } else {
                     this.loadingSubmit = false;
-                    await this.authService.alert('Ошибка', res.error)
+                    this.authService.alert('Ошибка', res.error);
                   }
-                })
-                .catch(async (err: any) => {
-                  this.loadingSubmit = false;
-                  console.log(err)
                 });
+              } catch (error) {
+                console.error('Error during verification:', error);
+                // Handle the error, e.g., show a message to the user.
+              }
             }
           }
         ]

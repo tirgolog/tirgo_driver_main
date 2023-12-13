@@ -100,6 +100,9 @@ export class OrderPage implements OnInit {
             cssClass: 'icon-alert-button',
             handler: async () => {
               await this.router.navigate(['/notify']);
+              await this.modalController.dismiss({
+                accepted: true,
+              });
             }
           }
         ]

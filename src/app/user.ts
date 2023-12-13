@@ -19,7 +19,8 @@ export class User {
     public busy: number;
     public files: any;
     public config: any;
-    constructor(user:any) {
+    public driver_verification: any;
+    constructor(user: any) {
         this.id = +user.id;
         this.name = user.name;
         this.phone = user.phone;
@@ -40,5 +41,6 @@ export class User {
         this.busy = +user.busy;
         this.files = user.files;
         this.config = user.config;
+        this.driver_verification = user.driver_verification
     }
 }

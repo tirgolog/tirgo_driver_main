@@ -183,6 +183,8 @@ export class HomePage implements OnInit  {
       this.authService.myorders = await this.authService.getMyOrders().toPromise();
       // this.items = this.authService.myorders;
       this.getOrders()
+    }else{
+      
     }
   }
   findAcceptedOrders(id: number) {

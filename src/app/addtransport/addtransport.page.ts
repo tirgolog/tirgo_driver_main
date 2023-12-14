@@ -147,10 +147,11 @@ export class AddtransportPage implements OnInit {
   }
   async saveTransport() {
     this.loadingAddTransport = true;
-    // if (this.type === 0) {
-    //   this.authService.alert('Ошибка', 'Требуется выбрать тип транспорта.')
-    //   this.loadingAddTransport = false;
-    // }else if(!this.description.length){
+    if (this.type === 0) {
+      this.authService.alert('Ошибка', 'Требуется выбрать тип транспорта.')
+      this.loadingAddTransport = false;
+    }
+    //else if(!this.description.length){
     //   this.authService.alert('Ошибка','Требуется ввести описание транспорта. Это поможет клиенту понять подходит ли транспорт под его требования.')
     //   this.loadingAddTransport = false;
     // }else if (!this.name.length) {

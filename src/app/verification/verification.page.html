@@ -201,10 +201,8 @@
           </div>
         </div>
       </div>
-      <p class="mt-10" *ngIf="!this.authService.mytruck[0].state_number"><b>{{'Гос. номер Тягача' | translate}}</b></p>
-      <input type="text" name="name" *ngIf="!this.authService.mytruck[0].state_number"
-        (click)="authService.alert('Ошибка','Запрещено редактировать Гос. номер Тягача в существующем транспорте. Вы можете добавить новый транспорт')"
-        placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
+      <p class="mt-10"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <input type="text" name="name"  placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
     </ng-container>
   </div>
   <div class="bottom-wrap autorize-btns bottom-wrap-verify" *ngIf="!verify">

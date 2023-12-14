@@ -505,4 +505,12 @@ export class AuthenticationService {
     }
   }
 
+  withdrawBalance(userId: number) {
+    const sUrl = API_URL + 'users/driver-balance/withdraw';
+    const body = JSON.stringify({
+      userId
+    });
+    return this.http.post<any>(sUrl, body);
+  }
+
 }

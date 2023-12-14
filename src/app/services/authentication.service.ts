@@ -242,10 +242,10 @@ export class AuthenticationService {
     });
     return this.http.post<any>(sUrl, body);
   }
-  Verification(full_name: string, selfies_with_passport: string, bank_card: string, bank_cardname: string, transport_front_photo: string, transport_back_photo: string, transport_side_photo: string, adr_photo: string, transport_registration_country: string, state_registration_truckNumber: string, driver_license: string, transportation_license_photo: string, techpassport_photo1: string, techpassport_photo2: string) {
+  Verification(full_name: string, phone: string, selfies_with_passport: string, bank_card: string, bank_cardname: string, transport_front_photo: string, transport_back_photo: string, transport_side_photo: string, adr_photo: string, transport_registration_country: string, state_registration_truckNumber: string, driver_license: string, transportation_license_photo: string, techpassport_photo1: string, techpassport_photo2: string) {
     const sUrl = API_URL + '/users/verification';
     const body = JSON.stringify({
-      full_name, selfies_with_passport, bank_card, bank_cardname, transport_front_photo, transport_back_photo, transport_side_photo, adr_photo, transport_registration_country, state_registration_truckNumber, driver_license, transportation_license_photo, techpassport_photo1, techpassport_photo2
+      full_name, phone, selfies_with_passport, bank_card, bank_cardname, transport_front_photo, transport_back_photo, transport_side_photo, adr_photo, transport_registration_country, state_registration_truckNumber, driver_license, transportation_license_photo, techpassport_photo1, techpassport_photo2
     });
     return this.http.post<any>(sUrl, body);
   }
@@ -503,6 +503,14 @@ export class AuthenticationService {
         }
       );
     }
+  }
+
+  withdrawBalance(userId: number) {
+    const sUrl = API_URL + 'users/driver-balance/withdraw';
+    const body = JSON.stringify({
+      userId
+    });
+    return this.http.post<any>(sUrl, body);
   }
 
 }

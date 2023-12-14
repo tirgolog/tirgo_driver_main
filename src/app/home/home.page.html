@@ -39,7 +39,7 @@
   <div class="wrapper-fluid" *ngIf="authService.mytruck.length != 0">
     <div class="body-wrap form-block main-body body-have-bottom-menu">
       <ng-container *ngFor="let row of items ">
-        <div class="order-item" *ngIf="row.status != 2 && row.status != 1">
+        <div class="order-item" *ngIf="row.status != 2 && row.status != 1 && row.status != 3">
           <div class="order-item-articul" (click)="viewOrderInfo(row.id)">
             <span class="order-header">
               <span>
@@ -48,9 +48,7 @@
                 №{{authService.addLeadingZeros(row.id)}}
               </span>
               <span>
-                <img src="assets/img/done.svg"
-                  *ngIf="authService?.currentUser?.driver_verification==1"
-                  alt="verification" />
+                <img src="assets/img/done.svg" *ngIf="row.secure_transaction" />
                 <span class="view-order" *ngIf="vieworder !== row.id">{{'Просмотреть' | translate}}</span>
                 <span class="view-order" *ngIf="vieworder === row.id">{{'Скрыть' | translate}}</span>
               </span>

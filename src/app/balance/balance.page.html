@@ -26,8 +26,10 @@
       <div class="payment-total form-block">
         <input type="text" inputmode="tel" name="total" placeholder="150 000" [(ngModel)]="amount">
       </div>
+      <div class="payment-total form-block">
+        <button class="reg-btn podpis-buy" (click)="withdrawFromActivebalance()">{{'Снять средства' | translate}}</button>
+      </div>
     </div>
-
     <!--<div class="code-error personal-modal">
       <div class="code-error-wrap">
         <h2>Ваш счет успешно пополнен</h2>

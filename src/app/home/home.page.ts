@@ -14,7 +14,7 @@ import { log } from 'console';
   styleUrls: ['./home.page.scss'],
   changeDetection: ChangeDetectionStrategy.Default
 })
-export class HomePage implements OnInit  {
+export class HomePage implements OnInit {
   modalAppendOrder: boolean = false;
   modalAppendOrderFull: boolean = false;
   filter: boolean = false;
@@ -52,9 +52,9 @@ export class HomePage implements OnInit  {
     // this.authService.myorders = await this.authService.getMyOrders().toPromise();
     // if (this.selectedtruck > 0) {
     //   this.allTruck(this.selectedtruck)
-      // this.items = this.authService.myorders.filter((item) => {
-      //   return +item.transport_type === +this.selectedtruck;
-      // });
+    // this.items = this.authService.myorders.filter((item) => {
+    //   return +item.transport_type === +this.selectedtruck;
+    // });
     // } 
     setTimeout(() => {
       event.target.complete();
@@ -75,7 +75,7 @@ export class HomePage implements OnInit  {
     }
   }
   localOrWorldIsset(id: number) {
-    if (this.selectedType === 'local') {      
+    if (this.selectedType === 'local') {
       const index = this.localItems.findIndex(e => e.id === id)
       return index >= 0;
     } else if (this.selectedType === 'world') {
@@ -117,7 +117,7 @@ export class HomePage implements OnInit  {
   };
 
   getOrders() {
-    if(this.selectedtruck == 0) {
+    if (this.selectedtruck == 0) {
       this.allTruck(0)
     }
     else {
@@ -125,7 +125,11 @@ export class HomePage implements OnInit  {
         this.myTruckTypeIds = res.map((el: any) => el.type);
         this.authService.getMyOrders().subscribe((order: any) => {
           this.items = order.filter((el: any) => this.haveSameContents(el.transport_types, [this.selectedtruck]));
-          this.items.forEach((v,k) => {
+          this.items = this.items.sort(function (a, b) {
+            return Number(new Date(a.date_create)) - Number(new Date(b.date_create));
+          });
+          // date_create
+          this.items.forEach((v, k) => {
             // v.transport_types = JSON.parse(v.transport_types)
           })
         })
@@ -134,26 +138,26 @@ export class HomePage implements OnInit  {
   }
 
   ngOnInit() {
-      this.getOrders()
-      this.routerOutlet.swipeGesture = false;
-      this.socketService.updateAllOrders().subscribe(async (res: any) => {
-        for (let row of this.authService.myorders) {
-          const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status !== 2)
-          if (index >= 0) {
-            const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
-              status_order: Boolean | undefined;
-              id: number | undefined;
-            }) => user.id === this.authService.currentUser?.id && user.status_order)
-            if (indexuser >= 0) {
-              this.authService.activeorder = this.authService.myorders[index];
-              this.authService.myorders.splice(index, 1)
-            }
+    this.getOrders()
+    this.routerOutlet.swipeGesture = false;
+    this.socketService.updateAllOrders().subscribe(async (res: any) => {
+      for (let row of this.authService.myorders) {
+        const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status !== 2)
+        if (index >= 0) {
+          const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
+            status_order: Boolean | undefined;
+            id: number | undefined;
+          }) => user.id === this.authService.currentUser?.id && user.status_order)
+          if (indexuser >= 0) {
+            this.authService.activeorder = this.authService.myorders[index];
+            this.authService.myorders.splice(index, 1)
           }
         }
-        // this.items = this.authService.myorders;
-        this.getOrders()
-      });
-      this.filterOrderLocal();
+      }
+      // this.items = this.authService.myorders;
+      this.getOrders()
+    });
+    this.filterOrderLocal();
   }
   viewOrderInfo(id: number) {
     if (this.vieworder === id) {
@@ -183,8 +187,8 @@ export class HomePage implements OnInit  {
       this.authService.myorders = await this.authService.getMyOrders().toPromise();
       // this.items = this.authService.myorders;
       this.getOrders()
-    }else{
-      
+    } else {
+
     }
   }
   findAcceptedOrders(id: number) {
@@ -274,12 +278,12 @@ export class HomePage implements OnInit  {
   }
 
   async sendAcceptOrder() {
-    
+
     this.loadingSendButton = true;
     this.loading = await this.loadingCtrl.create({
       message: 'Проверяем геопозицию',
     });
-    
+
     this.loading.present();
     this.geolocation.getCurrentPosition().then(async (resp) => {
       const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.latitude.toString() + "," + resp.coords.longitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
@@ -289,7 +293,7 @@ export class HomePage implements OnInit  {
             this.loading.dismiss()
             this.authService.acceptOrder(this.appendorderid, this.price, this.dates, false).toPromise().then((res) => {
               if (res.data) {
-              this.loading.dismiss()
+                this.loading.dismiss()
                 this.loadingSendButton = false;
                 this.closeModalAll();
               }
@@ -366,7 +370,7 @@ export class HomePage implements OnInit  {
     } else {
       this.authService.getMyOrders().subscribe((order: any) => {
         this.items = order
-        this.items.forEach((v,k) => {
+        this.items.forEach((v, k) => {
           // v.transport_types = JSON.parse(v.transport_types)
         })
       })

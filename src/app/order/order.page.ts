@@ -5,7 +5,6 @@ import { AuthenticationService } from "../services/authentication.service";
 import { AlertController, LoadingController, ModalController, Platform } from "@ionic/angular";
 import axios from "axios";
 import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
-import { log } from 'console';
 import { AddtransportPage } from '../addtransport/addtransport.page';
 import { Router } from '@angular/router';
 
@@ -27,7 +26,6 @@ export class OrderPage implements OnInit {
     private geolocation: Geolocation,
     private modalController: ModalController,
     private router: Router,
-    private platform: Platform
   ) { }
 
   async ngOnInit() {
@@ -90,7 +88,7 @@ export class OrderPage implements OnInit {
   }
 
   async acceptOrderFinal() {
-    if (this.authService?.currentUser?.driver_verification == 0 || this.authService?.currentUser?.driver_verification == undefined) {
+    if (this.item.secure_transaction && !this.authService.currentUser?.driver_verification) {
       const actionSheet = await this.alertController.create({
         header: 'Вы должны идентифицироваться чтобы иметь возможность  совершать “Безопасеые сделки',
         cssClass: 'custom-alert',

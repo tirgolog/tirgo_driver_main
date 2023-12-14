@@ -47,4 +47,13 @@ export class BalancePage implements OnInit {
       await this.authService.alert('Ошибка','Минимальная сумма оплаты 1000 UZS')
     }
   }
+
+  async withdrawFromActivebalance() {
+    if(this.authService.currentUser.balance > 0) {
+      this.authService.withdrawBalance(this.authService.currentUser.id).subscribe((res: any) => {
+      });
+    } else {
+      await this.authService.alert('Ошибка','У вас нет активного баланса')
+    }
+  }
 }

@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {AuthenticationService} from "../services/authentication.service";
-import {CallNumber} from "@ionic-native/call-number/ngx";
-import {Geolocation} from "@awesome-cordova-plugins/geolocation/ngx";
-import {AlertController, LoadingController, ModalController, Platform} from "@ionic/angular";
-import {Router} from "@angular/router";
-import {SetraitingPage} from "../setraiting/setraiting.page";
-import { log } from 'console';
+import { AuthenticationService } from "../services/authentication.service";
+import { CallNumber } from "@ionic-native/call-number/ngx";
+import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
+import { AlertController, LoadingController, ModalController, Platform } from "@ionic/angular";
+import { Router } from "@angular/router";
+import { SetraitingPage } from "../setraiting/setraiting.page";
 
 @Component({
   selector: 'app-activeorder',
@@ -13,25 +12,25 @@ import { log } from 'console';
   styleUrls: ['./activeorder.page.scss'],
 })
 export class ActiveorderPage implements OnInit {
-  item:any;
-  loading:any;
+  item: any;
+  loading: any;
   constructor(
-      public authService: AuthenticationService,
-      private loadingCtrl: LoadingController,
-      private callNumber: CallNumber,
-      public alertController: AlertController,
-      public platform: Platform,
-      private router: Router,
-      private modalCtrl: ModalController,
-      private geolocation: Geolocation,
-      ) {
+    public authService: AuthenticationService,
+    private loadingCtrl: LoadingController,
+    private callNumber: CallNumber,
+    public alertController: AlertController,
+    public platform: Platform,
+    private router: Router,
+    private modalCtrl: ModalController,
+    private geolocation: Geolocation,
+  ) {
   }
 
   ngOnInit() {
     this.item = this.authService.activeorder;
     this.item.transport_types = JSON.parse(this.item.transport_types)
   }
-  async finishOrder(item){
+  async finishOrder(item) {
     const alert = await this.alertController.create({
       header: 'Вы уверены?',
       message: 'Вы действительно хотите завершить заказ?',
@@ -54,7 +53,12 @@ export class ActiveorderPage implements OnInit {
             this.loading.present();
             this.geolocation.getCurrentPosition().then(async (resp) => {
               console.log(resp.coords)
-              const res = await this.authService.finishOrder(this.authService.activeorder.id,resp.coords.latitude.toString(),resp.coords.longitude.toString()).toPromise();
+              let res: any;
+              if (item.isMerchant) {
+                res = await this.authService.finishMerchantOrder(this.authService.activeorder.id, resp.coords.latitude.toString(), resp.coords.longitude.toString(), item.route?.to_city).toPromise();
+              } else {
+                res = await this.authService.finishOrder(this.authService.activeorder.id, resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
+              }
               const modal = await this.modalCtrl.create({
                 component: SetraitingPage,
                 swipeToClose: true,
@@ -66,21 +70,21 @@ export class ActiveorderPage implements OnInit {
                 cssClass: 'modalCss',
                 mode: 'ios',
                 componentProps: {
-                  orderid:this.authService.activeorder.id,
-                  userid:this.authService.activeorder.user_id,
+                  orderid: this.authService.activeorder.id,
+                  userid: this.authService.activeorder.user_id,
                 }
               });
               await modal.present();
-              if (res.status){
+              if (res.status) {
                 this.loading.dismiss();
-                if (res.error){
-                  await this.authService.alert('Ошибка',res.error)
+                if (res.error) {
+                  await this.authService.alert('Ошибка', res.error)
                 }
                 this.authService.activeorder = null;
-                await this.router.navigate(['/tabs/home'], {replaceUrl: true});
-              }else {
+                await this.router.navigate(['/tabs/home'], { replaceUrl: true });
+              } else {
                 this.loading.dismiss();
-                await this.authService.alert('Ошибка',res.error)
+                await this.authService.alert('Ошибка', res.error)
               }
             }).catch(async (err) => {
               this.loading.dismiss();
@@ -92,24 +96,24 @@ export class ActiveorderPage implements OnInit {
     });
     await alert.present();
   }
-  callMan(phone:string){
+  callMan(phone: string) {
     console.log(phone)
-    this.callNumber.callNumber('+'+phone, true)
+    this.callNumber.callNumber('+' + phone, true)
   }
-  returnNameTypeTransport(type:number){
+  returnNameTypeTransport(type: number) {
     const index = this.authService.typetruck.findIndex(e => +e.id === +type)
-    if (index>=0){
+    if (index >= 0) {
       return this.authService.typetruck[index].name
-    }else {
+    } else {
       return 'Не выбрано'
     }
   }
 
-  returnNameCargoType(id:number){
+  returnNameCargoType(id: number) {
     const index = this.authService.typecargo.findIndex(e => +e.id === +id)
-    if (index>=0){
+    if (index >= 0) {
       return this.authService.typecargo[index].name
-    }else {
+    } else {
       return 'Не выбрано'
     }
   }

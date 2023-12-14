@@ -26,6 +26,7 @@ export class MenuPage implements OnInit {
   ) { }
 
   ngOnInit() {
+    console.log(this.authService.currentUser)
   }
 
   async logOut(){

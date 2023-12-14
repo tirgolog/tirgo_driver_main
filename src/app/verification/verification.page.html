@@ -29,7 +29,6 @@
       <span *ngIf="timer > 0" class="resend-sms">{{'Повторная отправка СМС через' | translate}} {{timer}} {{'сек' |
         translate}}.</span>
     </ng-container>
-
     <ng-container *ngIf="verify">
       <span class="input-mode-code">
         <label for="fullName">{{'ФИО *' | translate}} </label>
@@ -44,7 +43,10 @@
             </label>
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" (click)="deleteFile(formData.selfies_with_passport, 'selfies_with_passport')">
+          <div class="del-button" *ngIf="formData.selfies_with_passport!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img
               [src]="formData.selfies_with_passport?file_url+formData.selfies_with_passport:'../../assets/img/passport.png'" />
@@ -71,7 +73,10 @@
             </label>
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" (click)="deleteFile(formData.transport_front_photo, 'transport_front_photo')">
+          <div class="del-button" *ngIf="formData.transport_front_photo!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img
               [src]="formData.transport_front_photo?file_url+formData.transport_front_photo:'../../assets/truck/opposite.png'" />
@@ -87,7 +92,10 @@
             </label>
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" (click)="deleteFile(formData.transport_back_photo, 'transport_back_photo')">
+          <div class="del-button" *ngIf="formData.transport_back_photo!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img
               [src]="formData.transport_back_photo?file_url+formData.transport_back_photo:'../../assets/truck/back.png'" />
@@ -103,7 +111,10 @@
             </label>
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" (click)="deleteFile(formData.transport_side_photo, 'transport_side_photo')">
+          <div class="del-button" *ngIf="formData.transport_side_photo!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img
               [src]="formData.transport_side_photo?file_url+formData.transport_side_photo:'../../assets/truck/right.png'" />
@@ -119,9 +130,12 @@
             </label>
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" (click)="deleteFile(formData.adr_photo, 'adr_photo')">
+          <div class="del-button" *ngIf="formData.adr_photo!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group" *ngIf="formData.adr_photo">
-            <img [src]="formData.adr_photo" />
+            <img [src]="file_url+ formData.adr_photo" />
           </div>
         </div>
       </div>
@@ -134,9 +148,12 @@
             </label>
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" (click)="deleteFile(formData.driver_license, 'driver_license')">
+          <div class="del-button" *ngIf="formData.driver_license!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group" *ngIf="formData.driver_license">
-            <img [src]="formData.driver_license" />
+            <img [src]="file_url+formData.driver_license" />
           </div>
         </div>
       </div>
@@ -148,14 +165,12 @@
         <ion-select-option value="Таджикистан">Таджикистан</ion-select-option>
         <ion-select-option value="Киргизистон">Киргизистон</ion-select-option>
       </ion-select>
-      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b></p>
+      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
+      </p>
       <div class="file-uploads">
         <div class="file-group" *ngFor="let row of license_files;let i=index">
-          <div class="del-button">
-            <ion-icon name="trash-bin-outline"></ion-icon>
-          </div>
           <div class="form-group">
-            <img [src]="file_url+row.filename" alt="">
+            <img [src]="formData.transportation_license_photo?file_url+formData.transportation_license_photo:''" alt="">
           </div>
         </div>
         <div class="file-group">
@@ -168,12 +183,14 @@
       </div>
       <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
       <div class="file-uploads" *ngIf="tech_passport_files.length<=1">
-        <div class="file-group" *ngFor="let row of tech_passport_files;let i=index">
-          <div class="del-button">
-            <ion-icon name="trash-bin-outline"></ion-icon>
-          </div>
+        <div class="file-group" *ngIf="formData.techpassport_photo1">
           <div class="form-group">
-            <img [src]="file_url+row.filename" alt="">
+            <img [src]="file_url+formData.techpassport_photo1" alt="">
+          </div>
+        </div>
+        <div class="file-group" *ngIf="formData.techpassport_photo2">
+          <div class="form-group">
+            <img [src]="file_url+formData.techpassport_photo2" alt="">
           </div>
         </div>
         <div class="file-group">
@@ -184,13 +201,11 @@
           </div>
         </div>
       </div>
-      <p class="mt-10"  *ngIf="!this.authService.mytruck[0].state_number"><b>{{'Гос. номер Тягача' | translate}}</b></p>
-      <input type="text" name="name" *ngIf="!this.authService.mytruck[0].state_number"
-        (click)="authService.alert('Ошибка','Запрещено редактировать Гос. номер Тягача в существующем транспорте. Вы можете добавить новый транспорт')"
-        placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
+      <p class="mt-10"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <input type="text" name="name"  placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
     </ng-container>
   </div>
-  <div class="bottom-wrap autorize-btns" *ngIf="!verify">
+  <div class="bottom-wrap autorize-btns bottom-wrap-verify" *ngIf="!verify">
     <button class="classic-btn" *ngIf="codeon" (click)="verifyCode()">
       <ng-container *ngIf="!loading">{{'Продолжить' | translate}}</ng-container>
       <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
@@ -200,7 +215,7 @@
       <ng-container *ngIf="loading"><ion-spinner></ion-spinner></ng-container>
     </button>
   </div>
-  <div class="bottom-wrap autorize-btns" *ngIf="verify">
+  <div class="bottom-wrap-verify form-block" *ngIf="verify">
     <button class="classic-btn" (click)="submit()">
       <ng-container *ngIf="!loadingSubmit" id="present-alert">{{'Отправить на проверку' |
         translate}}</ng-container>

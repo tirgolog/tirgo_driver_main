@@ -31,6 +31,8 @@ export class VerificationPage implements OnInit {
   license_files: any[] = [];
   car_photos: any[] = [];
   tech_passport_files: any[] = [];
+  typetransport: any[] = [];
+  type: number = 0
   stepper: number = 0
   formData = {
     user_id: 0,
@@ -48,7 +50,9 @@ export class VerificationPage implements OnInit {
     transportation_license_photo: '',
     state_registration_truckNumber: '',
     techpassport_photo1: '',
-    techpassport_photo2: ''
+    techpassport_photo2: '',
+    type: 0,
+    brand_name: ''
   };
   constructor(
     private router: Router,
@@ -63,6 +67,15 @@ export class VerificationPage implements OnInit {
     this.formData.phone = this.authService.currentUser.phone;
     this.formData.user_id = this.authService.currentUser.id;
     this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
+    this.formData.type = this.authService.mytruck[0].type;
+    this.formData.brand_name = this.authService.mytruck[0].brand_name;
+    this.typetransport = this.authService.typetruck.map((item) => {
+      return {
+        label: item.name,
+        type: 'radio',
+        value: item.id,
+      };
+    });
     for (let row of this.authService.currentUser.files) {
       if (row.type_file === 'license_files') {
         this.license_files.push(row)
@@ -110,6 +123,41 @@ export class VerificationPage implements OnInit {
         this.loading = false;
         this.error = true;
       });
+  }
+
+
+  returnNameTypeTransport(type: number) {
+    const index = this.authService.typetruck.findIndex(e => +e.id === +type)
+    if (index >= 0) {
+      return this.authService.typetruck[index].name
+    } else {
+      return 'Не выбрано'
+    }
+  }
+
+  async selectTypeTransport() {
+    const alert = await this.alertController.create({
+      header: 'Выберите тип транспорта',
+      cssClass: 'customAlert',
+      inputs: this.typetransport,
+      buttons: [
+        {
+          text: 'Отмена',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+
+          }
+        }, {
+          text: 'Выбрать',
+          handler: async (data) => {
+            this.type = data;
+            this.formData.type = data;
+          }
+        }
+      ],
+    });
+    await alert.present();
   }
 
   async addFilesLicense() {
@@ -391,7 +439,19 @@ export class VerificationPage implements OnInit {
     else if (!this.formData.techpassport_photo2) {
       this.authService.alert('Ошибка', 'Требуется фотографии Фото техпаспорта 2.')
       this.loadingSubmit = false;
-    } else {
+    }
+
+    else if (!this.formData.type) {
+      this.authService.alert('Ошибка', 'Требуется Тип прицепа')
+      this.loadingSubmit = false;
+    }
+
+    else if (!this.formData.brand_name) {
+      this.authService.alert('Ошибка', 'Требуется Марка транспорта.')
+      this.loadingSubmit = false;
+    }
+
+    else {
       this.loadingSubmit = false;
       const actionSheet = await this.alertController.create({
         header: 'Ваша заявка принята на оброботку',
@@ -403,7 +463,7 @@ export class VerificationPage implements OnInit {
             cssClass: 'icon-alert-button',
             handler: async () => {
               try {
-                const res: any = await this.authService.Verification(this.formData.full_name, this.formData.phone, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo1, this.formData.techpassport_photo2).toPromise()
+                const res: any = await this.authService.Verification(this.formData.full_name, this.formData.phone, this.formData.selfies_with_passport, this.formData.bank_card, this.formData.bank_cardname, this.formData.transport_front_photo, this.formData.transport_back_photo, this.formData.transport_side_photo, this.formData.adr_photo, this.formData.transport_registration_country, this.formData.state_registration_truckNumber, this.formData.driver_license, this.formData.transportation_license_photo, this.formData.techpassport_photo1, this.formData.techpassport_photo2, this.formData.type, this.formData.brand_name).toPromise()
                 this.zone.runOutsideAngular(() => {
                   if (res.status) {
                     this.loadingSubmit = false;

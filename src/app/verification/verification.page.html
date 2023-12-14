@@ -203,6 +203,12 @@
       </div>
       <p class="mt-10"><b>{{'Гос. номер Тягача' | translate}}</b></p>
       <input type="text" name="name"  placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
+
+      <p class="mt-10"><b> {{'Тип прицепа' | translate}}</b></p>
+      <input type="text" name="name" (click)="selectTypeTransport()"  [value]="returnNameTypeTransport(formData.type)">
+
+      <p class="mt-10"><b>{{'Марка транспорта' | translate}}</b></p>
+      <input type="text" name="name" placeholder="{{'Марка транспорта' | translate}}" [(ngModel)]="formData.brand_name">
     </ng-container>
   </div>
   <div class="bottom-wrap autorize-btns bottom-wrap-verify" *ngIf="!verify">

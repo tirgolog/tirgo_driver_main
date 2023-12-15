@@ -1,7 +1,7 @@
 <app-header></app-header>
 <ion-content>
   <div class="wrapper-fluid ion-padding-tabs">
-    <div class="body-wrap form-block" *ngIf="authService.currentUser" >
+    <div class="body-wrap form-block" *ngIf="authService.currentUser">
       <div class="user-photo" (click)="changeAvatar()">
         <img [src]="authService.currentUser!.avatar" alt="">
         <p>{{'Изменить фото' | translate}}</p>
@@ -9,32 +9,27 @@
       <div class="autorize">
 
         <p><b>{{'Ваше имя' | translate}}</b></p>
-        <input type="text" name="name" placeholder="Укажите Ваше имя" readonly [(ngModel)]="name" (click)="this.authService.alert('Ошибка','Изменение имени временно недоступно')">
+        <input type="text" name="name" placeholder="Укажите Ваше имя" readonly [(ngModel)]="name"
+          (click)="this.authService.alert('Ошибка','Изменение имени временно недоступно')">
 
         <p><b>{{'Телефон' | translate}}</b></p>
-        <input type="text" name="name" readonly (click)="authService.alert('Упс','Телефон невозможно изменить')" placeholder="Ваш телефон" [value]="'+'+phone | mask: '+ 000 (00) 000 00 00'">
+        <input type="text" name="name" readonly (click)="authService.alert('Упс','Телефон невозможно изменить')"
+          placeholder="Ваш телефон" [value]="'+'+phone | mask: '+ 000 (00) 000 00 00'">
 
         <p><b>{{'Ваш регион' | translate}} </b></p>
-        <input (click)="selectRegion()" id="region" [readOnly]="true" placeholder="Укажите Ваш регион" readonly type="text" name="name" [value]="this.authService.currentUser!.city + ', ' +this.authService.currentUser!.country ">
+        <input (click)="selectRegion()" id="region" [readOnly]="true" placeholder="Укажите Ваш регион" readonly
+          type="text" name="name"
+          [value]="this.authService.currentUser!.city + ', ' +this.authService.currentUser!.country ">
 
         <p><b>{{'Дата рождения' | translate}}</b></p>
-        <input id="selectdate" type="text" name="name" placeholder="Дата рождения" readonly [value]="birthday | formatTime:'DD MMMM YYYY'">
+        <input id="selectdate" type="text" name="name" placeholder="Дата рождения" readonly
+          [value]="birthday | formatTime:'DD MMMM YYYY'">
         <ion-modal trigger="selectdate" [cssClass]="'bottom-end'">
           <ng-template>
-            <ion-datetime
-                    class="custom-calendar"
-                    #startDate
-                    [showDefaultTitle]="true"
-                    [preferWheel]="true"
-                    presentation="date"
-                    firstDayOfWeek="1"
-                    [value]="birthday | formatTime:'YYYY-MM-DD'"
-                    size="cover"
-                    doneText="Выбрать"
-                    cancelText="Отмена"
-                    [showDefaultButtons]="true"
-                    (ionChange)="selectBirthday(startDate.value)"
-            >
+            <ion-datetime class="custom-calendar" #startDate [showDefaultTitle]="true" [preferWheel]="true"
+              presentation="date" firstDayOfWeek="1" [value]="birthday | formatTime:'YYYY-MM-DD'" size="cover"
+              doneText="Выбрать" cancelText="Отмена" [showDefaultButtons]="true"
+              (ionChange)="selectBirthday(startDate.value)">
               <span slot="title" style="color: white">{{'Дата рождения' | translate}}</span>
             </ion-datetime>
           </ng-template>
@@ -43,7 +38,7 @@
         <div class="file-uploads">
           <div class="file-group" *ngFor="let row of authService.mytruck">
             <div class="form-group" (click)="editTransport(row)">
-              <label class="label" >
+              <label class="label">
                 {{row.name}} <br> {{row.max_weight}} {{'кг' | translate}}
               </label>
             </div>
@@ -51,7 +46,8 @@
           <div class="file-group" *ngIf="authService.mytruck.length < 1">
             <div class="form-group" (click)="addTransport()">
               <label class="label">
-                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'транспорт' | translate}}</span>
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'транспорт' |
+                  translate}}</span>
               </label>
             </div>
           </div>
@@ -71,7 +67,7 @@
         <p><b>{{'Паспорт' | translate}}:</b></p>
         <!--<input class="input-from-image" type="text" name="name" placeholder="Серия и номер паспорта" [(ngModel)]="name">-->
         <div class="file-uploads">
-          <div class="file-group"  *ngFor="let row of passport_docks" (click)="delPassportFile(row.name.toString())">
+          <div class="file-group" *ngFor="let row of passport_docks" (click)="delPassportFile(row.name.toString())">
             <div class="del-button">
               <ion-icon name="trash-bin-outline"></ion-icon>
             </div>
@@ -82,7 +78,8 @@
           <div class="file-group" (click)="addPassportDocks()" *ngIf="passport_docks.length < 2">
             <div class="form-group">
               <label class="label">
-                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'фото паспорта' | translate}}</span>
+                <span class="title"><span>+</span> <br>{{'Добавить' | translate}} <br> {{'фото паспорта' |
+                  translate}}</span>
               </label>
             </div>
           </div>
@@ -90,7 +87,7 @@
 
         <p><b>{{'Водительское удостоверение' | translate}}:</b></p>
         <div class="file-uploads">
-          <div class="file-group"  *ngFor="let row of driver_license"  (click)="delDriverLicenseFile(row.name)">
+          <div class="file-group" *ngFor="let row of driver_license" (click)="delDriverLicenseFile(row.name)">
             <div class="del-button">
               <ion-icon name="trash-bin-outline"></ion-icon>
             </div>
@@ -111,14 +108,133 @@
           <h2>{{'Контакты' | translate}}</h2>
           <div class="dop-contact-row">
             <div class="input-contact" *ngFor="let row of authService.contacts">
-              <input type="text" inputmode="tel" class="form-control" readonly [value]="row.text | mask:'+000 (00) 000 00 00'">
-              <span class="delete-contact" [ngClass]="row.text.length > 0 ? '':'disabled-button'" (click)="deleteContact(row)">
-                  <ion-icon name="trash-outline"></ion-icon>
-                </span>
+              <input type="text" inputmode="tel" class="form-control" readonly
+                [value]="row.text | mask:'+000 (00) 000 00 00'">
+              <span class="delete-contact" [ngClass]="row.text.length > 0 ? '':'disabled-button'"
+                (click)="deleteContact(row)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </span>
             </div>
           </div>
           <button class="reg-btn ion-margin-top" (click)="addContacts()">{{'Добавить контакт' | translate}}</button>
         </div>
+
+        <ng-container *ngIf="verification">
+          <p><b>{{'Проверенные драйверы' | translate}}</b></p>
+          <span class="input-mode-code">
+            <label for="fullName">{{'ФИО' | translate}} </label>
+            <input id="fullName" type="text" name="fullName" [(ngModel)]="verification.full_name">
+          </span>
+          <p><b>{{'Фото паспорта с вашим лицом селфи' | translate}}:</b></p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group">
+                <img
+                  [src]="verification.selfies_with_passport?file_url+verification.selfies_with_passport:'../../assets/img/passport.png'" />
+              </div>
+            </div>
+          </div>
+
+          <span class="input-mode-code">
+            <label for="cardNumber">{{'Банковская карта' | translate}} </label>
+            <input id="cardNumber" type="text" name="cardNumber" [mask]="mask" [(ngModel)]="verification.bank_card">
+          </span>
+
+          <span class="input-mode-code">
+            <label for="cardName">{{'Название банка выпущенного карты' | translate}} </label>
+            <input id="cardName" type="text" name="cardName" [(ngModel)]="verification.bank_cardname">
+          </span>
+
+          <p><b>{{'Фото спереди' | translate}}:</b></p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group">
+                <img
+                  [src]="verification.transport_front_photo?file_url+verification.transport_front_photo:'../../assets/truck/opposite.png'" />
+              </div>
+            </div>
+          </div>
+          <p class="mt-10"><b>{{'Фото сзади' | translate}}:</b></p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group">
+                <img
+                  [src]="verification.transport_back_photo?file_url+verification.transport_back_photo:'../../assets/truck/back.png'" />
+              </div>
+            </div>
+          </div>
+          <p class="mt-10"><b>{{'Фото сбоку' | translate}}:</b></p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group">
+                <img
+                  [src]="verification.transport_side_photo?file_url+verification.transport_side_photo:'../../assets/truck/right.png'" />
+              </div>
+            </div>
+          </div>
+          <p class="mt-10"><b>{{'Фото ADR' | translate}}:</b></p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group" *ngIf="verification.adr_photo">
+                <img [src]="file_url+ verification.adr_photo" />
+              </div>
+            </div>
+          </div>
+          <p class="mt-10"><b>{{'Водительское удостоверение' | translate}}:</b></p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group" *ngIf="verification.driver_license">
+                <img [src]="file_url+verification.driver_license" />
+              </div>
+            </div>
+          </div>
+
+          <span class="input-mode-code">
+            <label for="cardName">{{'Страна регистрации транспорта' | translate}} </label>
+            <input id="cardName" type="text" name="cardName" [(ngModel)]="verification.transport_registration_country">
+          </span>
+
+          <p class="mt-10"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
+          </p>
+          <div class="file-uploads">
+            <div class="file-group">
+              <div class="form-group">
+                <img
+                  [src]="verification.transportation_license_photo?file_url+verification.transportation_license_photo:''"
+                  alt="">
+              </div>
+            </div>
+
+          </div>
+          <p class="mt-10"><b>{{'Фото тех паспорта' | translate}}</b></p>
+          <div class="file-uploads">
+            <div class="file-group" *ngIf="verification.techpassport_photo1">
+              <div class="form-group">
+                <img [src]="file_url+verification.techpassport_photo1" alt="">
+              </div>
+            </div>
+            <div class="file-group" *ngIf="verification.techpassport_photo2">
+              <div class="form-group">
+                <img [src]="file_url+verification.techpassport_photo2" alt="">
+              </div>
+            </div>
+
+          </div>
+          <p class="mt-10" *ngIf="verification.state_registration_truckNumber"><b>{{'Гос. номер Тягача' |
+              translate}}</b>
+          </p>
+          <input type="text" name="name" placeholder="Гос. номер Тягача"
+            *ngIf="verification.state_registration_truckNumber"
+            [(ngModel)]="verification.state_registration_truckNumber">
+
+          <p class="mt-10" *ngIf="verification.type"><b> {{'Тип прицепа' | translate}}</b></p>
+          <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="verification.type"
+            [value]="returnNameTypeTransport(verification.type)">
+
+          <p class="mt-10" *ngIf="verification.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
+          <input type="text" *ngIf="verification.brand_name" name="name"
+            placeholder="{{'Марка транспорта' | translate}}" [(ngModel)]="verification.brand_name">
+        </ng-container>
 
       </div>
     </div>

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { IonicModule } from '@ionic/angular';
 
+
 import { BalancePageRoutingModule } from './balance-routing.module';
 
 import { BalancePage } from './balance.page';
@@ -17,7 +18,7 @@ import {TranslateModule} from "@ngx-translate/core";
         IonicModule,
         BalancePageRoutingModule,
         HeaderPageModule,
-        TranslateModule
+        TranslateModule,
     ],
   declarations: [BalancePage]
 })

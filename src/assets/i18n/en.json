@@ -155,5 +155,15 @@
     "Создать":"Create",
     "Оплата":"Payment",
     "Чтобы изменить номер телефона, вам необходимо создать новый аккаунт, или обратиться в службу поддержки":"To change your phone number, you need to create a new account, or contact support",
-    "Проверка":"Go through identification"
+    "Проверка":"Go through identification",
+    "ФИО":"Full Name",
+    "Фото паспорта с вашим лицом селфи":"Passport photo with your face selfie",
+    "Банковская карта":"Bank card",
+    "Название банка выпущенного карты":"Name of the bank issued the card",
+    "Фото сзади":"Photo from behind",
+    "Фото сбоку":"Side photo",
+    "Фото ADR":"Photo ADR",
+    "Страна регистрации транспорта":"Country of registration of transport",
+    "Фото лицензия на грузоперевозку":"Photo license for cargo transportation",
+    "Фото тех паспорта":"Photos of those passports"
 }

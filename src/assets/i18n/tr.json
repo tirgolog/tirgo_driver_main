@@ -155,7 +155,15 @@
   "Создать":"Yaratmak",
   "Оплата": "Ödeme",
   "Чтобы изменить номер телефона, вам необходимо создать новый аккаунт, или обратиться в службу поддержки":  "Telefon numaranızı değiştirmek için yeni bir hesap oluşturmanız veya desteğe başvurmanız gerekir",
-  "Проверка":"Kimlik doğrulamadan geç"
-
+  "Проверка":"Kimlik doğrulamadan geç",
+  "ФИО":"Ad Soyad",
+  "Фото паспорта с вашим лицом селфи":"Yüz selfienizle birlikte pasaport fotoğrafı",
+  "Банковская карта":"banka kartı",
+  "Название банка выпущенного карты":"Kartı veren bankanın adı",
+  "Фото сзади":"Arkadan fotoğraf",
+  "Фото сбоку":"Yan fotoğraf",
+  "Фото ADR":"Fotoğraf ADR'si",
+  "Страна регистрации транспорта":"Taşımacılığın kayıtlı olduğu ülke",
+  "Фото лицензия на грузоперевозку":"Kargo taşımacılığı için fotoğraf lisansı",
+  "Фото тех паспорта":"O pasaportların fotoğrafları"
 }
-

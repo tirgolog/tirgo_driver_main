@@ -14,6 +14,7 @@ export class User {
     public geo_id: any;
     public balance: number;
     public balance_off: number;
+    public balance_in_proccess: number;
     public adr: number;
     public dirty: number;
     public busy: number;
@@ -36,6 +37,7 @@ export class User {
         this.geo_id = +user.geo_id;
         this.balance = +user.balance;
         this.balance_off = +user.balance_off;
+        this.balance_in_proccess = +user.balance_in_proccess;
         this.adr = +user.adr;
         this.dirty = +user.dirty;
         this.busy = +user.busy;

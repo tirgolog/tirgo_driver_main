@@ -13,19 +13,20 @@
       <div class="cart-wrap">
         <img src="assets/img/logo.png" alt="">
         <p class="cart-wrap-balance">Активные средства: {{authService.currentUser.balance}} <span></span></p>
+        <p class="cart-wrap-balance">Средства на запросе: {{authService.currentUser.balance_in_proccess}} <span></span></p>
         <p class="cart-wrap-balance">Замороженные средства: {{authService.currentUser.balance_off}} <span></span></p>
       </div>
-      <p class="ion-no-padding ion-no-margin"><b>{{'Методы оплаты' | translate}}</b></p>
+      <!-- <p class="ion-no-padding ion-no-margin"><b>{{'Методы оплаты' | translate}}</b></p>
       <div class="payment-method">
         <div class="payment-method-wrap">
           <button (click)="selectmethodpay = 'click'" [ngClass]="{'selected': selectmethodpay === 'click'}"><img src="assets/payment/click.svg" alt=""></button>
           <button (click)="selectmethodpay = 'payme'" [ngClass]="{'selected': selectmethodpay === 'payme'}"><img src="assets/payment/payme.svg" alt=""></button>
         </div>
-      </div>
-      <p class="ion-no-padding ion-no-margin"><b>{{'Сумма' | translate}}</b></p>
-      <div class="payment-total form-block">
+      </div> -->
+      <!-- <p class="ion-no-padding ion-no-margin"><b>{{'Сумма' | translate}}</b></p> -->
+      <!-- <div class="payment-total form-block">
         <input type="text" inputmode="tel" name="total" placeholder="150 000" [(ngModel)]="amount">
-      </div>
+      </div> -->
       <div class="payment-total form-block">
         <button class="reg-btn podpis-buy" (click)="withdrawFromActivebalance()">{{'Снять средства' | translate}}</button>
       </div>
@@ -38,8 +39,17 @@
     </div>-->
   </div>
 </ion-content>
-<ion-footer class="my-footer">
+<!-- <ion-footer class="my-footer">
   <div class="bottom-wrap personal-bottom">
     <button class="reg-btn podpis-buy" (click)="pay()">{{'Оплатить' | translate}}</button>
   </div>
-</ion-footer>
+</ion-footer> -->
+
+<ion-card *ngIf="payConfirm">
+  <ion-card-header>
+    <ion-card-title style="text-align: center;">Ваша заявка принята на обработку</ion-card-title>
+  </ion-card-header>
+
+  <ion-button style="display: flex;" routerLink="/tabs">OK</ion-button>
+
+</ion-card>

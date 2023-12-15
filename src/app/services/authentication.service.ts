@@ -8,10 +8,9 @@ import { AlertController, } from "@ionic/angular";
 import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
 import { FileTransfer, } from "@ionic-native/file-transfer/ngx";
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
-import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 
 const TOKEN_KEY = 'jwttirgotoken';
-const API_URL = 'https://admin.tirgo.io/api';
+const API_URL = 'http://localhost:7790';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +18,7 @@ const API_URL = 'https://admin.tirgo.io/api';
 export class AuthenticationService {
   authenticationState = new BehaviorSubject({});
   geolocationCheck: boolean;
-  public API_URL: string = 'https://admin.tirgo.io/api';
+  public API_URL: string = 'http://localhost:7790';
   public currentUser: User | undefined;
   public viewintro: boolean = false
   static jwt: any;
@@ -54,9 +53,7 @@ export class AuthenticationService {
     private iab: InAppBrowser,
     private storage: Storage,
     public camera: Camera,
-    public transfer: FileTransfer,
-    private geolocation: Geolocation
-  ) {
+    public transfer: FileTransfer) {
   }
   goToSupport() {
     this.iab.create('https://t.me/tirgosupportbot', '_system');
@@ -242,7 +239,7 @@ export class AuthenticationService {
     });
     return this.http.post<any>(sUrl, body);
   }
-  Verification(full_name: string, phone: string, selfies_with_passport: string, bank_card: string, bank_cardname: string, transport_front_photo: string, transport_back_photo: string, transport_side_photo: string, adr_photo: string, transport_registration_country: string, state_registration_truckNumber: string, driver_license: string, transportation_license_photo: string, techpassport_photo1: string, techpassport_photo2: string, type:number, brand_name:string) {
+  Verification(full_name: string, phone: string, selfies_with_passport: string, bank_card: string, bank_cardname: string, transport_front_photo: string, transport_back_photo: string, transport_side_photo: string, adr_photo: string, transport_registration_country: string, state_registration_truckNumber: string, driver_license: string, transportation_license_photo: string, techpassport_photo1: string, techpassport_photo2: string, type: number, brand_name: string) {
     const sUrl = API_URL + '/users/verification';
     const body = JSON.stringify({
       full_name, phone, selfies_with_passport, bank_card, bank_cardname, transport_front_photo, transport_back_photo, transport_side_photo, adr_photo, transport_registration_country, state_registration_truckNumber, driver_license, transportation_license_photo, techpassport_photo1, techpassport_photo2, type, brand_name

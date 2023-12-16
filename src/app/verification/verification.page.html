@@ -31,7 +31,7 @@
     </ng-container>
     <ng-container *ngIf="verify">
       <span class="input-mode-code">
-        <label for="fullName">{{'ФИО *' | translate}} </label>
+        <label for="fullName">{{'ФИО' | translate}} </label>
         <input id="fullName" type="text" name="fullName" [(ngModel)]="formData.full_name">
       </span>
       <p><b>{{'Фото паспорта с вашим лицом селфи' | translate}}:</b></p>
@@ -55,12 +55,12 @@
       </div>
 
       <span class="input-mode-code">
-        <label for="cardNumber">{{'Банковская карта *' | translate}} </label>
+        <label for="cardNumber">{{'Банковская карта' | translate}} </label>
         <input id="cardNumber" type="text" name="cardNumber" [mask]="mask" [(ngModel)]="formData.bank_card">
       </span>
 
       <span class="input-mode-code">
-        <label for="cardName">{{'Название банка выпущенного карты*' | translate}} </label>
+        <label for="cardName">{{'Название банка выпущенного карты' | translate}} </label>
         <input id="cardName" type="text" name="cardName" [(ngModel)]="formData.bank_cardname">
       </span>
 
@@ -165,7 +165,7 @@
         <ion-select-option value="Таджикистан">Таджикистан</ion-select-option>
         <ion-select-option value="Киргизистон">Киргизистон</ion-select-option>
       </ion-select>
-      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
+      <p class="mt-10" *ngIf="license_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
       </p>
       <div class="file-uploads">
         <div class="file-group" *ngFor="let row of license_files;let i=index">
@@ -173,7 +173,7 @@
             <img [src]="formData.transportation_license_photo?file_url+formData.transportation_license_photo:''" alt="">
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" *ngIf="license_files.length<=1">
           <div class="form-group" (click)="addFilesLicense()">
             <label class="label">
               <span class="title"><span>+</span> </span>
@@ -181,8 +181,8 @@
           </div>
         </div>
       </div>
-      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
-      <div class="file-uploads" *ngIf="tech_passport_files.length<=1">
+      <p class="mt-10" *ngIf="tech_passport_files.length<=2"><b>{{'Фото тех паспорта' | translate}}</b></p>
+      <div class="file-uploads" *ngIf="tech_passport_files.length<=2">
         <div class="file-group" *ngIf="formData.techpassport_photo1">
           <div class="form-group">
             <img [src]="file_url+formData.techpassport_photo1" alt="">
@@ -193,7 +193,7 @@
             <img [src]="file_url+formData.techpassport_photo2" alt="">
           </div>
         </div>
-        <div class="file-group">
+        <div class="file-group" *ngIf="!formData.techpassport_photo2&&!formData.techpassport_photo1">
           <div class="form-group" (click)="addFilesCarPhoto()">
             <label class="label">
               <span class="title"><span>+</span> </span>
@@ -201,8 +201,17 @@
           </div>
         </div>
       </div>
-      <p class="mt-10"><b>{{'Гос. номер Тягача' | translate}}</b></p>
-      <input type="text" name="name"  placeholder="Гос. номер Тягача" [(ngModel)]="formData.state_registration_truckNumber">
+      <p class="mt-10" *ngIf="!formData.state_registration_truckNumber"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <input type="text" name="name" placeholder="Гос. номер Тягача" *ngIf="!formData.state_registration_truckNumber"
+        [(ngModel)]="formData.state_registration_truckNumber">
+
+      <p class="mt-10" *ngIf="!formData.type"><b> {{'Тип прицепа' | translate}}</b></p>
+      <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="!formData.type"
+        [value]="returnNameTypeTransport(formData.type)">
+
+      <p class="mt-10" *ngIf="!formData.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
+      <input type="text" *ngIf="!formData.brand_name" name="name" placeholder="{{'Марка транспорта' | translate}}"
+        [(ngModel)]="formData.brand_name">
     </ng-container>
   </div>
   <div class="bottom-wrap autorize-btns bottom-wrap-verify" *ngIf="!verify">

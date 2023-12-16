@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AlertController, NavController } from "@ionic/angular";
 import { Router } from "@angular/router";
 import { AuthenticationService } from "../services/authentication.service";
+import { User } from '../user';
 
 @Component({
   selector: 'app-notify',
@@ -10,6 +11,7 @@ import { AuthenticationService } from "../services/authentication.service";
 })
 export class NotifyPage implements OnInit {
   Date = new Date().toLocaleDateString()
+  send_verification: number;
   constructor(
     private navCtrl: NavController,
     public authService: AuthenticationService,
@@ -18,7 +20,15 @@ export class NotifyPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    // this.presentActionSheet()
+    this.checkSession()
+  }
+  async checkSession() {
+    await this.authService.checkSession().toPromise().then(async (res) => {
+      if (res.status) {
+        this.authService.currentUser = new User(res.user);
+        this.send_verification = res.user.send_verification;
+      }
+    })
   }
   back() {
     this.navCtrl.back()
@@ -34,7 +44,7 @@ export class NotifyPage implements OnInit {
   async presentActionSheet() {
     const actionSheet = await this.alertController.create({
       header: 'Поздравляем вы прошли верификацию!',
-      subHeader:'Теперь вы можете совершать “Безопасные сделки”',
+      subHeader: 'Теперь вы можете совершать “Безопасные сделки”',
       message: `<img src="../../assets/img/medium-verification.png"  style="width: 100%;">`,
       cssClass: 'custom-alert',
       buttons: [

@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from "../services/authentication.service";
-import {ActionSheetController, AlertController, LoadingController, ModalController, Platform} from "@ionic/angular";
-import {AddtransportPage} from "../addtransport/addtransport.page";
-import {EdittransportPage} from "../edittransport/edittransport.page";
-import {FileTransferObject, FileUploadOptions} from "@ionic-native/file-transfer/ngx";
-import {Storage} from "@ionic/storage";
-import {Router} from "@angular/router";
-import {AddcontactPage} from "../addcontact/addcontact.page";
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from "../services/authentication.service";
+import { ActionSheetController, AlertController, LoadingController, ModalController, Platform } from "@ionic/angular";
+import { AddtransportPage } from "../addtransport/addtransport.page";
+import { EdittransportPage } from "../edittransport/edittransport.page";
+import { FileTransferObject, FileUploadOptions } from "@ionic-native/file-transfer/ngx";
+import { Storage } from "@ionic/storage";
+import { Router } from "@angular/router";
+import { AddcontactPage } from "../addcontact/addcontact.page";
 
 @Component({
     selector: 'app-profile',
@@ -14,6 +14,7 @@ import {AddcontactPage} from "../addcontact/addcontact.page";
     styleUrls: ['./profile.page.scss'],
 })
 export class ProfilePage implements OnInit {
+    mask: string = '0000-0000-0000-0000';
     file_url: string = 'https://admin.tirgo.io/file/';
     name: string | undefined = '';
     phone: string | undefined = '';
@@ -21,7 +22,7 @@ export class ProfilePage implements OnInit {
     country: string | undefined = '';
     city: string | undefined = '';
     adr: number | undefined = 0;
-
+    typetransport: any[] = [];
     selectedcartype: number = 0;
     selectedstatus: string = 'logist';
     modalupdateuser: boolean = false;
@@ -29,11 +30,11 @@ export class ProfilePage implements OnInit {
     model: string = '';
     brand: string = '';
     phone2: string = '';
-
-    loading:any;
-
-    passport_docks:any[]=[];
-    driver_license:any[]=[];
+    type: number = 0
+    loading: any;
+    verification: any;
+    passport_docks: any[] = [];
+    driver_license: any[] = [];
     constructor(
         public authService: AuthenticationService,
         private loadingCtrl: LoadingController,
@@ -55,15 +56,71 @@ export class ProfilePage implements OnInit {
         this.country = this.authService.currentUser?.country;
         this.city = this.authService.currentUser?.city;
         this.adr = this.authService.currentUser?.adr;
-        for (let row of this.authService.currentUser?.files){
-            if (row.type_file === 'passport'){
+        for (let row of this.authService.currentUser?.files) {
+            if (row.type_file === 'passport') {
                 this.passport_docks.push(row)
-            }else if(row.type_file === 'driver-license'){
+            } else if (row.type_file === 'driver-license') {
                 this.driver_license.push(row)
             }
         }
+        this.verifiedDriver();
+
+        this.typetransport = this.authService.typetruck.map((item) => {
+            return {
+                label: item.name,
+                type: 'radio',
+                value: item.id,
+            };
+        });
     }
-    async selectBirthday(date:any){
+
+
+    async verifiedDriver() {
+        await this.authService.verifiedDriver().toPromise().then(async (res) => {
+            if (res.status) {
+                this.verification = res.data[0];
+                console.log(this.verification)
+            }
+        }).catch(async (err) => {
+            console.log(err)
+        })
+    }
+
+
+    returnNameTypeTransport(type: number) {
+        const index = this.authService.typetruck.findIndex(e => +e.id === +type)
+        if (index >= 0) {
+            return this.authService.typetruck[index].name
+        } else {
+            return 'Не выбрано'
+        }
+    }
+
+    async selectTypeTransport() {
+        const alert = await this.alertController.create({
+            header: 'Выберите тип транспорта',
+            cssClass: 'customAlert',
+            inputs: this.typetransport,
+            buttons: [
+                {
+                    text: 'Отмена',
+                    role: 'cancel',
+                    cssClass: 'secondary',
+                    handler: () => {
+
+                    }
+                }, {
+                    text: 'Выбрать',
+                    handler: async (data) => {
+                        this.type = data;
+                        this.verification.type = data;
+                    }
+                }
+            ],
+        });
+        await alert.present();
+    }
+    async selectBirthday(date: any) {
         await this.authService.setDateBirthday(date).toPromise()
             .then(async (res: any) => {
                 if (res.status) {
@@ -91,7 +148,7 @@ export class ProfilePage implements OnInit {
     }
 
     async selectRegion() {
-        await this.authService.alert('Ошибка','Изменение региона временно недоступно')
+        await this.authService.alert('Ошибка', 'Изменение региона временно недоступно')
         /*const modal = await this.modalController.create({
             component: ChoiceCityPage,
             swipeToClose: true,
@@ -136,7 +193,7 @@ export class ProfilePage implements OnInit {
             mode: 'ios',
         });
         await modal.present();
-        const {data} = await modal.onWillDismiss();
+        const { data } = await modal.onWillDismiss();
         if (data) {
 
         }
@@ -165,7 +222,7 @@ export class ProfilePage implements OnInit {
                         }
                     });
                     await modal.present();
-                    const {data} = await modal.onWillDismiss();
+                    const { data } = await modal.onWillDismiss();
                     if (data) {
 
                     }
@@ -194,7 +251,7 @@ export class ProfilePage implements OnInit {
                                             if (res.status) {
                                                 const index = this.authService.mytruck.findIndex(e => e.id === item.id)
                                                 if (index >= 0) {
-                                                    this.authService.mytruck.splice(index,1)
+                                                    this.authService.mytruck.splice(index, 1)
                                                 }
                                             }
                                         })
@@ -207,7 +264,7 @@ export class ProfilePage implements OnInit {
                     });
                     await alert.present();
                 }
-            },{
+            }, {
                 text: 'Отменить',
                 role: 'cancel',
                 cssClass: 'cancel-action-sheet',
@@ -247,21 +304,20 @@ export class ProfilePage implements OnInit {
             mode: 'ios',
         });
         await modal.present();
-        const {data} = await modal.onWillDismiss();
+        const { data } = await modal.onWillDismiss();
         if (data) {
 
         }
     }
-    async changeAvatar(){
+    async changeAvatar() {
         this.loading = await this.loadingCtrl.create({
             message: 'Отгружаем фото',
             cssClass: 'custom-loading'
         });
-        await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
-            console.log(imageData)
+        await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
             this.loading.present()
             const fileTransfer: FileTransferObject = await this.authService.transfer.create();
-            const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
+            const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
             const uploadOpts: FileUploadOptions = {
                 headers: headers,
                 fileKey: 'file',
@@ -269,24 +325,24 @@ export class ProfilePage implements OnInit {
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };
-            uploadOpts.params = {typeUser:'driver',typeImage:'avatar'};
+            uploadOpts.params = { typeUser: 'driver', typeImage: 'avatar' };
             const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-            if (res.status){
+            if (res.status) {
                 // @ts-ignore
                 this.authService.currentUser?.avatar = res.file.preview;
                 this.loading.dismiss();
             }
         })
     }
-    async addPassportDocks(){
+    async addPassportDocks() {
         this.loading = await this.loadingCtrl.create({
             message: 'Отгружаем фото',
             cssClass: 'custom-loading'
         });
-        await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
+        await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
             this.loading.present()
             const fileTransfer: FileTransferObject = await this.authService.transfer.create();
-            const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
+            const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
             const uploadOpts: FileUploadOptions = {
                 headers: headers,
                 fileKey: 'file',
@@ -294,23 +350,23 @@ export class ProfilePage implements OnInit {
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };
-            uploadOpts.params = {typeUser:'driver',typeImage:'verification'};
+            uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
             const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-            if (res.status){
+            if (res.status) {
                 this.passport_docks.push(res.file)
                 this.loading.dismiss();
             }
         })
     }
-    async addDriverLicense(){
+    async addDriverLicense() {
         this.loading = await this.loadingCtrl.create({
             message: 'Отгружаем фото',
             cssClass: 'custom-loading'
         });
-        await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData:any) => {
+        await this.authService.camera.getPicture(this.authService.optionsCamera).then(async (imageData: any) => {
             this.loading.present()
             const fileTransfer: FileTransferObject = await this.authService.transfer.create();
-            const headers = {'Authorization': 'Bearer ' + AuthenticationService.jwt};
+            const headers = { 'Authorization': 'Bearer ' + AuthenticationService.jwt };
             const uploadOpts: FileUploadOptions = {
                 headers: headers,
                 fileKey: 'file',
@@ -318,18 +374,18 @@ export class ProfilePage implements OnInit {
                 chunkedMode: false,
                 fileName: imageData.substr(imageData.lastIndexOf('/') + 1)
             };
-            uploadOpts.params = {typeUser:'driver',typeImage:'driver-license'};
+            uploadOpts.params = { typeUser: 'driver', typeImage: 'driver-license' };
             const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
-            if (res.status){
+            if (res.status) {
                 this.driver_license.push(res.file)
                 this.loading.dismiss();
             }
         })
     }
-    async logOut(){
-       const alert = await this.alertController.create({
+    async logOut() {
+        const alert = await this.alertController.create({
             header: 'Выход из аккаунта',
-            message:'Вы уверены что хотите выйти из аккаунта?',
+            message: 'Вы уверены что хотите выйти из аккаунта?',
             cssClass: 'customAlert',
             buttons: [
                 {
@@ -355,17 +411,17 @@ export class ProfilePage implements OnInit {
                         this.authService.activeorder = [];
                         this.authService.notifications = [];
                         this.authService.messages = [];
-                        await this.router.navigate(['selectlanguage'], {replaceUrl: true});
+                        await this.router.navigate(['selectlanguage'], { replaceUrl: true });
                     }
                 }
             ],
         });
         await alert.present();
     }
-    async deleteProfile(){
-       const alert = await this.alertController.create({
+    async deleteProfile() {
+        const alert = await this.alertController.create({
             header: 'Удаление аккаунта',
-            message:'Вы уверены что хотите удалить аккаунт? Модератор проверит Ваш аккаунт и удаление будет произведено в течении 30 дней.',
+            message: 'Вы уверены что хотите удалить аккаунт? Модератор проверит Ваш аккаунт и удаление будет произведено в течении 30 дней.',
             cssClass: 'customAlert',
             buttons: [
                 {
@@ -382,14 +438,14 @@ export class ProfilePage implements OnInit {
                         await alert.present();
                         await this.storage.clear();
                         await this.authService.logout();
-                        await this.router.navigate(['selectlanguage'], {replaceUrl: true});
+                        await this.router.navigate(['selectlanguage'], { replaceUrl: true });
                     }
                 }
             ],
         });
         await alert.present();
     }
-    async delPassportFile(file: string){
+    async delPassportFile(file: string) {
         const alert = await this.alertController.create({
             header: 'Удаление фото',
             message: 'Вы уверены что хотите удалить фото паспорта?',
@@ -404,16 +460,16 @@ export class ProfilePage implements OnInit {
                     }
                 }, {
                     text: 'Удалить',
-                    role:'destructive',
+                    role: 'destructive',
                     handler: async (data) => {
                         const res = await this.authService.delPhotoUser(file).toPromise()
-                        if (res.status){
+                        if (res.status) {
                             const index = this.passport_docks.findIndex(e => e.name === file)
-                            if (index>=0){
-                                this.passport_docks.splice(index,1)
+                            if (index >= 0) {
+                                this.passport_docks.splice(index, 1)
                             }
-                        }else {
-                            this.authService.alert('Ошибка',res.error)
+                        } else {
+                            this.authService.alert('Ошибка', res.error)
                         }
                     }
                 }
@@ -421,7 +477,7 @@ export class ProfilePage implements OnInit {
         });
         await alert.present();
     }
-    async delDriverLicenseFile(file: string){
+    async delDriverLicenseFile(file: string) {
         const alert = await this.alertController.create({
             header: 'Удаление фото',
             message: 'Вы уверены что хотите удалить фото паспорта?',
@@ -436,16 +492,16 @@ export class ProfilePage implements OnInit {
                     }
                 }, {
                     text: 'Удалить',
-                    role:'destructive',
+                    role: 'destructive',
                     handler: async (data) => {
                         const res = await this.authService.delPhotoUser(file).toPromise()
-                        if (res.status){
+                        if (res.status) {
                             const index = this.driver_license.findIndex(e => e.name === file)
-                            if (index>=0){
-                                this.driver_license.splice(index,1)
+                            if (index >= 0) {
+                                this.driver_license.splice(index, 1)
                             }
-                        }else {
-                            this.authService.alert('Ошибка',res.error)
+                        } else {
+                            this.authService.alert('Ошибка', res.error)
                         }
                     }
                 }
@@ -454,7 +510,7 @@ export class ProfilePage implements OnInit {
         await alert.present();
     }
     async deleteContact(item: any) {
-        if (this.authService.contacts.length>1){
+        if (this.authService.contacts.length > 1) {
             if (item.id > 0) {
                 const alert = await this.alertController.create({
                     header: 'Вы уверены?',
@@ -490,8 +546,8 @@ export class ProfilePage implements OnInit {
                 });
                 await alert.present();
             }
-        }else {
-            this.authService.alert('Ошибка','Невозможно удалить единственный контакт')
+        } else {
+            this.authService.alert('Ошибка', 'Невозможно удалить единственный контакт')
         }
     }
 }

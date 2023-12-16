@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="io.tirgo.drive" version="0.0.3" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+<widget id="io.tirgo.drive" version="0.0.4" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
     <name>Tirgo Driver</name>
     <description>Tirgo Driver app.</description>
     <author>team</author>
@@ -26,8 +26,6 @@
     <preference name="android-compileSdkVersion" value="32" />
     <preference name="android-targetSdkVersion" value="32" />
     <platform name="android">
-        <preference name="android-targetSdkVersion" value="33" />
-        <preference name="android-compileSdkVersion" value="33" />
         <preference name="Scheme" value="http" />
         <preference name="AndroidWindowSplashScreenAnimatedIcon" value="resources/android/splash/drawable-port-xxxhdpi-screen.png" />
         <edit-config file="app/src/main/AndroidManifest.xml" mode="merge" target="/manifest/application" xmlns:android="http://schemas.android.com/apk/res/android">

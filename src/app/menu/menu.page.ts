@@ -7,6 +7,7 @@ import {Geolocation} from "@awesome-cordova-plugins/geolocation/ngx";
 import axios from "axios";
 import {ChoiceCityPage} from "../choice-city/choice-city.page";
 import {SelectstatusPage} from "../selectstatus/selectstatus.page";
+import { User } from '../user';
 
 @Component({
   selector: 'app-menu',
@@ -15,6 +16,7 @@ import {SelectstatusPage} from "../selectstatus/selectstatus.page";
 })
 export class MenuPage implements OnInit {
   modalExit:boolean = false;
+  driver_verification:number
   constructor(
     public alertController: AlertController,
     private menu: MenuController,
@@ -26,9 +28,17 @@ export class MenuPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    console.log(this.authService.currentUser)
+    this.checkSession()
   }
 
+  async checkSession() {
+    await this.authService.checkSession().toPromise().then(async (res) => {
+      if (res.status) {
+        this.authService.currentUser = new User(res.user);
+        this.driver_verification = res.user.send_verification;
+      }
+    })
+  }
   async logOut(){
     this.menu.toggle();
     //this.modalExit = true;

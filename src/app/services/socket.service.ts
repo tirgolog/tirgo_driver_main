@@ -61,4 +61,12 @@ export class SocketService {
             });
         });
     }
+
+    updateDriverBalance() {
+        return new Observable<any>(observer => {
+            this.socket.on('update-driver-balance', (data:any) => {
+                observer.next(data);
+            });
+        });
+    }
 }

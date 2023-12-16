@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {NavController} from "@ionic/angular";
 import {AuthenticationService} from "../services/authentication.service";
 import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
+import { SocketService } from '../services/socket.service';
 
 @Component({
   selector: 'app-balance',
@@ -11,14 +12,16 @@ import {InAppBrowser} from "@ionic-native/in-app-browser/ngx";
 export class BalancePage implements OnInit {
   selectmethodpay: string = 'click'
   amount:string = '';
-
+  payConfirm: boolean = false;
   constructor(
     private iab: InAppBrowser,
     private navCtrl: NavController,
-    public authService:AuthenticationService
+    public authService:AuthenticationService,
+    public socketService: SocketService
   ) { }
 
   ngOnInit() {
+    this.updateDriverBalance();
   }
   back(){
     this.navCtrl.back()
@@ -52,11 +55,22 @@ export class BalancePage implements OnInit {
     if(this.authService.currentUser.balance > 0) {
       this.authService.withdrawBalance(this.authService.currentUser.id).subscribe((res: any) => {
         if(res) {
-          location.reload()
+          this.payConfirm = true;
         }
       });
     } else {
       await this.authService.alert('Ошибка','У вас нет активного баланса')
     }
+  }
+
+  updateDriverBalance() {
+    this.socketService.updateDriverBalance().subscribe((res:any) => {
+      if(res) {
+        const data = JSON.parse(res);
+        this.authService.currentUser.balance = data.balance;
+        this.authService.currentUser.balance_off = data.balance_off;
+        this.authService.currentUser.balance_in_proccess = data.balance_in_proccess;
+      }
+    })
   }
 }

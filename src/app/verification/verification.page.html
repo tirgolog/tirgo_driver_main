@@ -181,8 +181,8 @@
           </div>
         </div>
       </div>
-      <p class="mt-10" *ngIf="tech_passport_files.length<=1"><b>{{'Фото тех паспорта' | translate}}</b></p>
-      <div class="file-uploads" *ngIf="tech_passport_files.length<=1">
+      <p class="mt-10" *ngIf="tech_passport_files.length<=2"><b>{{'Фото тех паспорта' | translate}}</b></p>
+      <div class="file-uploads" *ngIf="tech_passport_files.length<=2">
         <div class="file-group" *ngIf="formData.techpassport_photo1">
           <div class="form-group">
             <img [src]="file_url+formData.techpassport_photo1" alt="">
@@ -201,16 +201,16 @@
           </div>
         </div>
       </div>
-      <p class="mt-10" *ngIf="formData.state_registration_truckNumber"><b>{{'Гос. номер Тягача' | translate}}</b></p>
-      <input type="text" name="name" placeholder="Гос. номер Тягача" *ngIf="formData.state_registration_truckNumber"
+      <p class="mt-10" *ngIf="!formData.state_registration_truckNumber"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <input type="text" name="name" placeholder="Гос. номер Тягача" *ngIf="!formData.state_registration_truckNumber"
         [(ngModel)]="formData.state_registration_truckNumber">
 
-      <p class="mt-10" *ngIf="formData.type"><b> {{'Тип прицепа' | translate}}</b></p>
-      <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="formData.type"
+      <p class="mt-10" *ngIf="!formData.type"><b> {{'Тип прицепа' | translate}}</b></p>
+      <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="!formData.type"
         [value]="returnNameTypeTransport(formData.type)">
 
-      <p class="mt-10" *ngIf="formData.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
-      <input type="text" *ngIf="formData.brand_name" name="name" placeholder="{{'Марка транспорта' | translate}}"
+      <p class="mt-10" *ngIf="!formData.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
+      <input type="text" *ngIf="!formData.brand_name" name="name" placeholder="{{'Марка транспорта' | translate}}"
         [(ngModel)]="formData.brand_name">
     </ng-container>
   </div>

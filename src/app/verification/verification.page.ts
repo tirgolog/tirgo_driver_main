@@ -32,8 +32,11 @@ export class VerificationPage implements OnInit {
   car_photos: any[] = [];
   tech_passport_files: any[] = [];
   typetransport: any[] = [];
-  type: number = 0
-  stepper: number = 0
+  type: number = 0;
+  stepper: number = 0;
+  brand_name_check = false;
+  state_registration_truckNumber_check = false;
+  type_check = false;
   formData = {
     user_id: 0,
     full_name: '',
@@ -69,6 +72,9 @@ export class VerificationPage implements OnInit {
     this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
     this.formData.type = this.authService.mytruck[0].type;
     this.formData.brand_name = this.authService.mytruck[0].brand_name;
+    this.state_registration_truckNumber_check = this.authService.mytruck[0].state_number ? true : false;
+    this.type_check = this.authService.mytruck[0].type ? true : false;
+    this.brand_name_check = this.authService.mytruck[0].brand_name ? true : false;
     this.typetransport = this.authService.typetruck.map((item) => {
       return {
         label: item.name,
@@ -205,6 +211,7 @@ export class VerificationPage implements OnInit {
       uploadOpts.params = { typeUser: 'driver', typeImage: 'verification' };
       const res = JSON.parse((await fileTransfer.upload(imageData, this.authService.API_URL + '/users/uploadImage', uploadOpts)).response)
       if (this.stepper == 0) {
+        this.tech_passport_files.push(res?.file?.filename)
         this.formData.techpassport_photo1 = res?.file?.filename;
         this.stepper++;
       } else {

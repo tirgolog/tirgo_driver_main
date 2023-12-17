@@ -168,7 +168,11 @@
       <p class="mt-10" *ngIf="license_files.length<=1"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
       </p>
       <div class="file-uploads">
-        <div class="file-group" *ngFor="let row of license_files;let i=index">
+        <div class="file-group"
+          (click)="deleteFile(formData.transportation_license_photo, 'transportation_license_photo')">
+          <div class="del-button">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img [src]="formData.transportation_license_photo?file_url+formData.transportation_license_photo:''" alt="">
           </div>
@@ -183,17 +187,23 @@
       </div>
       <p class="mt-10" *ngIf="tech_passport_files.length<=2"><b>{{'Фото тех паспорта' | translate}}</b></p>
       <div class="file-uploads" *ngIf="tech_passport_files.length<=2">
-        <div class="file-group" *ngIf="formData.techpassport_photo1">
+        <div class="file-group" (click)="deleteFile(formData.techpassport_photo1, 'techpassport_photo1')">
+          <div class="del-button" *ngIf="formData.techpassport_photo1!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img [src]="file_url+formData.techpassport_photo1" alt="">
           </div>
         </div>
-        <div class="file-group" *ngIf="formData.techpassport_photo2">
+        <div class="file-group" (click)="deleteFile(formData.techpassport_photo2, 'transport_front_photo')">
+          <div class="del-button" *ngIf="formData.techpassport_photo2!=''">
+            <ion-icon name="trash-bin-outline"></ion-icon>
+          </div>
           <div class="form-group">
             <img [src]="file_url+formData.techpassport_photo2" alt="">
           </div>
         </div>
-        <div class="file-group" *ngIf="!formData.techpassport_photo2&&!formData.techpassport_photo1">
+        <div class="file-group">
           <div class="form-group" (click)="addFilesCarPhoto()">
             <label class="label">
               <span class="title"><span>+</span> </span>
@@ -201,16 +211,16 @@
           </div>
         </div>
       </div>
-      <p class="mt-10" *ngIf="!formData.state_registration_truckNumber"><b>{{'Гос. номер Тягача' | translate}}</b></p>
-      <input type="text" name="name" placeholder="Гос. номер Тягача" *ngIf="!formData.state_registration_truckNumber"
+      <p class="mt-10" *ngIf="!state_registration_truckNumber_check"><b>{{'Гос. номер Тягача' | translate}}</b></p>
+      <input type="text" name="name" placeholder="Гос. номер Тягача" *ngIf="!state_registration_truckNumber_check"
         [(ngModel)]="formData.state_registration_truckNumber">
 
-      <p class="mt-10" *ngIf="!formData.type"><b> {{'Тип прицепа' | translate}}</b></p>
-      <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="!formData.type"
+      <p class="mt-10" *ngIf="!type_check"><b> {{'Тип прицепа' | translate}}</b></p>
+      <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="!type_check"
         [value]="returnNameTypeTransport(formData.type)">
 
-      <p class="mt-10" *ngIf="!formData.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
-      <input type="text" *ngIf="!formData.brand_name" name="name" placeholder="{{'Марка транспорта' | translate}}"
+      <p class="mt-10" *ngIf="!brand_name_check"><b>{{'Марка транспорта' | translate}}</b></p>
+      <input type="text" *ngIf="!brand_name_check" name="name" placeholder="{{'Марка транспорта' | translate}}"
         [(ngModel)]="formData.brand_name">
     </ng-container>
   </div>

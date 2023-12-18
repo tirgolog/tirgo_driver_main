@@ -86,7 +86,6 @@ export class OrderPage implements OnInit {
       await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
     }
   }
-
   async acceptOrderFinal() {
     if (this.item.secure_transaction && !this.authService.currentUser?.driver_verification) {
       const actionSheet = await this.alertController.create({
@@ -138,7 +137,6 @@ export class OrderPage implements OnInit {
       }
     }
   }
-
   findDay(num: number) {
     const index = this.selecteddays.findIndex(e => e === num)
     return index >= 0;
@@ -151,7 +149,6 @@ export class OrderPage implements OnInit {
       this.selecteddays.push(num)
     }
   }
-
   async addTransport() {
     const modal = await this.modalController.create({
       component: AddtransportPage,

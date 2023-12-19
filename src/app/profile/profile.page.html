@@ -119,122 +119,113 @@
           <button class="reg-btn ion-margin-top" (click)="addContacts()">{{'Добавить контакт' | translate}}</button>
         </div>
 
-        <ng-container *ngIf="verification">
-          <p><b>{{'Проверенные драйверы' | translate}}</b></p>
-          <span class="input-mode-code">
-            <label for="fullName">{{'ФИО' | translate}} </label>
-            <input id="fullName" type="text" name="fullName" [(ngModel)]="verification.full_name">
-          </span>
-          <p><b>{{'Фото паспорта с вашим лицом селфи' | translate}}:</b></p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group">
-                <img
-                  [src]="verification.selfies_with_passport?file_url+verification.selfies_with_passport:'../../assets/img/passport.png'" />
-              </div>
-            </div>
-          </div>
+        // <ng-container *ngIf="verification">
+        //   <p><b>{{'Проверенные драйверы' | translate}}</b></p>
+        //   <span class="input-mode-code">
+        //     <label for="fullName">{{'ФИО' | translate}} </label>
+        //     <input id="fullName" type="text" name="fullName" [(ngModel)]="verification.full_name">
+        //   </span>
+        //   <p><b>{{'Фото паспорта с вашим лицом селфи' | translate}}:</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group">
+        //         <img   [src]="verification.selfies_with_passport?file_url+verification.selfies_with_passport:'../../assets/img/passport.png'" />
+        //       </div>
+        //     </div>
+        //   </div>
 
-          <span class="input-mode-code">
-            <label for="cardNumber">{{'Банковская карта' | translate}} </label>
-            <input id="cardNumber" type="text" name="cardNumber" [mask]="mask" [(ngModel)]="verification.bank_card">
-          </span>
+        //   <span class="input-mode-code">
+        //     <label for="cardNumber">{{'Банковская карта' | translate}} </label>
+        //     <input id="cardNumber" type="text" name="cardNumber" [mask]="mask" [(ngModel)]="verification.bank_card">
+        //   </span>
 
-          <span class="input-mode-code">
-            <label for="cardName">{{'Название банка выпущенного карты' | translate}} </label>
-            <input id="cardName" type="text" name="cardName" [(ngModel)]="verification.bank_cardname">
-          </span>
+        //   <span class="input-mode-code">
+        //     <label for="cardName">{{'Название банка выпущенного карты' | translate}} </label>
+        //     <input id="cardName" type="text" name="cardName" [(ngModel)]="verification.bank_cardname">
+        //   </span>
 
-          <p><b>{{'Фото спереди' | translate}}:</b></p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group">
-                <img
-                  [src]="verification.transport_front_photo?file_url+verification.transport_front_photo:'../../assets/truck/opposite.png'" />
-              </div>
-            </div>
-          </div>
-          <p class="mt-10"><b>{{'Фото сзади' | translate}}:</b></p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group">
-                <img
-                  [src]="verification.transport_back_photo?file_url+verification.transport_back_photo:'../../assets/truck/back.png'" />
-              </div>
-            </div>
-          </div>
-          <p class="mt-10"><b>{{'Фото сбоку' | translate}}:</b></p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group">
-                <img
-                  [src]="verification.transport_side_photo?file_url+verification.transport_side_photo:'../../assets/truck/right.png'" />
-              </div>
-            </div>
-          </div>
-          <p class="mt-10"><b>{{'Фото ADR' | translate}}:</b></p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group" *ngIf="verification.adr_photo">
-                <img [src]="file_url+ verification.adr_photo" />
-              </div>
-            </div>
-          </div>
-          <p class="mt-10"><b>{{'Водительское удостоверение' | translate}}:</b></p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group" *ngIf="verification.driver_license">
-                <img [src]="file_url+verification.driver_license" />
-              </div>
-            </div>
-          </div>
+        //   <p><b>{{'Фото спереди' | translate}}:</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group">
+        //         <img       [src]="verification.transport_front_photo?file_url+verification.transport_front_photo:'../../assets/truck/opposite.png'" />
+        //       </div>
+        //     </div>
+        //   </div>
+        //   <p class="mt-10"><b>{{'Фото сзади' | translate}}:</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group">
+        //         <img [src]="verification.transport_back_photo?file_url+verification.transport_back_photo:'../../assets/truck/back.png'" />
+        //       </div>
+        //     </div>
+        //   </div>
+        //   <p class="mt-10"><b>{{'Фото сбоку' | translate}}:</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group">
+        //         <img          [src]="verification.transport_side_photo?file_url+verification.transport_side_photo:'../../assets/truck/right.png'" />
+        //       </div>
+        //     </div>
+        //   </div>
+        //   <p class="mt-10"><b>{{'Фото ADR' | translate}}:</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group" *ngIf="verification.adr_photo">
+        //         <img [src]="file_url+ verification.adr_photo" />
+        //       </div>
+        //     </div>
+        //   </div>
+        //   <p class="mt-10"><b>{{'Водительское удостоверение' | translate}}:</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group" *ngIf="verification.driver_license">
+        //         <img [src]="file_url+verification.driver_license" />
+        //       </div>
+        //     </div>
+        //   </div>
 
-          <span class="input-mode-code">
-            <label for="cardName">{{'Страна регистрации транспорта' | translate}} </label>
-            <input id="cardName" type="text" name="cardName" [(ngModel)]="verification.transport_registration_country">
-          </span>
+        //   <span class="input-mode-code">
+        //     <label for="cardName">{{'Страна регистрации транспорта' | translate}} </label>
+        //     <input id="cardName" type="text" name="cardName" [(ngModel)]="verification.transport_registration_country">
+        //   </span>
 
-          <p class="mt-10"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
-          </p>
-          <div class="file-uploads">
-            <div class="file-group">
-              <div class="form-group">
-                <img
-                  [src]="verification.transportation_license_photo?file_url+verification.transportation_license_photo:''"
-                  alt="">
-              </div>
-            </div>
+        //   <p class="mt-10"><b>{{'Фото лицензия на грузоперевозку' | translate}}</b>
+        //   </p>
+        //   <div class="file-uploads">
+        //     <div class="file-group">
+        //       <div class="form-group">
+        //         <img     [src]="verification.transportation_license_photo?file_url+verification.transportation_license_photo:''"           alt=""/>
+        //       </div>
+        //     </div>
 
-          </div>
-          <p class="mt-10"><b>{{'Фото тех паспорта' | translate}}</b></p>
-          <div class="file-uploads">
-            <div class="file-group" *ngIf="verification.techpassport_photo1">
-              <div class="form-group">
-                <img [src]="file_url+verification.techpassport_photo1" alt="">
-              </div>
-            </div>
-            <div class="file-group" *ngIf="verification.techpassport_photo2">
-              <div class="form-group">
-                <img [src]="file_url+verification.techpassport_photo2" alt="">
-              </div>
-            </div>
+        //   </div>
+        //   <p class="mt-10"><b>{{'Фото тех паспорта' | translate}}</b></p>
+        //   <div class="file-uploads">
+        //     <div class="file-group" *ngIf="verification.techpassport_photo1">
+        //       <div class="form-group">
+        //         <img [src]="file_url+verification.techpassport_photo1" alt="">
+        //       </div>
+        //     </div>
+        //     <div class="file-group" *ngIf="verification.techpassport_photo2">
+        //       <div class="form-group">
+        //         <img [src]="file_url+verification.techpassport_photo2" alt="">
+        //       </div>
+        //     </div>
 
-          </div>
-          <p class="mt-10" *ngIf="verification.state_registration_truckNumber"><b>{{'Гос. номер Тягача' |
-              translate}}</b>
-          </p>
-          <input type="text" name="name" placeholder="Гос. номер Тягача"
-            *ngIf="verification.state_registration_truckNumber"
-            [(ngModel)]="verification.state_registration_truckNumber">
+        //   </div>
+        //   <p class="mt-10" *ngIf="verification.state_registration_truckNumber"><b>{{'Гос. номер Тягача' |  translate}}</b>
+        //   </p>
+        //   <div>
+        //     <input type="text" name="state_registration_truckNumber" placeholder="Гос. номер Тягача"    *ngIf="verification.state_registration_truckNumber"   [(ngModel)]="verification.state_registration_truckNumber">
 
-          <p class="mt-10" *ngIf="verification.type"><b> {{'Тип прицепа' | translate}}</b></p>
-          <input type="text" name="name" (click)="selectTypeTransport()" *ngIf="verification.type"
-            [value]="returnNameTypeTransport(verification.type)">
+        //   <p class="mt-10" *ngIf="verification.type"><b> {{'Тип прицепа' | translate}}</b></p>
+        //   <input type="text" name="type" (click)="selectTypeTransport()" *ngIf="verification.type"     [value]="returnNameTypeTransport(verification.type)">
 
-          <p class="mt-10" *ngIf="verification.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
-          <input type="text" *ngIf="verification.brand_name" name="name"
-            placeholder="{{'Марка транспорта' | translate}}" [(ngModel)]="verification.brand_name">
-        </ng-container>
+        //   <p class="mt-10" *ngIf="verification.brand_name"><b>{{'Марка транспорта' | translate}}</b></p>
+        //   <input type="text" *ngIf="verification.brand_name" name="brand_name"    placeholder="{{'Марка транспорта' | translate}}" [(ngModel)]="verification.brand_name">
+        //     </div>
+        // </ng-container>
 
       </div>
     </div>

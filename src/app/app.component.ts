@@ -79,6 +79,7 @@ export class AppComponent {
           if (this.platform.is('cordova')) {
             this.pushService.init();
           }
+          console.log(this.authService.currentUser.driver_verification)
           this.authService.typetruck = await this.authService.getTypeTruck().toPromise();
           this.authService.typecargo = await this.authService.getTypeCargo().toPromise();
           this.authService.mytruck = await this.authService.getTruck().toPromise();
@@ -162,7 +163,7 @@ export class AppComponent {
   }
   initializeApp() {
     this.checkSession();
-    
+
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {
         console.log('onDisconnect')

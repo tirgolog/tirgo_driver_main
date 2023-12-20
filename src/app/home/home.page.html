@@ -65,11 +65,16 @@
                 <td>{{'Доставка в' | translate}}:</td>
                 <td>{{row.route.to_city}}</td>
               </tr>
+
             </tbody>
           </table>
           <ng-container *ngIf="vieworder === row.id">
             <table class="table-data">
               <tbody>
+                <tr *ngIf="row.isMerchant && row.logo">
+                  <td>Компания:</td>
+                  <td> <img [src]="row.logo" alt="" width="100"> </td>
+                </tr>
                 <tr>
                   <td>{{'Время отправки' | translate}}</td>
                   <td>{{row.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
@@ -93,8 +98,15 @@
                 <tr>
                   <td>{{'Тип транспорта' | translate}}</td>
                   <td>
-                    <div *ngFor="let type of row.transport_types">{{returnNameTypeTransport(type)}}</div>
-                  </td>
+                    <span *ngIf="row.transport_types">
+                      <span *ngFor="let type of row.transport_types;let i=index">
+                        {{ returnNameTypeTransport(type) }}
+                      </span>
+                    </span>    
+                    <span *ngIf="row.transport_type && !row.transport_types">
+                        {{ returnNameTypeTransport(row.transport_type) }}
+                    </span>               
+                   </td>
                 </tr>
                 <tr>
                   <td>{{'Тип груза' | translate}}</td>

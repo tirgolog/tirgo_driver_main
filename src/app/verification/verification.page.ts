@@ -3,6 +3,8 @@ import { AlertController, IonicSafeString, LoadingController, NavController } fr
 import { AuthenticationService } from '../services/authentication.service';
 import { FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-verification',
@@ -29,6 +31,7 @@ export class VerificationPage implements OnInit {
   passport_docks: any[] = [];
   driver_license: any[] = [];
   license_files: any[] = [];
+  countries: any[] = [];
   car_photos: any[] = [];
   tech_passport_files: any[] = [];
   typetransport: any[] = [];
@@ -63,34 +66,66 @@ export class VerificationPage implements OnInit {
     public authService: AuthenticationService,
     private loadingCtrl: LoadingController,
     private zone: NgZone,
-    public alertController: AlertController) { }
+    public alertController: AlertController,
+    private http: HttpClient
+  ) { }
 
   ngOnInit() {
-    this.phone = this.authService.currentUser.phone;
-    this.formData.phone = this.authService.currentUser.phone;
-    this.formData.user_id = this.authService.currentUser.id;
-    this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
-    this.formData.type = this.authService.mytruck[0].type;
-    this.formData.brand_name = this.authService.mytruck[0].brand_name;
-    this.state_registration_truckNumber_check = this.authService.mytruck[0].state_number ? true : false;
-    this.type_check = this.authService.mytruck[0].type ? true : false;
-    this.brand_name_check = this.authService.mytruck[0].brand_name ? true : false;
-    this.typetransport = this.authService.typetruck.map((item) => {
-      return {
-        label: item.name,
-        type: 'radio',
-        value: item.id,
-      };
+    this.getJSONFromLocal().subscribe(data => {
+      this.countries = data
+      this.country_code = this.getCountryCode(this.authService.currentUser.phone);
+      this.phone = this.authService.currentUser.phone;
+      this.formData.phone = this.authService.currentUser.phone;
+      this.formData.user_id = this.authService.currentUser.id;
+      this.formData.state_registration_truckNumber = this.authService.mytruck[0].state_number;
+      this.formData.type = this.authService.mytruck[0].type;
+      this.formData.brand_name = this.authService.mytruck[0].brand_name;
+      this.state_registration_truckNumber_check = this.authService.mytruck[0].state_number ? true : false;
+      this.type_check = this.authService.mytruck[0].type ? true : false;
+      this.brand_name_check = this.authService.mytruck[0].brand_name ? true : false;
+      this.typetransport = this.authService.typetruck.map((item) => {
+        return {
+          label: item.name,
+          type: 'radio',
+          value: item.id,
+        };
+      });
+      for (let row of this.authService.currentUser.files) {
+        if (row.type_file === 'license_files') {
+          this.license_files.push(row)
+        } else if (row.type_file === 'tech_passport_files') {
+          this.tech_passport_files.push(row)
+        }
+      }
+      this.sendSms()
     });
-    for (let row of this.authService.currentUser.files) {
-      if (row.type_file === 'license_files') {
-        this.license_files.push(row)
-      } else if (row.type_file === 'tech_passport_files') {
-        this.tech_passport_files.push(row)
+  }
+
+  public getJSONFromLocal(): Observable<any> {
+    return this.http.get("./assets/json/code.json");
+  }
+
+  getCountryCode(phoneNumber: string): string | null {
+    const numericPhoneNumber = phoneNumber.replace(/\D/g, '');
+    for (const country of this.countries) {
+      const dialCode = country.dial_country_code;
+      if (numericPhoneNumber.startsWith(dialCode)) {
+        return country.code;
+      }
+
+      const regionCodes = country.dial_region_codes || [];
+      for (const regionCode of regionCodes) {
+        const fullDialCode = dialCode + regionCode;
+
+        if (numericPhoneNumber.startsWith(fullDialCode)) {
+          return country.code;
+        }
       }
     }
-    this.sendSms()
+
+    return null;
   }
+
 
   async sendSms() {
     await this.authService.driverVerification(this.phone, this.country_code).toPromise()

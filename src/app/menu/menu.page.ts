@@ -28,16 +28,6 @@ export class MenuPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkSession()
-  }
-
-  async checkSession() {
-    await this.authService.checkSession().toPromise().then(async (res) => {
-      if (res.status) {
-        this.authService.currentUser = new User(res.user);
-        this.driver_verification = res.user.send_verification;
-      }
-    })
   }
   async logOut(){
     this.menu.toggle();

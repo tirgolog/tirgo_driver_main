@@ -20,15 +20,6 @@ export class NotifyPage implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.checkSession()
-  }
-  async checkSession() {
-    await this.authService.checkSession().toPromise().then(async (res) => {
-      if (res.status) {
-        this.authService.currentUser = new User(res.user);
-        this.send_verification = res.user.send_verification;
-      }
-    })
   }
   back() {
     this.navCtrl.back()

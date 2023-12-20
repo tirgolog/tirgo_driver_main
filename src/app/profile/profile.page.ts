@@ -63,7 +63,7 @@ export class ProfilePage implements OnInit {
                 this.driver_license.push(row)
             }
         }
-        this.verifiedDriver();
+        // this.verifiedDriver();
 
         this.typetransport = this.authService.typetruck.map((item) => {
             return {
@@ -79,7 +79,6 @@ export class ProfilePage implements OnInit {
         await this.authService.verifiedDriver().toPromise().then(async (res) => {
             if (res.status) {
                 this.verification = res.data[0];
-                console.log(this.verification)
             }
         }).catch(async (err) => {
             console.log(err)

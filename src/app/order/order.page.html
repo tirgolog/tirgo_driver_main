@@ -10,7 +10,7 @@
       <div class="autorize">
         <p><b>{{'Ваше предложение по цене' | translate}} ($)</b></p>
         <input type="text" inputmode="tel" name="name" placeholder="Ваша цена в $" [(ngModel)]="price">
-        <p><b>{{'Дата погрузки у клиента' | translate}}</b></p>
+        <!-- <p><b>{{'Дата погрузки у клиента' | translate}}</b></p>
         <input type="text" inputmode="tel" name="name" readonly placeholder="Ваша цена" [value]="item.date_send | formatTime:'DD MMMM YYYY в HH:mm'">
         <ng-container *ngIf="item.add_two_days">
           <p><b>{{'Укажите свою дату погрузки' | translate}}</b></p>
@@ -25,9 +25,11 @@
               {{addDays(item.date_send,2)}}
             </div>
           </div>
-        </ng-container>
+        </ng-container> -->
       </div>
-      <button class="reg-btn accept-btn margin-top-15" [disabled]="loadingAccept" (click)="acceptOrderFinal()">{{'Отправить предложение' | translate}}</button>
+      <button class="reg-btn accept-btn margin-top-15" [disabled]="loadingAccept"
+        (click)="acceptOrderFinal()">{{'Отправить предложение' | translate}}
+      </button>
     </div>
   </div>
 </ion-content>

@@ -7,6 +7,7 @@ import axios from "axios";
 import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { AddtransportPage } from '../addtransport/addtransport.page';
 import { Router } from '@angular/router';
+import { log } from 'console';
 
 @Component({
   selector: 'app-order',
@@ -29,14 +30,14 @@ export class OrderPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    await this.authService.checkGeolocation()
+   this.authService.checkGeolocation()
   }
   addDays(date: any, num: number) {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept() {
-    await this.authService.checkGeolocation()
-
+    this.loadingAccept = true;
+    this.authService.checkGeolocation()
     let cityOrder = '';
     let cityUser = '';
 
@@ -45,11 +46,10 @@ export class OrderPage implements OnInit {
     });
 
     this.loading.present();
-    this.loadingAccept = false;
+    // this.loadingAccept = false;
     if (this.authService.geolocationCheck) {
       const resp = await this.geolocation.getCurrentPosition();
       const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU";
-
       axios.get(get)
         .then(async res => {
           if (res.status) {
@@ -78,10 +78,12 @@ export class OrderPage implements OnInit {
           }
         })
         .catch(async (error) => {
+          this.loadingAccept = false;
           this.loading.dismiss();
           await this.authService.alert('Ошибка', error.toString());
         });
     } else {
+      this.loadingAccept = false;
       this.loading.dismiss();
       await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
     }

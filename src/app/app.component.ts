@@ -29,7 +29,7 @@ export class AppComponent {
     private translateService: TranslateService,
     public alertController: AlertController,
     private router: Router,
-    private geolocation: Geolocation,
+    private geolocation: Geolocation
   ) {
     this.initializeApp();
     setInterval(() => {

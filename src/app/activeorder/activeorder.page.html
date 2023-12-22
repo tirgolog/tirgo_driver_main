@@ -25,7 +25,14 @@
         <tr>
           <td>{{'Тип транспорта' | translate}}</td>
           <td>
-            <div *ngFor="let type of item.transport_types" style="color: #fff;">{{returnNameTypeTransport(type)}}</div>
+            <div style="color: #fff;">
+              <span *ngIf="item.transport_types && item.transport_types.length">
+                <span *ngFor="let type of item.transport_types">{{returnNameTypeTransport(type)}}</span>
+              </span> 
+              <span *ngIf="item.transport_types && !item.transport_types.length">
+                <span>{{returnNameTypeTransport(item.transport_types)}}</span>
+              </span>
+            </div>
           </td>
         </tr>
         <tr>
@@ -54,7 +61,7 @@
         </tr>
         <tr>
           <td>{{'Контакты' | translate}}</td>
-          <td>+{{item.userphoneorder}}</td>
+          <td>+{{item.merchant?.phoneNumbers[0]}}</td>
         </tr>
       </tbody>
     </table>

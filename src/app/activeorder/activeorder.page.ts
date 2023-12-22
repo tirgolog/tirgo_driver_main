@@ -5,6 +5,7 @@ import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { AlertController, LoadingController, ModalController, Platform } from "@ionic/angular";
 import { Router } from "@angular/router";
 import { SetraitingPage } from "../setraiting/setraiting.page";
+import { log } from 'console';
 
 @Component({
   selector: 'app-activeorder',
@@ -28,6 +29,8 @@ export class ActiveorderPage implements OnInit {
 
   ngOnInit() {
     this.item = this.authService.activeorder;
+    console.log(this.item);
+    
     this.item.transport_types = JSON.parse(this.item.transport_types)
   }
   async finishOrder(item) {

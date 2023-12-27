@@ -492,7 +492,7 @@ export class AuthenticationService {
     return this.http.post<any>(sUrl, body);
   }
 
-  checkGeolocation() {
+  checkGeolocation(): boolean {
     if ('geolocation' in navigator) {
       navigator.geolocation.getCurrentPosition(
         (position) => {
@@ -502,6 +502,9 @@ export class AuthenticationService {
           this.geolocationCheck = false;
         }
       );
+      return this.geolocationCheck;
+    } else {
+      return false; // or provide a default value based on your requirements
     }
   }
 

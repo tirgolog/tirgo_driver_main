@@ -29,8 +29,6 @@ export class ActiveorderPage implements OnInit {
 
   ngOnInit() {
     this.item = this.authService.activeorder;
-    console.log(this.item);
-    
     this.item.transport_types = JSON.parse(this.item.transport_types)
   }
   async finishOrder(item) {
@@ -55,7 +53,6 @@ export class ActiveorderPage implements OnInit {
             });
             this.loading.present();
             this.geolocation.getCurrentPosition().then(async (resp) => {
-              console.log(resp.coords)
               let res: any;
               if (item.isMerchant) {
                 res = await this.authService.finishMerchantOrder(this.authService.activeorder.id, resp.coords.latitude.toString(), resp.coords.longitude.toString(), item.route?.to_city).toPromise();
@@ -111,7 +108,6 @@ export class ActiveorderPage implements OnInit {
       return 'Не выбрано'
     }
   }
-
   returnNameCargoType(id: number) {
     const index = this.authService.typecargo.findIndex(e => +e.id === +id)
     if (index >= 0) {

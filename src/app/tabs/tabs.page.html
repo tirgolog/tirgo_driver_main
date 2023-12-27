@@ -2,7 +2,7 @@
 
   <ion-tab-bar slot="bottom">
 
-    <ion-tab-button tab="activeorder" class="active-plane" *ngIf="authService.activeorder">
+    <ion-tab-button tab="activeorder" class="active-plane" *ngIf="authService.activeorder && authService.activeorder.status == 1">
       <span class="badge"></span>
       <ion-icon name="airplane-outline"></ion-icon>
       <ion-label>{{'Активный' | translate}}</ion-label>

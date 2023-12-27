@@ -30,14 +30,13 @@ export class OrderPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-   this.authService.checkGeolocation()
+    this.authService.checkGeolocation()
   }
   addDays(date: any, num: number) {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept() {
     this.loadingAccept = true;
-    this.authService.checkGeolocation()
     let cityOrder = '';
     let cityUser = '';
 
@@ -46,48 +45,55 @@ export class OrderPage implements OnInit {
     });
 
     this.loading.present();
-    // this.loadingAccept = false;
-    if (this.authService.geolocationCheck) {
-      const resp = await this.geolocation.getCurrentPosition();
-      const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU";
-      axios.get(get)
-        .then(async res => {
-          if (res.status) {
-            this.loading.dismiss();
-            cityUser = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',')[res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',').length - 1].replace(' ', '');
-            cityOrder = this.item.route.from_city.split(',')[1].replace(' ', '');
+    this.geolocation.getCurrentPosition(
+      {
+        maximumAge: 1000, timeout: 3000,
+        enableHighAccuracy: true
+      }
+    )
+      .then((res: any) => {
+        const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + res.coords.longitude.toString() + "," + res.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU";
+        axios.get(get)
+          .then(async res => {
+            if (res.status) {
+              this.loadingAccept = false;
+              this.loading.dismiss();
+              cityUser = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',')[res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description.split(',').length - 1].replace(' ', '');
+              cityOrder = this.item.route.from_city.split(',')[1].replace(' ', '');
 
-            if (cityUser === cityOrder) {
-              if (this.item.isMerchant) {
-                this.item.id = +this.item.id.split('M')[1];
-              }
-              const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays, this.item.isMerchant).toPromise();
+              if (cityUser === cityOrder) {
+                if (this.item.isMerchant) {
+                  this.item.id = +this.item.id.split('M')[1];
+                }
+                const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays, this.item.isMerchant).toPromise();
 
-              if (acceptRes.status) {
-                this.authService.myorders = await this.authService.getMyOrders().toPromise();
+                if (acceptRes.status) {
+                  // this.authService.myorders = await this.authService.getMyOrders().toPromise();
+                  await this.modalController.dismiss({
+                    accepted: true,
+                  });
+                }
+              } else {
+                await this.authService.alert('Ошибка', 'К сожалению Вы не можете принять заказ. Вы не находитесь в городе отправки груза.');
                 await this.modalController.dismiss({
-                  accepted: true,
+                  accepted: false,
                 });
               }
-            } else {
-              await this.authService.alert('Ошибка', 'К сожалению Вы не можете принять заказ. Вы не находитесь в городе отправки груза.');
-              await this.modalController.dismiss({
-                accepted: false,
-              });
             }
-          }
-        })
-        .catch(async (error) => {
-          this.loadingAccept = false;
+          })
+      }, (error) => {
+        if (error.message == 'User denied Geolocation') {
           this.loading.dismiss();
-          await this.authService.alert('Ошибка', error.toString());
-        });
-    } else {
-      this.loadingAccept = false;
-      this.loading.dismiss();
-      await this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
-    }
+          this.loadingAccept = false;
+          this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
+        } else {
+          this.loading.dismiss();
+          this.loadingAccept = false;
+          this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+        }
+      })
   }
+
   async acceptOrderFinal() {
     if (this.item.secure_transaction && !this.authService.currentUser?.driver_verification) {
       const actionSheet = await this.alertController.create({

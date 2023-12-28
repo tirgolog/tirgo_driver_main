@@ -79,10 +79,10 @@
                   <td>{{'Время отправки' | translate}}</td>
                   <td>{{row.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                   <td>Предлагаемая цена</td>
                   <td>{{row.price}} {{row.currency}}</td>
-                </tr>
+                </tr> -->
                 <tr *ngIf="row.adr">
                   <td>{{'ADR (Перевозка опасных грузов)' | translate}}</td>
                   <td>{{'Да' | translate}} </td>

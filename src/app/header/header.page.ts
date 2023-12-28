@@ -27,7 +27,7 @@ export class HeaderPage implements OnInit {
     await this.menu.toggle();
   }
   async goToNotify(){
-    this.pushService.init();
+    this.pushService.initializePushNotifications();
     await this.router.navigate(['/notify']);
   }
   async openTestPage(){

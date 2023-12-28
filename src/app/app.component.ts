@@ -11,6 +11,7 @@ import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
 import axios from "axios";
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 @Component({
   selector: 'app-root',
@@ -29,9 +30,11 @@ export class AppComponent {
     private translateService: TranslateService,
     public alertController: AlertController,
     private router: Router,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private fcm: FCM
   ) {
     this.initializeApp();
+    this.initializeAppFCM()
     setInterval(() => {
       this.geolocation.getCurrentPosition().then(async (resp) => {
         if (this.authService.isAuthenticated()) {
@@ -39,6 +42,59 @@ export class AppComponent {
         }
       })
     }, 1800000)
+  }
+
+  initializeAppFCM() {
+    console.log('fcm')
+    if (this.platform.is('cordova')) {
+      this.platform.ready().then(() => {
+        console.log('fcm platform')
+  
+        // subscribe to a topic
+        // subscribeToTopic() takes the topic name as a parameter.
+        this.fcm.subscribeToTopic('offers');
+  
+        // get FCM token
+        // getToken() method returns a token of a push notification, 
+        // token used to send push notification
+        console.log('fcm beforre token')
+  
+        this.fcm.getToken().then(token => {
+          console.log('fcm token')
+  
+          console.log(token);
+        });
+  
+        this.fcm.getToken().then(token => {
+          console.log('FCM Token:', token);
+        }).catch(error => {
+          console.error('Error getting FCM token:', error);
+        });
+        // ionic push notification example
+        // subscribe() method triggers when FCM message received
+        this.fcm.onNotification().subscribe(data => {
+          console.log(data);
+          if (data.wasTapped) {
+            console.log('Received in background');
+          } else {
+            console.log('Received in foreground');
+          }
+        });
+  
+        // refresh the FCM token
+        // onTokenRefresh() method allows refreshing the FCM token
+        this.fcm.onTokenRefresh().subscribe(token => {
+          console.log(token);
+        });
+  
+        // unsubscribe from a FCM topic to stop receive messages
+        this.fcm.unsubscribeFromTopic('offers');
+  
+      });
+    } else {
+      console.warn('FCM not available in non-Cordova environment');
+    }
+
   }
 
   async ngOnInit() {
@@ -66,6 +122,10 @@ export class AppComponent {
         await this.router.navigate(['selectlanguage'], { replaceUrl: true });
       }
     })
+
+    this.platform.ready().then(() => {
+      this.pushService.initializePushNotifications();
+    });
   }
   async checkSession() {
     await this.authService.checkSession().toPromise().then(async (res) => {
@@ -76,10 +136,11 @@ export class AppComponent {
         }
         if (this.authService.currentUser.name !== null) {
           this.socketService.connect();
-          if (this.platform.is('cordova')) {
-            this.pushService.init();
-          }
-          console.log(this.authService.currentUser.driver_verification)
+          // console.log('platform pushService')
+          // this.platform.ready().then(() => {
+          //   console.log('platform pushService')
+          //   this.pushService.initializePushNotifications();
+          // });
           this.authService.typetruck = await this.authService.getTypeTruck().toPromise();
           this.authService.typecargo = await this.authService.getTypeCargo().toPromise();
           this.authService.mytruck = await this.authService.getTruck().toPromise();

@@ -111,6 +111,7 @@ export class LoginPage implements OnInit {
     await this.authService.verifyCode(this.prefix + '' + this.phone,this.code).toPromise()
       .then(async (res) => {
         if (res.status){
+          console.log(res.token)
           await this.authService.setJwt(res.token);
           await this.app.checkSession()
           this.loading = false;

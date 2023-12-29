@@ -32,7 +32,7 @@ import player from 'lottie-web';
 import {SetraitingPage} from "./setraiting/setraiting.page";
 import {SelectstatusPage} from "./selectstatus/selectstatus.page";
 import {FilterPage} from "./filter/filter.page";
-
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 registerLocaleData(ruLocale);
 
 export function createTranslateLoader(http: HttpClient) {
@@ -87,6 +87,7 @@ export function playerFactory() {
         CallNumber,
         Geolocation,
         StatusBar,
+        FCM,
         Camera,
         FileTransfer,
         Push,

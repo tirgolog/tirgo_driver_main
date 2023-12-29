@@ -11,6 +11,7 @@ import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
 import axios from "axios";
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent {
     private translateService: TranslateService,
     public alertController: AlertController,
     private router: Router,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private fcm: FCM
   ) {
     this.initializeApp();
     setInterval(() => {
@@ -39,6 +41,12 @@ export class AppComponent {
         }
       })
     }, 1800000)
+
+    this.fcm.getToken().then(token => {
+      console.log(token)
+    });
+    
+    this.pushService.init();
   }
 
   async ngOnInit() {

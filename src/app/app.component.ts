@@ -162,6 +162,7 @@ export class AppComponent {
     })
   }
   initializeApp() {
+    this.initGeolocation();
     this.checkSession();
 
     this.platform.ready().then(() => {
@@ -179,5 +180,10 @@ export class AppComponent {
       });
       this.themeService.restore();
     });
+  }
+
+  //Запускается при запуске приложения
+  public async initGeolocation(){
+    return this.geolocation.getCurrentPosition();
   }
 }

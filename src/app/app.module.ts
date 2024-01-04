@@ -32,6 +32,7 @@ import player from 'lottie-web';
 import {SetraitingPage} from "./setraiting/setraiting.page";
 import {SelectstatusPage} from "./selectstatus/selectstatus.page";
 import {FilterPage} from "./filter/filter.page";
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 registerLocaleData(ruLocale);
 
@@ -83,6 +84,7 @@ export function playerFactory() {
         MainPipeModule
     ],
     providers: [
+        AndroidPermissions,
         InAppBrowser,
         CallNumber,
         Geolocation,

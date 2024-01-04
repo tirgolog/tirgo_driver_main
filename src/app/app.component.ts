@@ -11,7 +11,8 @@ import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
 import axios from "axios";
-
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -19,6 +20,7 @@ import axios from "axios";
 })
 export class AppComponent {
   constructor(
+    private androidPermissions: AndroidPermissions,
     private platform: Platform,
     private socketService: SocketService,
     private network: Network,
@@ -39,6 +41,7 @@ export class AppComponent {
         }
       })
     }, 1800000)
+
   }
 
   async ngOnInit() {
@@ -66,6 +69,30 @@ export class AppComponent {
         await this.router.navigate(['selectlanguage'], { replaceUrl: true });
       }
     })
+
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+    .then((status) => {
+      console.log(status, 'status')
+      if (status.hasPermission) {
+        // Permission is granted, you can proceed with your functionality
+      } else {
+        // Permission is not granted, request it
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+          .then(() => {
+            // Permission granted, you can proceed with your functionality
+          })
+          .catch((error) => {
+            console.error('Error requesting location permission:', error);
+            // Handle the error, show a message to the user, etc.
+          });
+      }
+    })
+    .catch((error) => {
+      console.error('Error checking location permission:', error);
+      // Handle the error, show a message to the user, etc.
+    });
+
+    // this.checkGPSPermission()
   }
   async checkSession() {
     await this.authService.checkSession().toPromise().then(async (res) => {
@@ -79,7 +106,7 @@ export class AppComponent {
           if (this.platform.is('cordova')) {
             this.pushService.init();
           }
-          console.log(this.authService.currentUser.driver_verification)
+          console.log(this.authService.currentUser?.driver_verification)
           this.authService.typetruck = await this.authService.getTypeTruck().toPromise();
           this.authService.typecargo = await this.authService.getTypeCargo().toPromise();
           this.authService.mytruck = await this.authService.getTruck().toPromise();
@@ -129,7 +156,10 @@ export class AppComponent {
           //this.authService.allordersfree = await this.authService.getAllOrdersFree().toPromise();
           //this.authService.allmyordersprocessing = await this.authService.getAllMyOrdersProcessing().toPromise();
           await this.router.navigate(['/tabs/home'], { replaceUrl: true });
-          this.geolocation.getCurrentPosition().then(async (resp) => {
+          this.geolocation.getCurrentPosition( {
+            maximumAge: 1000, timeout: 3000,
+            enableHighAccuracy: true
+          }).then(async (resp) => {
             this.authService.geolocationCheck = true;
             await this.authService.updateLocation(resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
             const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
@@ -141,15 +171,39 @@ export class AppComponent {
                 }
               })
               .catch(async (error) => {
+                console.log(error)
                 this.authService.geolocationCheck = false;
-                await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+                // await this.checkGPSPermission()
+                // await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
               });
           }).catch(async (error) => {
-            this.authService.geolocationCheck = false
-            await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+            console.log(error)
+            this.authService.geolocationCheck = false;
+
+            this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+            .then((status) => {
+              if (status.hasPermission) {
+                // Permission is granted, you can proceed with your functionality
+              } else {
+                // Permission is not granted, request it
+                this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+                  .then(() => {
+                    // Permission granted, you can proceed with your functionality
+                  })
+                  .catch((error) => {
+                    console.error('Error requesting location permission:', error);
+                    // Handle the error, show a message to the user, etc.
+                  });
+              }
+            })
+            .catch((error) => {
+              console.error('Error checking location permission:', error);
+              // Handle the error, show a message to the user, etc.
+            });
+            // await this.checkGPSPermission()
+            // await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
         } else {
-          console.log('here')
           await this.router.navigate(['/name'], { replaceUrl: true });
         }
       } else {
@@ -179,5 +233,54 @@ export class AppComponent {
       });
       this.themeService.restore();
     });
+  }
+
+  async checkGPSPermission() {
+    if (!this.authService.geolocationCheckPermission) {
+      this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+        async(result) => {
+          if (!result.hasPermission) {
+            const alert = await this.alertController.create({
+              header: 'Внимание',
+              message: 'Вы даете разрешение на размещение?',
+              cssClass: 'customAlert',
+              buttons: [
+                {
+                  text: 'Нет',
+                  role: 'cancel',
+                  cssClass: 'secondary',
+                  handler: () => {
+                    this.authService.geolocationCheckPermission=false
+                    console.log('Confirm Cancel');
+                  }
+                }, {
+                  text: 'Да',
+                  handler: async() => {
+                    this.requestGPSPermission();
+                  }
+                }
+              ]
+            });
+            await alert.present();
+          }
+        },
+        async(err) => {
+          console.log(err);
+        }
+      );
+    }
+  
+  }
+
+  requestGPSPermission() {
+    this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+    .then(
+      () => {
+        this.authService.geolocationCheckPermission=true;
+      },
+      async(error) => {
+        console.log(error)
+      }
+    );
   }
 }

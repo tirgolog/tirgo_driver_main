@@ -8,6 +8,7 @@ import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { AddtransportPage } from '../addtransport/addtransport.page';
 import { Router } from '@angular/router';
 import { log } from 'console';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-order',
@@ -21,6 +22,7 @@ export class OrderPage implements OnInit {
   selecteddays: any[] = [];
   loading: any;
   constructor(
+    private androidPermissions: AndroidPermissions,
     public authService: AuthenticationService,
     private loadingCtrl: LoadingController,
     public alertController: AlertController,
@@ -85,11 +87,77 @@ export class OrderPage implements OnInit {
         if (error.message == 'User denied Geolocation') {
           this.loading.dismiss();
           this.loadingAccept = false;
-          this.authService.alert('Упс', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
+          if (!this.authService.geolocationCheckPermission) {
+            this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+              async(result) => {
+                if (!result.hasPermission) {
+                  const alert = await this.alertController.create({
+                    header: 'Внимание',
+                    message: ' Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver?',
+                    cssClass: 'customAlert',
+                    buttons: [
+                      {
+                        text: 'Нет',
+                        role: 'cancel',
+                        cssClass: 'secondary',
+                        handler: () => {
+                          this.authService.geolocationCheckPermission=false
+                          console.log('Confirm Cancel');
+                        }
+                      }, {
+                        text: 'Да',
+                        handler: async() => {
+                          this.requestGPSPermission();
+                        }
+                      }
+                    ]
+                  });
+                  await alert.present();
+                }
+              },
+              async(err) => {
+                console.log(err);
+              }
+            );
+          }
+          // this.authService.alert('Упс', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
         } else {
           this.loading.dismiss();
           this.loadingAccept = false;
-          this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+          if (!this.authService.geolocationCheckPermission) {
+            this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION).then(
+              async(result) => {
+                if (!result.hasPermission) {
+                  const alert = await this.alertController.create({
+                    header: 'Внимание',
+                    message: ' Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver?',
+                    cssClass: 'customAlert',
+                    buttons: [
+                      {
+                        text: 'Нет',
+                        role: 'cancel',
+                        cssClass: 'secondary',
+                        handler: () => {
+                          this.authService.geolocationCheckPermission=false
+                          console.log('Confirm Cancel');
+                        }
+                      }, {
+                        text: 'Да',
+                        handler: async() => {
+                          this.requestGPSPermission();
+                        }
+                      }
+                    ]
+                  });
+                  await alert.present();
+                }
+              },
+              async(err) => {
+                console.log(err);
+              }
+            );
+          }
+          // this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
         }
       })
   }
@@ -145,6 +213,19 @@ export class OrderPage implements OnInit {
       }
     }
   }
+
+  requestGPSPermission() {
+    this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION)
+    .then(
+      () => {
+        this.authService.geolocationCheckPermission=true;
+      },
+      async(error) => {
+        console.log(error)
+      }
+    );
+  }
+
   findDay(num: number) {
     const index = this.selecteddays.findIndex(e => e === num)
     return index >= 0;

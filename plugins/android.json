@@ -7,6 +7,9 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "io.tirgo.drive"
+    },
     "cordova-plugin-androidx-adapter": {
       "PACKAGE_NAME": "io.tirgo.drive"
     },

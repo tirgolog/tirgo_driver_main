@@ -147,7 +147,7 @@ export class AppComponent {
               });
           }).catch(async (error) => {
             this.authService.geolocationCheck = false
-            await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+            // await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
         } else {
           console.log('here')

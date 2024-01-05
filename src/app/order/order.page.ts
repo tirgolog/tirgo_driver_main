@@ -7,7 +7,6 @@ import axios from "axios";
 import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { AddtransportPage } from '../addtransport/addtransport.page';
 import { Router } from '@angular/router';
-import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 declare var cordova: any;
 
@@ -29,30 +28,17 @@ export class OrderPage implements OnInit {
     private geolocation: Geolocation,
     private modalController: ModalController,
     private router: Router,
-    private diagnostic: Diagnostic,
   ) { }
 
   async ngOnInit() {
     this.authService.checkGeolocation();
-    await this.requestLocationPermission();
   }
 
-  async requestLocationPermission() {
-    try {
-      const authorizationStatus = await this.diagnostic.requestLocationAuthorization(
-        cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS
-      );
-      console.log('Authorization Status:', authorizationStatus);
-    } catch (error) {
-      console.error('Error requesting location authorization:', error);
-    }
-  }
 
   addDays(date: any, num: number) {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');
   }
   async acceptOrderFinalAccept() {
-    await this.requestLocationPermission();
     this.loadingAccept = true;
     let cityOrder = '';
     let cityUser = '';
@@ -112,7 +98,6 @@ export class OrderPage implements OnInit {
   }
 
   async acceptOrderFinal() {
-    await this.requestLocationPermission();
     if (this.item.secure_transaction && !this.authService.currentUser?.driver_verification) {
       const actionSheet = await this.alertController.create({
         header: 'Вы должны идентифицироваться чтобы иметь возможность  совершать “Безопасеые сделки',

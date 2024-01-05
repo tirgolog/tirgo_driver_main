@@ -31,6 +31,7 @@ export class AppComponent {
     private router: Router,
     private geolocation: Geolocation
   ) {
+    this.router.navigate(['loading'])
     this.initializeApp();
     setInterval(() => {
       this.geolocation.getCurrentPosition().then(async (resp) => {
@@ -162,8 +163,10 @@ export class AppComponent {
     })
   }
   initializeApp() {
-    this.initGeolocation();
-    this.checkSession();
+    // this.initGeolocation();
+    setTimeout(() => {
+      this.checkSession();
+    },500)
 
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {
@@ -183,7 +186,7 @@ export class AppComponent {
   }
 
   //Запускается при запуске приложения
-  public async initGeolocation(){
-    return this.geolocation.getCurrentPosition();
-  }
+  // public async initGeolocation(){
+  //   return this.geolocation.getCurrentPosition();
+  // }
 }

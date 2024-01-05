@@ -10,6 +10,7 @@ import { HomePage } from './home.page';
 import {HeaderPageModule} from "../header/header.module";
 import {MainPipeModule} from "../pipes/main-pipe.module";
 import {TranslateModule} from "@ngx-translate/core";
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 @NgModule({
     imports: [
@@ -21,6 +22,7 @@ import {TranslateModule} from "@ngx-translate/core";
         MainPipeModule,
         TranslateModule
     ],
-  declarations: [HomePage]
+  declarations: [HomePage],
+  providers: [Diagnostic]
 })
 export class HomePageModule {}

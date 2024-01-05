@@ -45,6 +45,6 @@ export class User {
         this.files = user.files;
         this.config = user.config;
         this.driver_verification = user.driver_verification
-        this.send_verification = user.driver_verification
+        this.send_verification = user.send_verification
     }
 }

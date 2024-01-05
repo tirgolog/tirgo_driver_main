@@ -9,6 +9,8 @@ import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
 import { FileTransfer, } from "@ionic-native/file-transfer/ngx";
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
+declare var cordova: any;
 
 const TOKEN_KEY = 'jwttirgotoken';
 const API_URL = 'https://admin.tirgo.io/api';
@@ -55,7 +57,9 @@ export class AuthenticationService {
     private storage: Storage,
     public camera: Camera,
     public transfer: FileTransfer,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private diagnostic: Diagnostic,
+
   ) {
   }
   goToSupport() {
@@ -436,6 +440,7 @@ export class AuthenticationService {
       buttons: [{
         text: 'Хорошо',
         handler: async () => {
+          this.diagnostic.requestLocationAuthorization(cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS)
         }
       }]
     });

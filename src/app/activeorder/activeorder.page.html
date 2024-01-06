@@ -8,11 +8,11 @@
       <tbody>
         <tr>
           <td>{{'Отправка из' | translate}}:</td>
-          <td>{{item.route.from_city}}</td>
+          <td>{{item.route?.from_city}}</td>
         </tr>
         <tr>
           <td>{{'Доставка в' | translate}}:</td>
-          <td>{{item.route.to_city}}</td>
+          <td>{{item.route?.to_city}}</td>
         </tr>
       </tbody>
     </table>
@@ -20,18 +20,20 @@
       <tbody>
         <tr>
           <td>{{'Время отправки' | translate}}</td>
-          <td>{{item.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
+          <td>{{item?.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
         </tr>
         <tr>
           <td>{{'Тип транспорта' | translate}}</td>
           <td>
             <div style="color: #fff;">
-              <span *ngIf="item.transport_types && item.transport_types.length">
-                <span *ngFor="let type of item.transport_types">{{returnNameTypeTransport(type)}}</span>
-              </span> 
-              <span *ngIf="item.transport_types && !item.transport_types.length">
-                <span>{{returnNameTypeTransport(item.transport_types)}}</span>
-              </span>
+              <span *ngIf="item.transport_types">
+                <span *ngFor="let type of item.transport_types;let i=index">
+                  {{ returnNameTypeTransport(type) }}
+                </span>
+              </span>    
+              <span *ngIf="item.transport_type && !item.transport_types">
+                  {{ returnNameTypeTransport(item.transport_type) }}
+              </span>    
             </div>
           </td>
         </tr>
@@ -59,7 +61,11 @@
           <td>{{'Пользователь' | translate}}</td>
           <td>{{item.usernameorder}}</td>
         </tr>
-        <tr>
+        <tr *ngIf="item.userphoneorder">
+          <td>{{'Контакты' | translate}}</td>
+          <td>+{{item.userphoneorder}}</td>
+        </tr>
+        <tr *ngIf="item.merchant?.phoneNumbers[0]">
           <td>{{'Контакты' | translate}}</td>
           <td>+{{item.merchant?.phoneNumbers[0]}}</td>
         </tr>

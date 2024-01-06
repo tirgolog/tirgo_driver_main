@@ -29,7 +29,9 @@ export class ActiveorderPage implements OnInit {
 
   ngOnInit() {
     this.item = this.authService.activeorder;
-    this.item.transport_types = JSON.parse(this.item.transport_types)
+    this.item.transport_types = JSON.parse(this.item.transport_types);
+    console.log(this.item)
+    console.log(this.item.transport_types)
   }
   async finishOrder(item) {
     const alert = await this.alertController.create({

@@ -84,7 +84,7 @@ export class OrderPage implements OnInit {
         if (error.message == 'User denied Geolocation') {
           this.loading.dismiss();
           this.loadingAccept = false;
-          this.authService.alert('Упс', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
+          this.authService.alert('Упс', 'Включите пожалуйста локацию, при выключенной локации невозможно предложить цену');
         } else {
           this.loading.dismiss();
           this.loadingAccept = false;

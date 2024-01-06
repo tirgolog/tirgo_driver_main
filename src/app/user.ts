@@ -21,6 +21,7 @@ export class User {
     public files: any;
     public config: any;
     public driver_verification: any;
+    public send_verification: any;
     constructor(user: any) {
         this.id = +user.id;
         this.name = user.name;
@@ -43,6 +44,7 @@ export class User {
         this.busy = +user.busy;
         this.files = user.files;
         this.config = user.config;
-        this.driver_verification = user.driver_verification
+        this.driver_verification = user.driver_verification;
+        this.send_verification = user.send_verification
     }
 }

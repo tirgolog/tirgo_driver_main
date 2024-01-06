@@ -4,12 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { User } from '../user';
 import { Storage } from '@ionic/storage';
-import { AlertController, } from "@ionic/angular";
+import { AlertController, Platform, } from "@ionic/angular";
 import { Camera, CameraOptions } from '@awesome-cordova-plugins/camera/ngx';
 import { FileTransfer, } from "@ionic-native/file-transfer/ngx";
 import { InAppBrowser } from "@ionic-native/in-app-browser/ngx";
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
-
+import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 const TOKEN_KEY = 'jwttirgotoken';
 const API_URL = 'https://admin.tirgo.io/api';
 
@@ -49,6 +49,8 @@ export class AuthenticationService {
   };
 
   constructor(
+    private diagnostic:Diagnostic,
+    private platform:Platform,
     private http: HttpClient,
     public alertController: AlertController,
     private iab: InAppBrowser,
@@ -437,6 +439,35 @@ export class AuthenticationService {
     await alert.present();
   }
 
+  
+  async alertLocation(header: string, text: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: text,
+      cssClass: 'customAlert',
+      buttons: [{
+        text: 'получать разрешение',
+        handler: async () => {
+          try {
+            this.platform.ready().then(() => {
+              this.platform.ready().then(() => {
+                this.diagnostic.requestLocationAuthorization('always')
+                .then((status) => {
+                  console.log('Location authorization status:', status);
+                })
+                .catch((error) => {
+                  console.error('Error requesting location authorization:', error);
+                });
+              });
+            });
+          } catch (error) {
+            console.error('Error requesting location authorization:', error);
+          }
+        }
+      }]
+    });
+    await alert.present();
+  }
   checkToken() {
     return this.storage.get(TOKEN_KEY).then(res => {
       if (res) {

@@ -11,7 +11,8 @@ import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
 import axios from "axios";
-
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
+import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -19,6 +20,8 @@ import axios from "axios";
 })
 export class AppComponent {
   constructor(
+    private locationAccuracy: LocationAccuracy,
+    private androidPermissions: AndroidPermissions,
     private platform: Platform,
     private socketService: SocketService,
     private network: Network,
@@ -141,11 +144,13 @@ export class AppComponent {
               })
               .catch(async (error) => {
                 this.authService.geolocationCheck = false;
-                await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+                this.chckAppGpsPermission()
+                // await this.authService.alertLocation('Уведомление', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
               });
           }).catch(async (error) => {
             this.authService.geolocationCheck = false
-            await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+            // this.chckAppGpsPermission()
+            // await this.authService.alertLocation('Уведомление', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
         } else {
           console.log('here')
@@ -178,5 +183,49 @@ export class AppComponent {
       });
       this.themeService.restore();
     });
+  }
+
+  chckAppGpsPermission() {
+    this.androidPermissions
+      .checkPermission(
+        this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION
+      )
+      .then(
+        (result) => {
+          if (result.hasPermission) {
+            this.requestToSwitchOnGPS();
+          } else {
+            this.askGPSPermission();
+          }
+        },
+        (err) => {
+          console.log(err)
+        }
+      );
+  }
+
+  askGPSPermission() {
+    this.androidPermissions
+    .requestPermission(
+      this.androidPermissions.PERMISSION.ACCESS_COARSE_LOCATION
+    )
+    .then(
+      () => {
+        this.requestToSwitchOnGPS();
+      },
+      (error) => {
+        console.log(error)
+      }
+    );
+  }
+
+  requestToSwitchOnGPS() {
+    this.locationAccuracy
+      .request(this.locationAccuracy.REQUEST_PRIORITY_HIGH_ACCURACY)
+      .then(
+        () => {
+        },
+        (error) => console.log(JSON.stringify(error))
+      );
   }
 }

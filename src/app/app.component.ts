@@ -10,7 +10,7 @@ import { User } from "./user";
 import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
-import axios from "axios";
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx"
 
 @Component({
   selector: 'app-root',
@@ -29,7 +29,8 @@ export class AppComponent {
     private translateService: TranslateService,
     public alertController: AlertController,
     private router: Router,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private fcm: FCM,
   ) {
     this.initializeApp();
     setInterval(() => {
@@ -68,102 +69,103 @@ export class AppComponent {
     })
   }
   async checkSession() {
-    await this.authService.checkSession().toPromise().then(async (res) => {
-      if (res.status) {
-        this.authService.currentUser = new User(res.user);
-        if (!this.authService.isAuthenticated()) {
-          this.authService.authenticationState.next(true);
-        }
-        if (this.authService.currentUser.name !== null) {
-          this.socketService.connect();
-          if (this.platform.is('cordova')) {
-            this.pushService.init();
-          }
-          console.log(this.authService.currentUser.driver_verification)
-          this.authService.typetruck = await this.authService.getTypeTruck().toPromise();
-          this.authService.typecargo = await this.authService.getTypeCargo().toPromise();
-          this.authService.mytruck = await this.authService.getTruck().toPromise();
-          this.authService.contacts = await this.authService.getContacts().toPromise();
-          this.authService.myorders = await this.authService.getMyOrders().toPromise();
-          this.authService.getMyOrders().subscribe((res: any) => {
-            this.authService.myAllorders = res
-          })
-          this.authService.myarchiveorders = await this.authService.getMyArchiveOrders().toPromise();
-          this.authService.currency = await this.authService.getCurrency().toPromise();
-          this.authService.statuses = await this.authService.getStatuses().toPromise();
-          for (let row of this.authService.myorders) {
-            const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status === 1)
-            if (index >= 0) {
-              const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
-                status_order: number | undefined;
-                id: number | undefined;
-              }) => user.id === this.authService.currentUser?.id && user.status_order === 1)
-              if (indexuser >= 0) {
-                this.authService.activeorder = this.authService.myorders[index];
-                this.authService.myorders.splice(index, 1)
-              }
-            }
-          }
-          this.socketService.updateAllOrders().subscribe(async (res: any) => {
-            this.authService.myorders = await this.authService.getMyOrders().toPromise();
-            for (let row of this.authService.myorders) {
-              const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status === 1)
-              if (index >= 0) {
-                const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
-                  status_order: number | undefined;
-                  user_id: number | undefined;
-                }) => user.user_id === this.authService.currentUser?.id && user.status_order === 1)
-                if (indexuser >= 0) {
-                  this.authService.activeorder = this.authService.myorders[index];
-                  this.authService.myorders.splice(index, 1)
-                }
-              }
-            }
-            await this.checkSession();
-          });
-          this.authService.notifications = await this.authService.getNotification().toPromise();
-          this.authService.messages = await this.authService.getMessages().toPromise();
-          this.socketService.updateAllMessages().subscribe(async (res: any) => {
-            this.authService.messages = await this.authService.getMessages().toPromise();
-          })
-          //this.authService.allordersfree = await this.authService.getAllOrdersFree().toPromise();
-          //this.authService.allmyordersprocessing = await this.authService.getAllMyOrdersProcessing().toPromise();
-          await this.router.navigate(['/tabs/home'], { replaceUrl: true });
-          this.geolocation.getCurrentPosition().then(async (resp) => {
-            this.authService.geolocationCheck = true;
-            await this.authService.updateLocation(resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
-            const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
-            axios.get(get)
-              .then(res => {
-                if (res.status) {
-                  this.authService.geolocationCheck = true;
-                  this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
-                }
-              })
-              .catch(async (error) => {
-                this.authService.geolocationCheck = false;
-                await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-              });
-          }).catch(async (error) => {
-            this.authService.geolocationCheck = false
-            await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-          });
-        } else {
-          console.log('here')
-          await this.router.navigate(['/name'], { replaceUrl: true });
-        }
-      } else {
-        this.authService.authenticationState.next(false);
-        await this.router.navigate(['selectlanguage'], { replaceUrl: true });
-      }
-    }).catch(async (err) => {
-      this.authService.authenticationState.next(false);
-      await this.router.navigate(['selectlanguage'], { replaceUrl: true });
-    })
+    // await this.authService.checkSession().toPromise().then(async (res) => {
+    //   if (res.status) {
+    //     this.authService.currentUser = new User(res.user);
+    //     if (!this.authService.isAuthenticated()) {
+    //       this.authService.authenticationState.next(true);
+    //     }
+    //     if (this.authService.currentUser.name !== null) {
+    //       this.socketService.connect();
+    //       if (this.platform.is('cordova')) {
+    //         this.pushService.init();
+    //       }
+    //       console.log(this.authService.currentUser.driver_verification)
+    //       this.authService.typetruck = await this.authService.getTypeTruck().toPromise();
+    //       this.authService.typecargo = await this.authService.getTypeCargo().toPromise();
+    //       this.authService.mytruck = await this.authService.getTruck().toPromise();
+    //       this.authService.contacts = await this.authService.getContacts().toPromise();
+    //       this.authService.myorders = await this.authService.getMyOrders().toPromise();
+    //       this.authService.getMyOrders().subscribe((res: any) => {
+    //         this.authService.myAllorders = res
+    //       })
+    //       this.authService.myarchiveorders = await this.authService.getMyArchiveOrders().toPromise();
+    //       this.authService.currency = await this.authService.getCurrency().toPromise();
+    //       this.authService.statuses = await this.authService.getStatuses().toPromise();
+    //       for (let row of this.authService.myorders) {
+    //         const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status === 1)
+    //         if (index >= 0) {
+    //           const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
+    //             status_order: number | undefined;
+    //             id: number | undefined;
+    //           }) => user.id === this.authService.currentUser?.id && user.status_order === 1)
+    //           if (indexuser >= 0) {
+    //             this.authService.activeorder = this.authService.myorders[index];
+    //             this.authService.myorders.splice(index, 1)
+    //           }
+    //         }
+    //       }
+    //       this.socketService.updateAllOrders().subscribe(async (res: any) => {
+    //         this.authService.myorders = await this.authService.getMyOrders().toPromise();
+    //         for (let row of this.authService.myorders) {
+    //           const index = this.authService.myorders.findIndex(e => e.id === row.id && row.status === 1)
+    //           if (index >= 0) {
+    //             const indexuser = this.authService.myorders[index].orders_accepted.findIndex((user: {
+    //               status_order: number | undefined;
+    //               user_id: number | undefined;
+    //             }) => user.user_id === this.authService.currentUser?.id && user.status_order === 1)
+    //             if (indexuser >= 0) {
+    //               this.authService.activeorder = this.authService.myorders[index];
+    //               this.authService.myorders.splice(index, 1)
+    //             }
+    //           }
+    //         }
+    //         await this.checkSession();
+    //       });
+    //       this.authService.notifications = await this.authService.getNotification().toPromise();
+    //       this.authService.messages = await this.authService.getMessages().toPromise();
+    //       this.socketService.updateAllMessages().subscribe(async (res: any) => {
+    //         this.authService.messages = await this.authService.getMessages().toPromise();
+    //       })
+    //       //this.authService.allordersfree = await this.authService.getAllOrdersFree().toPromise();
+    //       //this.authService.allmyordersprocessing = await this.authService.getAllMyOrdersProcessing().toPromise();
+    //       await this.router.navigate(['/tabs/home'], { replaceUrl: true });
+    //       this.geolocation.getCurrentPosition().then(async (resp) => {
+    //         this.authService.geolocationCheck = true;
+    //         await this.authService.updateLocation(resp.coords.latitude.toString(), resp.coords.longitude.toString()).toPromise();
+    //         const get = "https://geocode-maps.yandex.ru/1.x/?format=json&geocode=" + resp.coords.longitude.toString() + "," + resp.coords.latitude.toString() + "&apikey=" + this.authService.currentUser?.config.key_api_maps + "&lang=ru-RU"
+    //         axios.get(get)
+    //           .then(res => {
+    //             if (res.status) {
+    //               this.authService.geolocationCheck = true;
+    //               this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
+    //             }
+    //           })
+    //           .catch(async (error) => {
+    //             this.authService.geolocationCheck = false;
+    //             await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+    //           });
+    //       }).catch(async (error) => {
+    //         this.authService.geolocationCheck = false
+    //         await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+    //       });
+    //     } else {
+    //       console.log('here')
+    //       await this.router.navigate(['/name'], { replaceUrl: true });
+    //     }
+    //   } else {
+    //     this.authService.authenticationState.next(false);
+    //     await this.router.navigate(['selectlanguage'], { replaceUrl: true });
+    //   }
+    // }).catch(async (err) => {
+    //   this.authService.authenticationState.next(false);
+    //   await this.router.navigate(['selectlanguage'], { replaceUrl: true });
+    // })
   }
   initializeApp() {
     this.initGeolocation();
-    this.checkSession();
+    this.initPushNotifications();
+    // this.checkSession();
 
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {
@@ -185,5 +187,46 @@ export class AppComponent {
   //Запускается при запуске приложения
   public async initGeolocation(){
     return this.geolocation.getCurrentPosition();
+  }
+
+  //Push уведомлеения
+  public async initPushNotifications(){
+    this.platform.ready().then(() => {
+      this.fcm.requestPushPermission().then((value:boolean)=>{
+        console.log(value)
+      })
+
+      // subscribe to a topic
+      // subscribeToTopic() takes the topic name as a parameter.
+      this.fcm.subscribeToTopic('offers');
+
+      // get FCM token
+      // getToken() method returns a token of a push notification, 
+      // token used to send push notification
+      this.fcm.getToken().then(token => {
+        console.log(token);
+      });
+
+      // ionic push notification example
+      // subscribe() method triggers when FCM message received
+      this.fcm.onNotification().subscribe(data => {
+        console.log(data);
+        if (data.wasTapped) {
+          console.log('Received in background');
+        } else {
+          console.log('Received in foreground');
+        }
+      });
+
+      // refresh the FCM token
+      // onTokenRefresh() method allows refreshing the FCM token
+      this.fcm.onTokenRefresh().subscribe(token => {
+        console.log(token);
+      });
+
+      // unsubscribe from a FCM topic to stop receive messages
+      this.fcm.unsubscribeFromTopic('offers');
+
+    });
   }
 }

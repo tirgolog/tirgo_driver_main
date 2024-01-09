@@ -10,7 +10,8 @@ import { User } from "./user";
 import { PushService } from "./services/push.service";
 import { SocketService } from "./services/socket.service";
 import { Network } from "@ionic-native/network/ngx";
-import axios from "axios";
+import { FCM } from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx"
+import axios from 'axios';
 
 @Component({
   selector: 'app-root',
@@ -29,7 +30,8 @@ export class AppComponent {
     private translateService: TranslateService,
     public alertController: AlertController,
     private router: Router,
-    private geolocation: Geolocation
+    private geolocation: Geolocation,
+    private fcm: FCM,
   ) {
     this.router.navigate(['loading'])
     this.initializeApp();
@@ -143,11 +145,11 @@ export class AppComponent {
               })
               .catch(async (error) => {
                 this.authService.geolocationCheck = false;
-                await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+                await this.authService.alertLocation('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
               });
           }).catch(async (error) => {
             this.authService.geolocationCheck = false
-            // await this.authService.alert('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+            await this.authService.alertLocation('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
         } else {
           console.log('here')
@@ -163,10 +165,9 @@ export class AppComponent {
     })
   }
   initializeApp() {
-    // this.initGeolocation();
-    setTimeout(() => {
-      this.checkSession();
-    },500)
+    this.initGeolocation();
+    this.initPushNotifications();
+    // this.checkSession();
 
     this.platform.ready().then(() => {
       this.network.onDisconnect().subscribe(() => {
@@ -186,7 +187,48 @@ export class AppComponent {
   }
 
   //Запускается при запуске приложения
-  // public async initGeolocation(){
-  //   return this.geolocation.getCurrentPosition();
-  // }
+  public async initGeolocation(){
+    return this.geolocation.getCurrentPosition();
+  }
+
+  //Push уведомлеения
+  public async initPushNotifications(){
+    this.platform.ready().then(() => {
+      this.fcm.requestPushPermission().then((value:boolean)=>{
+        console.log(value)
+      })
+
+      // subscribe to a topic
+      // subscribeToTopic() takes the topic name as a parameter.
+      this.fcm.subscribeToTopic('offers');
+
+      // get FCM token
+      // getToken() method returns a token of a push notification, 
+      // token used to send push notification
+      this.fcm.getToken().then(token => {
+        console.log(token);
+      });
+
+      // ionic push notification example
+      // subscribe() method triggers when FCM message received
+      this.fcm.onNotification().subscribe(data => {
+        console.log(data);
+        if (data.wasTapped) {
+          console.log('Received in background');
+        } else {
+          console.log('Received in foreground');
+        }
+      });
+
+      // refresh the FCM token
+      // onTokenRefresh() method allows refreshing the FCM token
+      this.fcm.onTokenRefresh().subscribe(token => {
+        console.log(token);
+      });
+
+      // unsubscribe from a FCM topic to stop receive messages
+      this.fcm.unsubscribeFromTopic('offers');
+
+    });
+  }
 }

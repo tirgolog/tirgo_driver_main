@@ -32,6 +32,7 @@ import player from 'lottie-web';
 import {SetraitingPage} from "./setraiting/setraiting.page";
 import {SelectstatusPage} from "./selectstatus/selectstatus.page";
 import {FilterPage} from "./filter/filter.page";
+import { FCM} from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx"
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 
 registerLocaleData(ruLocale);
@@ -50,7 +51,7 @@ export function playerFactory() {
         AddcontactPage,
         SelectstatusPage,
         FilterPage,
-        ChoiceCityPage
+        ChoiceCityPage,
     ],
     entryComponents: [
         ChoiceCityPage,
@@ -81,8 +82,8 @@ export function playerFactory() {
         }),
         AppRoutingModule,
         MenuPageModule,
-        MainPipeModule
-    ],
+        MainPipeModule,
+        ],
     providers: [
         Diagnostic,
         InAppBrowser,
@@ -92,6 +93,8 @@ export function playerFactory() {
         Camera,
         FileTransfer,
         Push,
+        FCM,
+        Diagnostic,
         Network,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         {

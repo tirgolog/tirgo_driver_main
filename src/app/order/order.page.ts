@@ -7,8 +7,7 @@ import axios from "axios";
 import { Geolocation } from "@awesome-cordova-plugins/geolocation/ngx";
 import { AddtransportPage } from '../addtransport/addtransport.page';
 import { Router } from '@angular/router';
-
-declare var cordova: any;
+declare var cordova;
 
 @Component({
   selector: 'app-order',
@@ -21,13 +20,14 @@ export class OrderPage implements OnInit {
   price: string = '';
   selecteddays: any[] = [];
   loading: any;
+
   constructor(
     public authService: AuthenticationService,
     private loadingCtrl: LoadingController,
     public alertController: AlertController,
     private geolocation: Geolocation,
     private modalController: ModalController,
-    private router: Router,
+    private router: Router
   ) { }
 
   async ngOnInit() {
@@ -88,15 +88,14 @@ export class OrderPage implements OnInit {
         if (error.message == 'User denied Geolocation') {
           this.loading.dismiss();
           this.loadingAccept = false;
-          this.authService.alert('Упс', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
+          this.authService.alertLocation('Упс', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
         } else {
           this.loading.dismiss();
           this.loadingAccept = false;
-          this.authService.alert('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+          this.authService.alertLocation('Упс', 'Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
         }
       })
   }
-
   async acceptOrderFinal() {
     if (this.item.secure_transaction && !this.authService.currentUser?.driver_verification) {
       const actionSheet = await this.alertController.create({

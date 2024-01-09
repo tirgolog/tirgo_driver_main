@@ -49,6 +49,9 @@
       "ANDROID_SUPPORT_V13_VERSION": "27.+",
       "FCM_VERSION": "17.0.+",
       "PACKAGE_NAME": "io.tirgo.drive"
+    },
+    "cordova-plugin-android-permissions": {
+      "PACKAGE_NAME": "io.tirgo.drive"
     }
   },
   "dependent_plugins": {

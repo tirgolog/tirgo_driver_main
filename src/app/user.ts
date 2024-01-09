@@ -44,7 +44,7 @@ export class User {
         this.busy = +user.busy;
         this.files = user.files;
         this.config = user.config;
-        this.driver_verification = user.driver_verification
+        this.driver_verification = user.driver_verification;
         this.send_verification = user.send_verification
     }
 }

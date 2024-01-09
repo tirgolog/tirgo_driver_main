@@ -16,7 +16,7 @@
   <div class="wrapper-fluid">
     <div class="body-wrap body-have-bottom-menu">
       <div class="notice-item"
-        *ngIf="!authService.currentUser.send_verification">
+        *ngIf="!authService?.currentUser?.send_verification">
         <div class="notice-wrap">
           <ion-button expand="full" (click)="goToVerification()">
             {{'Проверка' | translate}}

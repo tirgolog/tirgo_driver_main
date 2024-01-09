@@ -64,7 +64,7 @@ export class OrderPage implements OnInit {
     this.loading.present();
     this.geolocation.getCurrentPosition(
       {
-        maximumAge: 1000, timeout: 3000,
+        maximumAge: 0, timeout: 5000,
         enableHighAccuracy: true
       }
     )
@@ -83,7 +83,6 @@ export class OrderPage implements OnInit {
                   this.item.id = +this.item.id.split('M')[1];
                 }
                 const acceptRes = await this.authService.acceptOrder(this.item.id, this.price, this.selecteddays, this.item.isMerchant).toPromise();
-
                 if (acceptRes.status) {
                   this.authService.myorders = await this.authService.getMyOrders().toPromise();
                   await this.modalController.dismiss({
@@ -102,7 +101,7 @@ export class OrderPage implements OnInit {
         if (error.message == 'User denied Geolocation') {
           this.loading.dismiss();
           this.loadingAccept = false;
-          this.authService.alert('Упс', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver');
+          this.authService.alert('Упс', 'Включите пожалуйста локацию, при выключенной локации невозможно предложить цену');
         } else {
           this.loading.dismiss();
           this.loadingAccept = false;

@@ -13,6 +13,8 @@ import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 const TOKEN_KEY = 'jwttirgotoken';
 const API_URL = 'https://admin.tirgo.io/api';
 
+declare var cordova: any;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -57,9 +59,6 @@ export class AuthenticationService {
     private storage: Storage,
     public camera: Camera,
     public transfer: FileTransfer,
-    private geolocation: Geolocation,
-    private diagnostic: Diagnostic,
-
   ) {
   }
   goToSupport() {
@@ -555,4 +554,43 @@ export class AuthenticationService {
     return this.http.post<any>(sUrl, body);
   }
 
+  async locationIsAvailable(){
+    this.diagnostic.getLocationAuthorizationStatus().then((status:any)=>{
+      if((this.platform.is("android") && status !== "GRANTED") || (this.platform.is("ios") && status !== "authorized")){
+        this.setLocation(status)
+      }
+
+    }) 
+  }
+
+  setLocation(val:string){
+    this.alertController.create({
+      header:"Использование вашей геопозиции",
+      mode:'md',
+      message:"<p> собирает данные о вашем местоположении,чтобы обеспечить работу курьерской доставки , даже если приложение закрыто или когда приложение не используется.</p",
+      backdropDismiss:false,
+      buttons:[{
+        text:'Разрешаю',handler:()=>{
+            this.diagnostic.getLocationAuthorizationStatus().then(async(value:any) =>{
+              console.log(value + 'this.diagnostic.getLocationAuthorizationStatus()')
+                this.diagnostic.requestLocationAuthorization(cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS).then(async(resp:string)=>{
+                  if((this.platform.is("android") && resp !== "GRANTED") || (this.platform.is("ios") && resp !== "authorized")){
+                    const alert = this.alertController.create({
+                      header:"Необходимо изменить уровень доступа к геопозиции",
+                      message:"Закройте приложение, зайдите в настройки приложения Tirgo и выберите доступ к геопозиции - 'Разрешить в любом режиме'",
+                    });
+                    (await alert).present()
+                  } else {
+                    console.log('i have permission')
+                    // this.sys.lsSet('initBackgroundLocation', true)
+                    // this.backgroundPositionService.initBackgroundPosition();
+                  }
+                })
+              
+            })
+        }
+      },
+      ]
+    }).then(res => res.present())
+  }
 }

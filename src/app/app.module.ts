@@ -35,6 +35,8 @@ import {FilterPage} from "./filter/filter.page";
 import { Diagnostic } from '@ionic-native/diagnostic/ngx';
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { LocationAccuracy } from '@ionic-native/location-accuracy/ngx';
+import { FCM} from "cordova-plugin-fcm-with-dependecy-updated/ionic/ngx"
+
 registerLocaleData(ruLocale);
 
 export function createTranslateLoader(http: HttpClient) {
@@ -51,7 +53,7 @@ export function playerFactory() {
         AddcontactPage,
         SelectstatusPage,
         FilterPage,
-        ChoiceCityPage
+        ChoiceCityPage,
     ],
     entryComponents: [
         ChoiceCityPage,
@@ -82,8 +84,8 @@ export function playerFactory() {
         }),
         AppRoutingModule,
         MenuPageModule,
-        MainPipeModule
-    ],
+        MainPipeModule,
+        ],
     providers: [
         AndroidPermissions,
         Diagnostic,
@@ -95,6 +97,8 @@ export function playerFactory() {
         Camera,
         FileTransfer,
         Push,
+        FCM,
+        Diagnostic,
         Network,
         {provide: RouteReuseStrategy, useClass: IonicRouteStrategy},
         {

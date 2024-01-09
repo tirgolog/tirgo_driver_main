@@ -1,18 +1,21 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {AlertController, IonInput, ModalController, NavController, Platform} from "@ionic/angular";
 import {Router} from "@angular/router";
-import {Storage} from "@ionic/storage";
+
 import {AuthenticationService} from "../../services/authentication.service";
 import {AppComponent} from "../../app.component";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
+
+import { Diagnostic} from '@ionic-native/diagnostic/ngx/index';
+
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
 })
-export class LoginPage implements OnInit {
+export class LoginPage{
   phone:string = '';
   //phone:string = '(93) 542-13-24';
   code:string = '';
@@ -40,7 +43,8 @@ export class LoginPage implements OnInit {
     private navCtrl: NavController,
     public alertController: AlertController,
     private platform: Platform,
-  ) { 
+     ) { 
+      this.authService.locationIsAvailable();
     this.platform.ready().then(() => {
       this.setAutocompleteAttribute();
     });
@@ -53,7 +57,10 @@ export class LoginPage implements OnInit {
           this.phonescodes = this.phonescodesOriginal;
         },
         error => console.error(`Failed because: ${error}`));
+
+    // this.getPermissionLocation();
   }
+
 
   setAutocompleteAttribute() {
     if (this.passInput) {

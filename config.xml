@@ -3,7 +3,7 @@
     <name>Tirgo Driver</name>
     <description>Tirgo Driver app.</description>
     <author>team</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

@@ -10,7 +10,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "debug": "ionic cordova run android --device -l --debug --target=\"977a5533\""
+    "debug": "ionic cordova run android --device -l --debug --target=\"c2ff0112\""
   },
   "private": true,
   "dependencies": {

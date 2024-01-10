@@ -31,7 +31,7 @@ export class OrderPage implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.authService.checkGeolocation();
+    // this.authService.checkGeolocation();
   }
   addDays(date: any, num: number) {
     return formatDate(new Date(addDays(date, num).toISOString()), 'dd MMMM', 'ru');

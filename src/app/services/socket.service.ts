@@ -18,14 +18,10 @@ export class SocketService {
     connect() {
         this.socket = io('https://admin.tirgo.io/', {transports: ['websocket']});
         this.socket.on('connect', () => {
-            console.log('connect')
                 this.socket.emit('authenticate', {token: AuthenticationService.jwt})
                     .on('authenticated', (data:any) => {
-                        console.warn('подключился к сокету')
                     })
                     .on('unauthorized', function(msg:any) {
-                        console.log('unauthorized: ' + JSON.stringify(msg.data));
-                        // throw new Error(msg.data.type);
                     });
             });
             this.socket.on('connect_error', (error: any) => {

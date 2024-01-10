@@ -81,7 +81,6 @@ export class AppComponent {
           if (this.platform.is('cordova')) {
             this.pushService.init();
           }
-          console.log(this.authService.currentUser.driver_verification)
           this.authService.typetruck = await this.authService.getTypeTruck().toPromise();
           this.authService.typecargo = await this.authService.getTypeCargo().toPromise();
           this.authService.mytruck = await this.authService.getTruck().toPromise();
@@ -142,13 +141,13 @@ export class AppComponent {
                   this.authService.cityinfo = res.data.response.GeoObjectCollection.featureMember[0].GeoObject.description;
                 }
               })
-              .catch(async (error) => {
-                this.authService.geolocationCheck = false;
-                await this.authService.alertLocation('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
-              });
-          }).catch(async (error) => {
-            this.authService.geolocationCheck = false
-            await this.authService.alertLocation('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+          //     .catch(async (error) => {
+          //       this.authService.geolocationCheck = false;
+          //       await this.authService.alertLocation('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
+          //     });
+          // }).catch(async (error) => {
+          //   this.authService.geolocationCheck = false
+          //   await this.authService.alertLocation('Ошибка', 'Для получения заказов нам нужно знать вашу геопозицию. Пожалуйста включите разрешение на использование местоположения в приложении Tirgo Driver')
           });
         } else {
           console.log('here')
@@ -164,7 +163,7 @@ export class AppComponent {
     })
   }
   initializeApp() {
-    this.initGeolocation();
+    // this.initGeolocation();
     this.initPushNotifications();
     // this.checkSession();
 
@@ -186,15 +185,21 @@ export class AppComponent {
   }
 
   //Запускается при запуске приложения
-  public async initGeolocation(){
-    return this.geolocation.getCurrentPosition();
-  }
+  // public async initGeolocation(){
+  //   return this.geolocation.getCurrentPosition();
+  // }
 
   //Push уведомлеения
   public async initPushNotifications(){
+    
+    console.log('keld')
     this.platform.ready().then(() => {
-      this.fcm.requestPushPermission().then((value:boolean)=>{
+      this.fcm = new FCM();
+      new FCM().requestPushPermission().then((value: boolean) => {
         console.log(value)
+      })
+      this.fcm.requestPushPermission().then((value:boolean)=>{
+        console.log('value', value)
       })
 
       // subscribe to a topic
@@ -205,7 +210,7 @@ export class AppComponent {
       // getToken() method returns a token of a push notification, 
       // token used to send push notification
       this.fcm.getToken().then(token => {
-        console.log(token);
+        console.log(token, "Fcm token");
       });
 
       // ionic push notification example

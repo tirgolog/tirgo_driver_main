@@ -2,17 +2,17 @@
 <ion-content class="ion-padding">
   <div class="order-item">
     <div class="order-item-articul">
-      <span><img src="assets/img/circle.svg" alt=""> №{{authService.addLeadingZeros(item.id)}}</span>
+      <span><img src="assets/img/circle.svg" alt=""> №{{authService.addLeadingZeros(item?.id)}}</span>
     </div>
     <table class="table-info table-img">
       <tbody>
         <tr>
           <td>{{'Отправка из' | translate}}:</td>
-          <td>{{item.route.from_city}}</td>
+          <td>{{item?.route.from_city}}</td>
         </tr>
         <tr>
           <td>{{'Доставка в' | translate}}:</td>
-          <td>{{item.route.to_city}}</td>
+          <td>{{item?.route.to_city}}</td>
         </tr>
       </tbody>
     </table>
@@ -20,52 +20,55 @@
       <tbody>
         <tr>
           <td>{{'Время отправки' | translate}}</td>
-          <td>{{item.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
+          <td>{{item?.date_send | formatTime: 'DD MMMM YYYY в HH:mm'}}</td>
         </tr>
         <tr>
           <td>{{'Тип транспорта' | translate}}</td>
           <td>
             <div style="color: #fff;">
-              <span *ngIf="item.transport_types && item.transport_types.length">
-                <span *ngFor="let type of item.transport_types">{{returnNameTypeTransport(type)}}</span>
+              <span *ngIf="item?.transport_types && item?.transport_types.length">
+                <span *ngFor="let type of item?.transport_types">{{returnNameTypeTransport(type)}}</span>
               </span> 
-              <span *ngIf="item.transport_types && !item.transport_types.length">
-                <span>{{returnNameTypeTransport(item.transport_types)}}</span>
+              <span *ngIf="item?.transport_types && !item?.transport_types.length">
+                <span>{{returnNameTypeTransport(item?.transport_types)}}</span>
               </span>
             </div>
           </td>
         </tr>
         <tr>
           <td>{{'Тип груза' | translate}}</td>
-          <td>{{returnNameCargoType(item.type_cargo)}}</td>
+          <td>{{returnNameCargoType(item?.type_cargo)}}</td>
         </tr>
-        <tr *ngIf="item.no_cash">
+        <tr *ngIf="item?.no_cash">
           <td>{{'Безналичная оплата' | translate}}</td>
           <td>{{'Да'}}</td>
         </tr>
-        <tr *ngIf="item.adr">
+        <tr *ngIf="item?.adr">
           <td>{{'ADR' | translate}}</td>
           <td>{{'Да'}}</td>
         </tr>
-        <tr *ngIf="item.secure_transaction">
+        <tr *ngIf="item?.secure_transaction">
           <td>{{'Безопасная сделка' | translate}}</td>
           <td>{{'Да'}}</td>
         </tr>
         <tr>
           <td>{{'Вес груза' | translate}}</td>
-          <td>{{item.weight}} кг.</td>
+          <td>{{item?.weight}} кг.</td>
         </tr>
         <tr>
           <td>{{'Пользователь' | translate}}</td>
-          <td>{{item.usernameorder}}</td>
+          <td>{{item?.usernameorder}}</td>
         </tr>
         <tr>
           <td>{{'Контакты' | translate}}</td>
-          <td>+{{item.merchant?.phoneNumbers[0]}}</td>
+          <td>
+            <span *ngIf="item?.merchant?.phoneNumber">+998 {{item?.merchant?.phoneNumber}}</span>  
+            <span *ngIf="!item?.merchant?.phoneNumber">{{item?.userphoneorder}}</span>
+          </td>
         </tr>
       </tbody>
     </table>
-    <button class="get-order-btn order-succes-btn" (click)="callMan(item.userphoneorder)">{{'Позвонить' |
+    <button class="get-order-btn order-succes-btn" (click)="callMan(item?.userphoneorder)">{{'Позвонить' |
       translate}}</button>
     <button class="get-order-btn" (click)="finishOrder(item)">{{'Завершить заказ' | translate}}</button>
   </div>

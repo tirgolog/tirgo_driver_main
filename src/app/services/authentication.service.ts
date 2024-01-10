@@ -538,7 +538,7 @@ export class AuthenticationService {
       );
       return this.geolocationCheck;
     } else {
-      return false; // or provide a default value based on your requirements
+      return false;
     }
   }
 
@@ -550,10 +550,10 @@ export class AuthenticationService {
     return this.http.post<any>(sUrl, body);
   }
 
-  async locationIsAvailable() {
+   locationIsAvailable() {
     this.diagnostic.getLocationAuthorizationStatus().then((status: any) => {
       if ((this.platform.is("android") && status !== "GRANTED") || (this.platform.is("ios") && status !== "authorized")) {
-        this.setLocation(status)
+        // this.setLocation(status)
       }
 
     })
